@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/report/:slug", "destination": "/report.html" }
+  ]
+}

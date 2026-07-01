@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>리포트 제목 | 공고 분석 리포트</title>
+
+  <!-- Syne (Display font) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Pretendard Variable (Body font) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ① 헤더: 뷰 토글 + 스크롤 프로그레스바 -->
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="header-tag">공고 분석 리포트</span>
+      <div class="view-toggle">
+        <button class="toggle-btn active" data-view="magazine">📰 매거진</button>
+        <button class="toggle-btn" data-view="card">📊 카드</button>
+      </div>
+    </div>
+    <div class="progress-bar" id="progressBar"></div>
+  </header>
+
+  <!-- ② 리포트 타이틀 히어로 -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">청년주택 공고 분석</div>
+      <h1 class="hero-title" id="reportTitle">로딩 중...</h1>
+      <p class="hero-subtitle" id="reportSubtitle"></p>
+    </div>
+  </section>
+
+  <!-- ③ 뷰 컨테이너 -->
+  <main class="view-container">
+
+    <!-- 매거진 뷰 (기본 활성) -->
+    <div class="view magazine-view active" id="magazineView">
+      <!-- 좌측 목차 사이드바 -->
+      <aside class="section-index" id="sectionIndex">
+        <p class="section-index-title">목차</p>
+        <ul class="section-index-list" id="sectionIndexList">
+          <!-- JS로 동적 삽입 예정 -->
+          <li><a href="#">섹션이 로드되면 표시됩니다</a></li>
+        </ul>
+      </aside>
+
+      <!-- 우측 본문 -->
+      <article class="article-body" id="articleBody">
+        <!-- JS로 동적 삽입 예정 -->
+        <div class="article-section">
+          <h2 class="article-section-title">리포트를 불러오는 중</h2>
+          <p>URL 파라미터 <code>?slug=xxx</code> 로 리포트를 지정하면 내용이 표시됩니다.</p>
+        </div>
+      </article>
+    </div>
+
+    <!-- 카드 뷰 -->
+    <div class="view card-view" id="cardView">
+      <div class="cards-grid" id="cardsGrid">
+        <!-- JS로 동적 삽입 예정 -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ④ 푸터 -->
+  <footer class="site-footer">
+    <p>© 고방 (gobang.kr)</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공고 분석 리포트</title>
+
+  <!-- Syne (Display font) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Pretendard Variable (Body font) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="header-tag">공고 분석 리포트</span>
+    </div>
+    <div class="progress-bar" style="width:0%"></div>
+  </header>
+
+  <section class="index-page-hero">
+    <h1>공고 분석 리포트</h1>
+    <p>청년주택 공고를 쉽고 빠르게 분석해드려요!</p>
+  </section>
+
+  <main class="index-content">
+    <!-- 히어로 카드 -->
+    <div id="heroCard"></div>
+    <!-- 그리드 -->
+    <div id="gridSection" style="display:none">
+      <p class="grid-section-label">지난 리포트</p>
+      <div class="reports-grid" id="reportsGrid"></div>
+    </div>
+    <!-- 빈 상태 -->
+    <div class="empty-state" id="emptyState" style="display:none">
+      <p>아직 등록된 리포트가 없습니다.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 고방 (gobang.kr)</p>
+  </footer>
+
+  <script>
+  async function loadIndex() {
+    try {
+      const res = await fetch('reports/index.json');
+      const data = await res.json();
+      const reports = data.reports || [];
+
+      if (!reports.length) {
+        document.getElementById('emptyState').style.display = 'block';
+        return;
+      }
+
+      // 히어로 (첫 번째)
+      const hero = reports[0];
+      document.getElementById('heroCard').innerHTML = `
+        <a href="report.html?slug=${hero.slug}" class="hero-report-card">
+          <div class="hero-report-inner">
+            <div class="hero-report-content">
+              <span class="report-badge">${hero.badge}</span>
+              <h2 class="hero-report-title">${hero.title}</h2>
+              <p class="hero-report-subtitle">${hero.subtitle}</p>
+              <div class="hero-report-meta">
+                <span class="report-date">${hero.createdAt || hero.publishedAt}</span>
+                <span class="report-cta">리포트 읽기 →</span>
+              </div>
+            </div>
+            <div class="hero-report-icon">
+              <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <!-- 지붕 -->
+                <path d="M10 1.5L1.5 7.5H3V18.5H17V7.5H18.5L10 1.5Z" fill="white" opacity="0.15"/>
+                <!-- 건물 본체 -->
+                <rect x="3" y="7.5" width="14" height="11" rx="0.5" fill="white" opacity="0.15"/>
+                <!-- 지붕 삼각형 (진하게) -->
+                <path d="M10 2.5L2.5 8H17.5L10 2.5Z" fill="white" opacity="0.5"/>
+                <!-- 굴뚝 -->
+                <rect x="13" y="3.5" width="1.5" height="3" rx="0.5" fill="white" opacity="0.4"/>
+                <!-- 창문 왼쪽 위 -->
+                <rect x="4.5" y="9.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>
+                <!-- 창문 오른쪽 위 -->
+                <rect x="12.5" y="9.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>
+                <!-- 창문 왼쪽 아래 -->
+                <rect x="4.5" y="13.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>
+                <!-- 창문 오른쪽 아래 -->
+                <rect x="12.5" y="13.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>
+                <!-- 현관문 -->
+                <rect x="8.5" y="13" width="3" height="5.5" rx="0.5" fill="white" opacity="0.7"/>
+                <!-- 문 손잡이 -->
+                <circle cx="11" cy="15.8" r="0.4" fill="#2563EB" opacity="0.5"/>
+              </svg>
+            </div>
+          </div>
+        </a>`;
+
+      // 그리드 (나머지)
+      const rest = reports.slice(1);
+      if (rest.length) {
+        document.getElementById('gridSection').style.display = 'block';
+        document.getElementById('reportsGrid').innerHTML = rest.map(r => `
+          <a href="report.html?slug=${r.slug}" class="report-card-item">
+            <span class="report-badge">${r.badge}</span>
+            <h3 class="report-card-title">${r.title}</h3>
+            <p class="report-card-subtitle">${r.subtitle}</p>
+            <div class="report-card-meta">
+              <span class="report-date">${r.createdAt || r.publishedAt}</span>
+              <span class="report-cta">읽기 →</span>
+            </div>
+          </a>`).join('');
+      }
+    } catch(e) {
+      console.error(e);
+      document.getElementById('emptyState').style.display = 'block';
+    }
+  }
+  loadIndex();
+  </script>
+</body>
+</html>
