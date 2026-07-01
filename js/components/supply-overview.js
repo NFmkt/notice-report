@@ -1,12 +1,13 @@
 // js/components/supply-overview.js
 import { DISTRICT_CENTERS, SEOUL_OUTLINE } from './seoul-map.js';
+import { ICONS } from '../icons.js';
 
 function renderSinglePin(data) {
   const loc = data.locations[0];
   return `
     <div class="supply-single">
       <div class="supply-pin-card">
-        <span class="supply-pin-icon">📍</span>
+        <span class="supply-pin-icon">${ICONS.pin}</span>
         <div>
           <p class="supply-pin-district">${loc.district}</p>
           <p class="supply-pin-units">${loc.units}호</p>
