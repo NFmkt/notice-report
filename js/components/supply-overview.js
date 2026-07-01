@@ -1,124 +1,96 @@
 // js/components/supply-overview.js
-import { DISTRICT_CENTERS, SEOUL_OUTLINE } from './seoul-map.js';
-import { ICONS } from '../icons.js';
 
-function renderSinglePin(data) {
-  const loc = data.locations[0];
-  return `
-    <div class="supply-single">
-      <div class="supply-pin-card">
-        <span class="supply-pin-icon">${ICONS.pin}</span>
-        <div>
-          <p class="supply-pin-district">${loc.district}</p>
-          <p class="supply-pin-units">${loc.units}호</p>
-        </div>
+function sqmToPyeong(sqm) {
+  return Math.round(sqm * 0.3025 * 10) / 10;
+}
+
+function parseAreaRange(areaRange) {
+  if (!areaRange) return null;
+  const match = areaRange.match(/([\d.]+)㎡~([\d.]+)㎡/);
+  if (!match) return null;
+  const minSqm = parseFloat(match[1]);
+  const maxSqm = parseFloat(match[2]);
+  return {
+    minSqm, maxSqm,
+    minPyeong: sqmToPyeong(minSqm),
+    maxPyeong: sqmToPyeong(maxSqm),
+  };
+}
+
+function renderDistrictChart(locations) {
+  if (!locations || locations.length === 0) return '';
+  const sorted = [...locations].sort((a, b) => b.units - a.units);
+  const top = sorted.slice(0, 5);
+  const maxUnits = top[0].units;
+  const remaining = sorted.length - 5;
+
+  if (locations.length === 1) {
+    return `
+      <div class="supply-single-district">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span class="supply-single-name">${locations[0].district} 단일 공급</span>
+        <span class="supply-single-units">${locations[0].units}호</span>
+      </div>`;
+  }
+
+  const bars = top.map(loc => `
+    <div class="supply-bar-row">
+      <span class="supply-bar-label">${loc.district}</span>
+      <div class="supply-bar-track">
+        <div class="supply-bar-fill" style="width:${Math.round((loc.units/maxUnits)*100)}%"></div>
       </div>
-    </div>
-  `;
-}
-
-function renderBubble(data) {
-  const maxUnits = Math.max(...data.locations.map(l => l.units));
-  const bubbles = data.locations.map(loc => {
-    const center = DISTRICT_CENTERS[loc.district] || { cx: 250, cy: 275 };
-    const r = 15 + (loc.units / maxUnits) * 35;
-    return `
-      <g class="bubble-group">
-        <circle cx="${center.cx}" cy="${center.cy}" r="${r}"
-          fill="var(--blue)" fill-opacity="0.25" stroke="var(--blue)" stroke-width="1.5"/>
-        <text x="${center.cx}" y="${center.cy}" text-anchor="middle"
-          dy="0.35em" font-size="11" fill="var(--blue)" font-weight="600">
-          ${loc.units}
-        </text>
-        <text x="${center.cx}" y="${center.cy + r + 12}" text-anchor="middle"
-          font-size="9" fill="var(--ink-muted)">
-          ${loc.district}
-        </text>
-      </g>
-    `;
-  }).join('');
-  return `
-    <svg viewBox="0 0 500 550" class="supply-map-svg" aria-label="공급 위치 버블 차트">
-      <path d="${SEOUL_OUTLINE}" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
-      ${bubbles}
-    </svg>
-  `;
-}
-
-function renderChoropleth(data) {
-  const maxUnits = Math.max(...data.locations.map(l => l.units));
-  const unitMap = Object.fromEntries(data.locations.map(l => [l.district, l.units]));
-  const districtElements = Object.entries(DISTRICT_CENTERS).map(([name, center]) => {
-    const units = unitMap[name] || 0;
-    const intensity = units / maxUnits;
-    const opacity = units > 0 ? 0.15 + intensity * 0.7 : 0.05;
-    return `
-      <g class="district-group">
-        <circle cx="${center.cx}" cy="${center.cy}" r="18"
-          fill="var(--blue)" fill-opacity="${opacity.toFixed(2)}"/>
-        ${units > 0 ? `
-          <text x="${center.cx}" y="${center.cy}" text-anchor="middle"
-            dy="0.35em" font-size="9" fill="${intensity > 0.5 ? 'var(--bg)' : 'var(--blue)'}">
-            ${units}
-          </text>` : ''}
-      </g>
-    `;
-  }).join('');
-  return `
-    <svg viewBox="0 0 500 550" class="supply-map-svg" aria-label="서울 자치구별 공급 물량">
-      <path d="${SEOUL_OUTLINE}" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
-      ${districtElements}
-    </svg>
-  `;
-}
-
-export function renderSupplyOverview(data) {
-  const { organizer, totalUnits, houseTypes, areaRange, locations } = data;
-
-  const typesHtml = houseTypes.map(t => `
-    <div class="supply-type-item">
-      <span class="supply-type-name">${t.type}</span>
-      <span class="supply-type-units">${t.units}호</span>
+      <span class="supply-bar-val">${loc.units}</span>
     </div>
   `).join('');
 
-  let mapHtml;
-  if (locations.length === 1) {
-    mapHtml = renderSinglePin(data);
-  } else if (locations.length <= 5) {
-    mapHtml = renderBubble(data);
-  } else {
-    mapHtml = renderChoropleth(data);
+  return `
+    <div class="supply-bar-list">${bars}</div>
+    ${remaining > 0 ? `<p class="supply-bar-note">외 ${remaining + (sorted.length > 5 ? sorted.length - 5 : 0)}개 자치구 포함</p>` : ''}
+  `;
+}
+
+function renderHouseTypes(houseTypes) {
+  if (!houseTypes || houseTypes.length === 0) return '';
+
+  if (houseTypes.length === 1) {
+    return `
+      <div class="supply-solo-type">
+        <span class="supply-solo-type-name">${houseTypes[0].type}</span>
+        <span class="supply-solo-type-units">${houseTypes[0].units}호</span>
+        <span class="supply-solo-type-badge">단일 유형</span>
+      </div>`;
   }
 
+  const pills = houseTypes.map(t => `
+    <span class="supply-type-pill">${t.type}<span class="supply-type-pill-units">${t.units}</span></span>
+  `).join('');
+  return `<div class="supply-type-pills">${pills}</div>`;
+}
+
+export function renderSupplyOverview(data) {
+  const { houseTypes, areaRange, locations } = data;
+  const area = parseAreaRange(areaRange);
+  const districtHtml = renderDistrictChart(locations);
+  const typesHtml = renderHouseTypes(houseTypes);
+
   return `
-    <div class="supply-overview">
-      <div class="supply-meta">
-        <div class="supply-stat">
-          <span class="supply-stat-label">공급기관</span>
-          <span class="supply-stat-value">${organizer}</span>
+    <div class="supply-overview-v2">
+      <div class="supply-cols">
+        <div class="supply-col-district">
+          <p class="supply-col-title">자치구별 공급</p>
+          ${districtHtml}
         </div>
-        <div class="supply-stat">
-          <span class="supply-stat-label">총 모집 호수</span>
-          <span class="supply-stat-value">${totalUnits.toLocaleString()}호</span>
+        <div class="supply-col-types">
+          <p class="supply-col-title">주택 유형</p>
+          ${typesHtml}
+          ${area ? `
+          <div class="supply-area-row">
+            <span class="supply-area-sqm">${area.minSqm}~${area.maxSqm}㎡</span>
+            <span class="supply-area-sep">·</span>
+            <span class="supply-area-pyeong">${area.minPyeong}~${area.maxPyeong}평</span>
+          </div>` : ''}
         </div>
-        ${areaRange ? `
-        <div class="supply-stat">
-          <span class="supply-stat-label">전용면적</span>
-          <span class="supply-stat-value">${areaRange}</span>
-        </div>` : ''}
       </div>
-      <div class="supply-types">${typesHtml}</div>
-      <div class="supply-map">${mapHtml}</div>
-      ${locations.length > 1 ? `
-      <div class="supply-location-table">
-        <table>
-          <thead><tr><th>지역</th><th>호수</th></tr></thead>
-          <tbody>
-            ${locations.map(l => `<tr><td>${l.district}</td><td>${l.units}호</td></tr>`).join('')}
-          </tbody>
-        </table>
-      </div>` : ''}
     </div>
   `;
 }
