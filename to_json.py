@@ -134,7 +134,7 @@ def parse_with_claude(text: str, source_url: str, badge: str, model: str) -> dic
     client = anthropic.Anthropic()
     response = client.messages.create(
         model=model,
-        max_tokens=4096,
+        max_tokens=8192,
         system=SYSTEM_PROMPT,
         tools=[TOOL_SCHEMA],
         tool_choice={"type": "tool", "name": "parse_notice"},
