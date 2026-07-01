@@ -26,11 +26,11 @@ function renderTerms(terms) {
   if (!terms || terms.length === 0) return '';
   const items = terms.map(t => `
     <div class="term-item">
-      <span class="term-name">${t.term}</span>
-      <span class="term-def">${t.definition}</span>
+      <dt class="term-name">${t.term}</dt>
+      <dd class="term-def">${t.definition}</dd>
     </div>
   `).join('');
-  return `<div class="terms-box">${items}</div>`;
+  return `<dl class="terms-box">${items}</dl>`;
 }
 
 function renderSection(section) {
