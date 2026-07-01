@@ -3,39 +3,6 @@
  */
 import { renderReport } from './renderer.js';
 
-// ============================================
-// 1. 뷰 토글 (매거진 ↔ 카드뷰)
-// ============================================
-function initViewToggle() {
-  const buttons = document.querySelectorAll('.toggle-btn');
-  const magazineView = document.getElementById('magazineView');
-  const cardView = document.getElementById('cardView');
-
-  function switchView(targetView) {
-    buttons.forEach(b => b.classList.remove('active'));
-    const activeBtn = document.querySelector(`.toggle-btn[data-view="${targetView}"]`);
-    if (activeBtn) activeBtn.classList.add('active');
-
-    if (targetView === 'magazine') {
-      magazineView.classList.add('active');
-      cardView.classList.remove('active');
-    } else {
-      cardView.classList.add('active');
-      magazineView.classList.remove('active');
-    }
-    history.replaceState(null, '', '#' + targetView);
-  }
-
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => switchView(btn.dataset.view));
-  });
-
-  // 페이지 로드 시 hash 읽어서 초기 뷰 결정
-  const hash = window.location.hash.replace('#', '');
-  if (hash === 'card') {
-    switchView('card');
-  }
-}
 
 // ============================================
 // 2. 스크롤 프로그레스바
@@ -72,9 +39,6 @@ async function loadReport(slug) {
     if (subtitleEl) subtitleEl.textContent = data.meta.subtitle;
     if (badgeEl && data.meta.badge) badgeEl.textContent = data.meta.badge;
 
-    const readTimeEl = document.getElementById('readingTime');
-    if (readTimeEl) readTimeEl.textContent = calcReadingTime(data);
-
     const articleBody = document.getElementById('articleBody');
     const sectionIndexList = document.getElementById('sectionIndexList');
     renderReport(data, articleBody, sectionIndexList);
@@ -86,22 +50,9 @@ async function loadReport(slug) {
     const sk = document.getElementById('loadingSkeleton');
     if (sk) sk.style.display = 'none';
 
-    // Populate card view grid if empty
-    const cardsGrid = document.getElementById('cardsGrid');
-    if (cardsGrid && !cardsGrid.children.length && data.sections) {
-      data.sections.forEach(section => {
-        const lead = section.lead ? `<p class="card-body">${section.lead}</p>` : '';
-        cardsGrid.insertAdjacentHTML('beforeend', `
-          <div class="card">
-            <div class="card-label">${section.title}</div>
-            ${lead}
-          </div>`);
-      });
-    }
   } catch (err) {
     console.error('[app.js] loadReport error:', err);
 
-    // Hide skeleton on error too
     const sk = document.getElementById('loadingSkeleton');
     if (sk) sk.style.display = 'none';
 
@@ -114,37 +65,11 @@ async function loadReport(slug) {
           URL 파라미터 <code>?slug=xxx</code>가 올바른지 확인해 주세요.</p>
         </div>`;
     }
-    const cardsGrid = document.getElementById('cardsGrid');
-    if (cardsGrid) {
-      cardsGrid.innerHTML = `
-        <div class="card-empty-state">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary);margin-bottom:12px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <p>리포트를 불러올 수 없습니다</p>
-          <button class="card-empty-retry" onclick="location.reload()">다시 시도</button>
-        </div>`;
-    }
   }
 }
 
 // ============================================
-// 4. 읽기 시간 계산
-// ============================================
-function calcReadingTime(data) {
-  const text = (data.sections || []).map(s => {
-    let t = s.lead || '';
-    if (s.component?.data?.groups) {
-      s.component.data.groups.forEach(g => { t += g.items.join(' '); });
-    }
-    if (s.terms) s.terms.forEach(t2 => { t += t2.term + t2.definition; });
-    return t;
-  }).join(' ');
-  const words = text.trim().split(/\s+/).length;
-  const minutes = Math.max(1, Math.round(words / 300));
-  return `약 ${minutes}분 읽기`;
-}
-
-// ============================================
-// 5. 모바일 TOC 드로어
+// 4. 모바일 TOC 드로어
 // ============================================
 function initMobileToc() {
   const fab = document.getElementById('tocFab');
@@ -270,7 +195,6 @@ function initShareButton() {
 // Init
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-  initViewToggle();
   initScrollProgress();
   initMobileToc();
   initShareButton();

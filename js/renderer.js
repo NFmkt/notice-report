@@ -41,7 +41,7 @@ function renderSection(section) {
     <section id="section-${section.id}" class="article-section" data-section-id="${section.id}">
       <h2 class="article-section-title">
         ${iconSvg ? `<span class="section-icon">${iconSvg}</span>` : ''}
-        ${section.title}
+        <span class="section-title-text">${section.title}</span>
       </h2>
       ${section.lead ? `<p class="section-lead">${section.lead}</p>` : ''}
       ${componentHtml}
