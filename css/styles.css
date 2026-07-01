@@ -308,7 +308,22 @@ a {
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-sm);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
+.article-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .article-section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+#summaryCard, #introBlock, #outroBlock { opacity: 1; transform: none; transition: none; }
 
 .article-section-title {
   font-family: var(--font-body);
@@ -1496,4 +1511,35 @@ a {
 
 @media (max-width: 768px) {
   .toc-fab { display: flex; }
+}
+
+/* ── Share Button ────────────────────────────── */
+.share-btn {
+  display: flex; align-items: center; gap: 5px;
+  font-family: var(--font-body);
+  font-size: 13px; font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  white-space: nowrap;
+}
+.share-btn:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+.share-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ── Share Toast ─────────────────────────────── */
+.share-toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(12px);
+  background: var(--text-primary); color: #fff;
+  font-size: 13px; font-weight: 500;
+  padding: 8px 18px; border-radius: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 500; white-space: nowrap;
+}
+.share-toast.show {
+  opacity: 1; transform: translateX(-50%) translateY(0);
 }

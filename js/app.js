@@ -80,6 +80,7 @@ async function loadReport(slug) {
     renderReport(data, articleBody, sectionIndexList);
     initSectionObserver();
     if (window._syncMobileToc) window._syncMobileToc();
+    initSectionAnimations();
 
     // Hide skeleton after render
     const sk = document.getElementById('loadingSkeleton');
@@ -191,12 +192,66 @@ function initSectionObserver() {
 }
 
 // ============================================
+// Section Entrance Animations
+// ============================================
+function initSectionAnimations() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const sections = document.querySelectorAll('#articleBody .article-section');
+  if (!sections.length) return;
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  sections.forEach(s => observer.observe(s));
+}
+
+// ============================================
+// Share Button
+// ============================================
+function initShareButton() {
+  const btn = document.getElementById('shareBtn');
+  const toast = document.getElementById('shareToast');
+  if (!btn) return;
+
+  function showToast(msg) {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  btn.addEventListener('click', async () => {
+    const url = window.location.href;
+    const title = document.getElementById('reportTitle')?.textContent || '공고 분석 리포트';
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url });
+      } catch (e) {
+        // user cancelled — no toast needed
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('링크가 복사됐어요!');
+      } catch (e) {
+        showToast('복사에 실패했습니다');
+      }
+    }
+  });
+}
+
+// ============================================
 // Init
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
   initViewToggle();
   initScrollProgress();
   initMobileToc();
+  initShareButton();
 
   // ?slug=xxx (로컬 테스트) 또는 /report/xxx (Vercel 배포) 둘 다 지원
   const params = new URLSearchParams(window.location.search);
