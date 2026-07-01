@@ -1250,10 +1250,13 @@ a:focus-visible {
 
 /* ── Section Icon ─────────────────────────────── */
 .section-icon {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  align-self: center;
+  width: 24px;
+  height: 24px;
+  line-height: 0;
 }
 .section-icon svg {
   display: block;
@@ -1538,12 +1541,16 @@ a:focus-visible {
 /* ── Outro Block ─────────────────────────────── */
 .outro-block { text-align: left; padding: 32px 0; }
 .outro-body { line-height: 1.8; color: var(--ink); margin-bottom: 24px; }
+.outro-cta-wrap { text-align: center; }
 .outro-cta {
-  display: inline-block; padding: 14px 28px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px;
   background: var(--blue); color: white;
   border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 16px;
 }
 .outro-cta:hover { opacity: 0.9; }
+.outro-cta-icon { display: flex; align-items: center; flex-shrink: 0; line-height: 0; }
+.outro-cta-icon svg { display: block; }
 
 /* ── Intro Block ─────────────────────────────── */
 .intro-headline {
