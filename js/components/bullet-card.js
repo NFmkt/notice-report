@@ -11,9 +11,7 @@ function renderEligibilityBadges(items) {
   items.forEach(item => {
     for (const [key, meta] of Object.entries(ELIGIBILITY_ICONS)) {
       if (item.startsWith(key + ':') || item.startsWith(key + ' ')) {
-        // extract description after the colon
-        const desc = item.includes(':') ? item.split(':')[1].trim() : '';
-        badges.push({ key, desc, ...meta });
+        badges.push({ key, ...meta });
         break;
       }
     }
@@ -23,10 +21,30 @@ function renderEligibilityBadges(items) {
     <div class="elig-badge elig-${b.color}">
       <span class="elig-icon">${b.icon}</span>
       <span class="elig-name">${b.key}</span>
-      ${b.desc ? `<span class="elig-desc">${b.desc}</span>` : ''}
     </div>
   `).join('');
   return `<div class="elig-badges">${badgeHtml}</div>`;
+}
+
+function renderIncomeTable(table) {
+  if (!table || !table.rows || table.rows.length === 0) return '';
+  const sizes = table.sizes || ['1인', '2인', '3인', '4인', '5인'];
+  const headerCells = sizes.map(s => `<th>${s}</th>`).join('');
+  const bodyRows = table.rows.map(row => {
+    const cells = row.values.map(v => `<td>${v !== null ? v.toLocaleString() : '—'}</td>`).join('');
+    return `<tr><td class="income-row-label">${row.label}</td>${cells}</tr>`;
+  }).join('');
+  return `
+    <div class="income-table-wrap">
+      <div class="income-table-title">${table.title || '가구원수별 월평균소득 기준 (원)'}</div>
+      <div class="income-table-scroll">
+        <table class="income-table">
+          <thead><tr><th>구분</th>${headerCells}</tr></thead>
+          <tbody>${bodyRows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
 }
 
 export function renderBulletCard(data) {
@@ -34,10 +52,10 @@ export function renderBulletCard(data) {
   let prefixHtml = '';
   let groupsToRender = groups;
 
-  // If first group is eligibility types, extract icon badges
+  // If first group is eligibility types, show icon badges only — skip the text row
   if (groups.length > 0 && groups[0].label === '신청 가능 계층') {
     prefixHtml = renderEligibilityBadges(groups[0].items);
-    // still render the first group's items as a row below the badges
+    groupsToRender = groups.slice(1); // skip the 신청 가능 계층 row
   }
 
   const groupsHtml = groupsToRender.map(group => `
@@ -45,9 +63,12 @@ export function renderBulletCard(data) {
       <div class="bullet-group-head">
         <span class="bullet-group-label">${group.label}</span>
       </div>
-      <ul class="bullet-list">
-        ${group.items.map(item => `<li>${item}</li>`).join('')}
-      </ul>
+      <div class="bullet-group-content">
+        <ul class="bullet-list">
+          ${group.items.map(item => `<li>${item}</li>`).join('')}
+        </ul>
+        ${group.incomeTable ? renderIncomeTable(group.incomeTable) : ''}
+      </div>
     </div>
   `).join('');
 

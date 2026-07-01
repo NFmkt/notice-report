@@ -1,7 +1,14 @@
 // js/components/timeline.js
 
+const STEP_COLORS = [
+  { key: 'blue',   bg: '#2563EB', light: '#DBEAFE', text: '#fff' },
+  { key: 'green',  bg: '#16A34A', light: '#DCFCE7', text: '#fff' },
+  { key: 'amber',  bg: '#D97706', light: '#FEF3C7', text: '#fff' },
+  { key: 'purple', bg: '#7C3AED', light: '#EDE9FE', text: '#fff' },
+  { key: 'slate',  bg: '#64748B', light: '#F1F5F9', text: '#fff' },
+];
+
 function parseYYMMDD(str) {
-  // Matches "26.07.06" or "26.07.06(월)" patterns
   const m = str.match(/(\d{2})\.(\d{2})\.(\d{2})/);
   if (!m) return null;
   return { year: 2000 + parseInt(m[1]), month: parseInt(m[2]), day: parseInt(m[3]) };
@@ -12,26 +19,32 @@ function getDaysInMonth(year, month) {
 }
 
 function getFirstDayOfMonth(year, month) {
-  return new Date(year, month - 1, 1).getDay(); // 0=Sun
+  return new Date(year, month - 1, 1).getDay();
 }
 
-function parseHighlightRange(dateStr) {
-  // Extract all day numbers from a date string like "26.07.06(월) 10:00 ~ 07.08(수) 16:00"
-  const days = [];
-  const matches = dateStr.matchAll(/\.(\d{2})(?:\([월화수목금토일]\))?/g);
-  for (const m of matches) days.push(parseInt(m[1]));
-  return days; // e.g. [6, 8] for a range
-}
-
-function buildRangeDays(dateStr) {
-  // Returns array of day numbers that should be highlighted
-  const days = parseHighlightRange(dateStr);
-  if (days.length >= 2) {
-    const result = [];
-    for (let d = days[0]; d <= days[days.length - 1]; d++) result.push(d);
-    return result;
-  }
-  return days;
+function extractDayRange(dateStr, targetMonth) {
+  // Find all MM.DD pairs (or YY.MM.DD) within the string
+  const allDates = [];
+  // Match YY.MM.DD first
+  const fullMatches = [...dateStr.matchAll(/(\d{2})\.(\d{2})\.(\d{2})/g)];
+  fullMatches.forEach(m => {
+    const mo = parseInt(m[2]);
+    const d = parseInt(m[3]);
+    if (mo === targetMonth) allDates.push(d);
+  });
+  // Also match MM.DD patterns (without year)
+  const shortMatches = [...dateStr.matchAll(/(?<!\d)(\d{2})\.(\d{2})(?:\([월화수목금토일]\))?/g)];
+  shortMatches.forEach(m => {
+    const mo = parseInt(m[1]);
+    const d = parseInt(m[2]);
+    if (mo === targetMonth && !allDates.includes(d)) allDates.push(d);
+  });
+  if (allDates.length < 2) return allDates;
+  const min = Math.min(...allDates);
+  const max = Math.max(...allDates);
+  const range = [];
+  for (let d = min; d <= max; d++) range.push(d);
+  return range;
 }
 
 function renderCalendar(year, month, steps) {
@@ -40,18 +53,14 @@ function renderCalendar(year, month, steps) {
   const monthNames = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
   const dayNames = ['일','월','화','수','목','금','토'];
 
-  // Find apply range days (highlight steps)
-  const applyDays = new Set();
-  const eventDays = new Set();
-  steps.forEach(step => {
-    const range = buildRangeDays(step.date || '');
-    const parsed = step.date ? parseYYMMDD(step.date) : null;
-    if (parsed && parsed.month === month) {
-      range.forEach(d => {
-        if (step.highlight) applyDays.add(d);
-        else eventDays.add(d);
-      });
-    }
+  // Build day → step index map (only for days in this month)
+  const dayStepMap = {};
+  steps.forEach((step, idx) => {
+    if (!step.date) return;
+    const days = extractDayRange(step.date, month);
+    days.forEach(d => {
+      if (!dayStepMap[d]) dayStepMap[d] = idx;
+    });
   });
 
   const headerCells = dayNames.map(d => `<div class="cal-dname">${d}</div>`).join('');
@@ -59,54 +68,56 @@ function renderCalendar(year, month, steps) {
 
   const dayCells = Array.from({ length: daysInMonth }, (_, i) => {
     const day = i + 1;
-    let cls = 'cal-cell';
-    if (applyDays.has(day)) {
-      const isFirst = day === Math.min(...applyDays);
-      const isLast = day === Math.max(...applyDays);
-      if (isFirst && isLast) cls += ' cal-apply';
-      else if (isFirst) cls += ' cal-apply cal-apply-start';
-      else if (isLast) cls += ' cal-apply cal-apply-end';
-      else cls += ' cal-apply cal-apply-mid';
-    } else if (eventDays.has(day)) {
-      cls += ' cal-event';
+    if (dayStepMap[day] !== undefined) {
+      const stepIdx = dayStepMap[day];
+      return `<div class="cal-cell cal-step-${stepIdx}">${day}</div>`;
     }
-    return `<div class="${cls}">${day}</div>`;
+    return `<div class="cal-cell">${day}</div>`;
+  }).join('');
+
+  // Build legend from steps that have dates in this month
+  const legendSteps = steps.filter((s, idx) => {
+    if (!s.date) return false;
+    return extractDayRange(s.date, month).length > 0;
+  });
+  const legendHtml = legendSteps.map((s, i) => {
+    const stepIdx = steps.indexOf(s);
+    const color = STEP_COLORS[stepIdx % STEP_COLORS.length];
+    return `<span class="cal-legend-item"><span class="cal-legend-dot" style="background:${color.bg}"></span>${s.label}</span>`;
   }).join('');
 
   return `
     <div class="cal-wrap">
       <div class="cal-header">
         <span class="cal-month">${year}년 ${monthNames[month-1]}</span>
-        <span class="cal-hint">신청 달력</span>
       </div>
       <div class="cal-grid">
         ${headerCells}
         ${emptyCells}
         ${dayCells}
       </div>
-      <div class="cal-legend">
-        <span class="cal-legend-item"><span class="cal-legend-dot apply"></span>신청 기간</span>
-        <span class="cal-legend-item"><span class="cal-legend-dot event"></span>주요 일정</span>
-      </div>
+      ${legendHtml ? `<div class="cal-legend">${legendHtml}</div>` : ''}
     </div>`;
 }
 
 function renderSteps(steps) {
-  return steps.map((step, i) => `
-    <div class="tl-step ${step.highlight ? 'tl-step--highlight' : ''}">
-      <div class="tl-dot ${step.highlight ? 'tl-dot--active' : ''}"></div>
-      <div class="tl-content">
-        <span class="tl-label">${step.label}</span>
-        ${step.date ? `<span class="tl-date-badge">${step.date}</span>` : ''}
+  return steps.map((step, i) => {
+    const color = STEP_COLORS[i % STEP_COLORS.length];
+    return `
+      <div class="tl-step">
+        <div class="tl-dot" style="background:${color.bg}; border-color:${color.bg}"></div>
+        <div class="tl-content">
+          <span class="tl-label">${step.label}</span>
+          ${step.date ? `<span class="tl-date-badge" style="background:${color.light}; color:${color.bg}">${step.date}</span>` : ''}
+        </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 export function renderTimeline(data) {
   const { method, steps } = data;
 
-  // Find the month to show from the highlighted (apply) step
   let calYear = new Date().getFullYear();
   let calMonth = new Date().getMonth() + 1;
   const highlightStep = steps.find(s => s.highlight);

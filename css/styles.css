@@ -1252,10 +1252,11 @@ a:focus-visible {
 .section-icon {
   display: inline-flex;
   align-items: center;
-  margin-right: 8px;
-  vertical-align: middle;
+  flex-shrink: 0;
+  align-self: center;
 }
 .section-icon svg {
+  display: block;
   width: 24px;
   height: 24px;
 }
@@ -1282,6 +1283,7 @@ a:focus-visible {
 .bullet-group-head {
   padding-top: 2px;
 }
+.bullet-group-content { flex: 1; }
 .bullet-group-label {
   font-size: 12px;
   font-weight: 700;
@@ -1309,13 +1311,23 @@ a:focus-visible {
   padding: 12px 16px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  min-width: 90px;
+  flex: 1;
+  min-width: 80px;
   text-align: center;
   background: var(--surface);
 }
 .elig-icon { display: flex; align-items: center; justify-content: center; }
 .elig-name { font-size: 13px; font-weight: 600; }
 .elig-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+/* Income table */
+.income-table-wrap { margin-top: 12px; }
+.income-table-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+.income-table-scroll { overflow-x: auto; }
+.income-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.income-table th { background: var(--surface); border: 1px solid var(--border); padding: 6px 8px; text-align: center; font-weight: 700; color: var(--text-secondary); white-space: nowrap; }
+.income-table td { border: 1px solid var(--border); padding: 6px 8px; text-align: right; color: var(--text-primary); white-space: nowrap; }
+.income-row-label { text-align: left !important; color: var(--text-secondary); font-weight: 600; }
 .elig-blue .elig-icon { color: #2563EB; }
 .elig-blue .elig-name { color: #2563EB; }
 .elig-green .elig-icon { color: #16A34A; }
@@ -1360,6 +1372,12 @@ a:focus-visible {
 .lease-meta-key { font-weight: 600; color: var(--text-primary); }
 .lease-notes { margin-top: 4px; }
 .lease-note { font-size: 11px; color: var(--text-secondary); }
+.lease-extra { margin-top: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+.lease-extra-row { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; align-items: start; }
+.lease-extra-row:last-child { border-bottom: none; }
+.lease-extra-row--full { }
+.lease-extra-key { font-weight: 700; color: var(--text-primary); }
+.lease-extra-val { color: var(--text-secondary); line-height: 1.5; }
 
 /* ── Timeline ────────────────────────────────── */
 .timeline-v2 { display: flex; flex-direction: column; gap: 14px; }
@@ -1383,15 +1401,14 @@ a:focus-visible {
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; padding: 8px; }
 .cal-dname { text-align: center; font-size: 9px; color: var(--text-secondary); padding: 3px 0; font-weight: 600; }
 .cal-cell { text-align: center; font-size: 11px; padding: 5px 2px; border-radius: 4px; color: var(--text-secondary); }
-.cal-apply { background: var(--accent); color: #fff; font-weight: 600; border-radius: 0; }
-.cal-apply-start { border-radius: 4px 0 0 4px; }
-.cal-apply-end { border-radius: 0 4px 4px 0; }
-.cal-event { color: #D97706; font-weight: 600; }
-.cal-legend { padding: 8px 14px; border-top: 1px solid var(--border); display: flex; gap: 14px; }
+.cal-step-0 { background: #2563EB; color: #fff; font-weight: 600; border-radius: 4px; }
+.cal-step-1 { background: #16A34A; color: #fff; font-weight: 600; border-radius: 4px; }
+.cal-step-2 { background: #D97706; color: #fff; font-weight: 600; border-radius: 4px; }
+.cal-step-3 { background: #7C3AED; color: #fff; font-weight: 600; border-radius: 4px; }
+.cal-step-4 { background: #64748B; color: #fff; font-weight: 600; border-radius: 4px; }
+.cal-legend { padding: 8px 14px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 10px; }
 .cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-secondary); }
-.cal-legend-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
-.cal-legend-dot.apply { background: var(--accent); }
-.cal-legend-dot.event { background: #D97706; }
+.cal-legend-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; flex-shrink: 0; }
 
 /* Steps */
 .timeline-steps { display: flex; flex-direction: column; gap: 0; position: relative; padding-top: 4px; }
@@ -1399,11 +1416,9 @@ a:focus-visible {
 .tl-step::before { content: ''; position: absolute; left: 7px; top: 22px; width: 1.5px; height: calc(100% - 10px); background: var(--border); }
 .tl-step:last-child::before { display: none; }
 .tl-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--border); margin-top: 2px; }
-.tl-dot--active { background: var(--accent); border-color: var(--accent); }
 .tl-content { display: flex; flex-direction: column; gap: 3px; }
 .tl-label { font-size: 12px; font-weight: 500; color: var(--text-primary); }
-.tl-step--highlight .tl-label { color: var(--accent); }
-.tl-date-badge { display: inline-block; font-size: 10px; background: var(--accent-light); color: var(--accent); padding: 1px 6px; border-radius: 3px; width: fit-content; line-height: 1.5; }
+.tl-date-badge { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; width: fit-content; line-height: 1.5; }
 
 @media (max-width: 768px) {
   .timeline-cols { grid-template-columns: 1fr; }
@@ -1440,6 +1455,8 @@ a:focus-visible {
 .caution-dot { width: 5px; height: 5px; border-radius: 50%; background: #D97706; flex-shrink: 0; margin-top: 7px; }
 .caution-item--sub { padding-left: 16px; }
 .caution-dot--sub { background: #F59E0B; opacity: 0.6; }
+
+.caution-card + .faq-list { margin-top: 16px; }
 
 /* ── FAQ Accordion ── */
 .faq-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
@@ -1519,7 +1536,7 @@ a:focus-visible {
 .term-def { color: var(--ink-muted); line-height: 1.6; font-size: 14px; margin: 0; }
 
 /* ── Outro Block ─────────────────────────────── */
-.outro-block { text-align: center; padding: 32px 0; }
+.outro-block { text-align: left; padding: 32px 0; }
 .outro-body { line-height: 1.8; color: var(--ink); margin-bottom: 24px; }
 .outro-cta {
   display: inline-block; padding: 14px 28px;

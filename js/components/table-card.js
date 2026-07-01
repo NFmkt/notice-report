@@ -21,7 +21,6 @@ function renderRentRow(row) {
       </div>
       <div class="lease-bar-track">
         <div class="lease-bar-fill lease-bar--${color}" style="width:${pct}%"></div>
-        <span class="lease-bar-label">${row.ratio} 시세</span>
       </div>
       <div class="lease-meta">
         <span class="lease-meta-item"><span class="lease-meta-key">보증금</span>${row.deposit}</span>
@@ -38,11 +37,11 @@ export function renderTableCard(data) {
     ? `<div class="lease-notes">${notes.map(n => `<p class="lease-note">* ${n}</p>`).join('')}</div>`
     : '';
   const extraHtml = (leaseTerm || renewalBonus || conversion) ? `
-    <div class="lease-info">
-      ${leaseTerm ? `<div class="lease-info-item"><span class="lease-meta-key">임대기간</span><span>${leaseTerm}</span></div>` : ''}
-      ${renewalBonus ? `<div class="lease-info-item"><span class="lease-meta-key">재계약 혜택</span><span>${renewalBonus}</span></div>` : ''}
-      ${conversion ? `<div class="lease-conversion"><p class="lease-conversion-title">보증금 월세 전환</p><p>${conversion.description} (${conversion.unit} 단위, ${conversion.rate})</p></div>` : ''}
-    </div>
-  ` : '';
+  <div class="lease-extra">
+    ${leaseTerm ? `<div class="lease-extra-row"><span class="lease-extra-key">임대기간</span><span class="lease-extra-val">${leaseTerm}</span></div>` : ''}
+    ${renewalBonus ? `<div class="lease-extra-row"><span class="lease-extra-key">재계약 혜택</span><span class="lease-extra-val">${renewalBonus}</span></div>` : ''}
+    ${conversion ? `<div class="lease-extra-row lease-extra-row--full"><span class="lease-extra-key">보증금 월세 전환</span><span class="lease-extra-val">${conversion.description} (${conversion.unit} 단위, ${conversion.rate})</span></div>` : ''}
+  </div>
+` : '';
   return `<div class="lease-card">${rowsHtml}${notesHtml}${extraHtml}</div>`;
 }
