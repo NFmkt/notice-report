@@ -85,6 +85,19 @@ async function loadReport(slug) {
     // Hide skeleton after render
     const sk = document.getElementById('loadingSkeleton');
     if (sk) sk.style.display = 'none';
+
+    // Populate card view grid if empty
+    const cardsGrid = document.getElementById('cardsGrid');
+    if (cardsGrid && !cardsGrid.children.length && data.sections) {
+      data.sections.forEach(section => {
+        const lead = section.lead ? `<p class="card-body">${section.lead}</p>` : '';
+        cardsGrid.insertAdjacentHTML('beforeend', `
+          <div class="card">
+            <div class="card-label">${section.title}</div>
+            ${lead}
+          </div>`);
+      });
+    }
   } catch (err) {
     console.error('[app.js] loadReport error:', err);
 
@@ -99,6 +112,15 @@ async function loadReport(slug) {
           <h2 class="article-section-title">리포트를 불러올 수 없습니다</h2>
           <p>slug: <code>${slug}</code> 에 해당하는 리포트 파일을 찾을 수 없습니다.<br>
           URL 파라미터 <code>?slug=xxx</code>가 올바른지 확인해 주세요.</p>
+        </div>`;
+    }
+    const cardsGrid = document.getElementById('cardsGrid');
+    if (cardsGrid) {
+      cardsGrid.innerHTML = `
+        <div class="card-empty-state">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary);margin-bottom:12px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>리포트를 불러올 수 없습니다</p>
+          <button class="card-empty-retry" onclick="location.reload()">다시 시도</button>
         </div>`;
     }
   }

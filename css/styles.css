@@ -67,6 +67,27 @@ a {
   text-decoration: none;
 }
 
+/* ── Global Focus Rings (WCAG 2.4.7) ────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+/* Suppress mouse-click focus outline (focus-visible handles keyboard) */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+.outro-cta:focus-visible,
+.toc-drawer-list a:focus-visible,
+.qa-question:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* ============================================
    Header
    ============================================ */
@@ -1543,3 +1564,23 @@ a {
 .share-toast.show {
   opacity: 1; transform: translateX(-50%) translateY(0);
 }
+
+/* ── Card Empty State ────────────────────────── */
+.card-empty-state {
+  grid-column: 1 / -1;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+.card-empty-retry {
+  margin-top: 16px;
+  padding: 8px 20px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.card-empty-retry:hover { opacity: 0.88; }
+.card-empty-retry:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
