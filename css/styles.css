@@ -1282,7 +1282,7 @@ a {
 .qa-list { display: flex; flex-direction: column; gap: 16px; }
 .qa-bullet-label {
   font-size: 13px; font-weight: 600;
-  color: #EF4444; margin-bottom: 6px;
+  color: var(--red); margin-bottom: 6px;
 }
 .qa-bullet-list { padding-left: 20px; }
 .qa-bullet-list li { margin-bottom: 6px; }
