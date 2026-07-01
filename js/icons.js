@@ -29,7 +29,7 @@ export const ICONS = {
     <rect x="4" y="9.5" width="12" height="2" fill="#FF9000"/>
     <ellipse cx="10" cy="11.5" rx="6" ry="2.5" fill="#FF9000"/>
     <rect x="4" y="11.5" width="12" height="2" fill="#FF9000"/>
-    <ellipse cx="10" cy="13.5" rx="6" ry="2.5" fill="#E07B00"/>
+    <ellipse cx="10" cy="13.5" rx="6" ry="2.5" fill="#FF9000"/>
   `),
 
   // 신청기간 — 캘린더
