@@ -30,7 +30,7 @@ function renderBubble(data) {
           ${loc.units}
         </text>
         <text x="${center.cx}" y="${center.cy + r + 12}" text-anchor="middle"
-          font-size="9" fill="var(--text-muted)">
+          font-size="9" fill="var(--ink-muted)">
           ${loc.district}
         </text>
       </g>
@@ -57,7 +57,7 @@ function renderChoropleth(data) {
           fill="var(--blue)" fill-opacity="${opacity.toFixed(2)}"/>
         ${units > 0 ? `
           <text x="${center.cx}" y="${center.cy}" text-anchor="middle"
-            dy="0.35em" font-size="9" fill="${intensity > 0.5 ? 'white' : 'var(--blue)'}">
+            dy="0.35em" font-size="9" fill="${intensity > 0.5 ? 'var(--bg)' : 'var(--blue)'}">
             ${units}
           </text>` : ''}
       </g>
