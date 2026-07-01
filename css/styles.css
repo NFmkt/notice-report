@@ -141,6 +141,14 @@ a {
   cursor: pointer;
   transition: background 0.18s ease, color 0.18s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.toggle-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .toggle-btn:hover:not(.active) {
@@ -226,21 +234,15 @@ a {
    ============================================ */
 
 .magazine-view {
-  grid-template-columns: 240px 1fr;
-  gap: var(--space-xl);
-  align-items: start;
+  display: block;
 }
 
-/* Section Index (sidebar) */
+/* Section Index (sidebar) — hidden, kept for HTML compatibility */
 .section-index {
-  position: sticky;
-  top: calc(var(--header-h) + var(--space-lg));
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
-  box-shadow: var(--shadow-sm);
+  display: none;
 }
+
+/* Section Index (sidebar) — styles kept for reference, hidden via display:none above */
 
 .section-index-title {
   font-size: 11px;
@@ -285,7 +287,8 @@ a {
 
 /* Article Body */
 .article-body {
-  max-width: 720px;
+  max-width: 760px;
+  margin: 0 auto;
   line-height: 1.8;
   display: flex;
   flex-direction: column;
@@ -1334,3 +1337,38 @@ a {
   color: var(--blue); margin-bottom: 16px;
 }
 .intro-body { line-height: 1.8; }
+
+/* ============================================
+   Skeleton Loading
+   ============================================ */
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.skeleton {
+  display: block;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-title  { height: 40px; width: 70%; margin-bottom: 8px; }
+.skeleton-subtitle { height: 20px; width: 50%; }
+
+.loading-skeleton { display: flex; flex-direction: column; gap: var(--space-lg); }
+.skeleton-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-xl); display: flex; flex-direction: column; gap: 12px; }
+.skeleton-line { height: 16px; }
+.w-30 { width: 30%; }
+.w-40 { width: 40%; }
+.w-50 { width: 50%; }
+.w-60 { width: 60%; }
+.w-70 { width: 70%; }
+.w-80 { width: 80%; }
+.w-90 { width: 90%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; background: #e2e8f0; }
+}

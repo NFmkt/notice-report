@@ -76,8 +76,17 @@ async function loadReport(slug) {
     const sectionIndexList = document.getElementById('sectionIndexList');
     renderReport(data, articleBody, sectionIndexList);
     initSectionObserver();
+
+    // Hide skeleton after render
+    const sk = document.getElementById('loadingSkeleton');
+    if (sk) sk.style.display = 'none';
   } catch (err) {
     console.error('[app.js] loadReport error:', err);
+
+    // Hide skeleton on error too
+    const sk = document.getElementById('loadingSkeleton');
+    if (sk) sk.style.display = 'none';
+
     const articleBody = document.getElementById('articleBody');
     if (articleBody) {
       articleBody.innerHTML = `

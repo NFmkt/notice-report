@@ -23,8 +23,14 @@
     <div class="header-inner">
       <span class="header-tag">공고 분석 리포트</span>
       <div class="view-toggle">
-        <button class="toggle-btn active" data-view="magazine">📰 매거진</button>
-        <button class="toggle-btn" data-view="card">📊 카드</button>
+        <button class="toggle-btn active" data-view="magazine" aria-label="매거진 뷰">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          매거진
+        </button>
+        <button class="toggle-btn" data-view="card" aria-label="카드 뷰">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          카드
+        </button>
       </div>
     </div>
     <div class="progress-bar" id="progressBar"></div>
@@ -34,8 +40,8 @@
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-badge">청년주택 공고 분석</div>
-      <h1 class="hero-title" id="reportTitle">로딩 중...</h1>
-      <p class="hero-subtitle" id="reportSubtitle"></p>
+      <h1 class="hero-title" id="reportTitle"><span class="skeleton skeleton-title"></span></h1>
+      <p class="hero-subtitle" id="reportSubtitle"><span class="skeleton skeleton-subtitle"></span></p>
     </div>
   </section>
 
@@ -55,6 +61,19 @@
 
       <!-- 우측 본문 -->
       <article class="article-body">
+        <div id="loadingSkeleton" class="loading-skeleton">
+          <div class="skeleton-section">
+            <div class="skeleton skeleton-line w-40"></div>
+            <div class="skeleton skeleton-line w-80"></div>
+            <div class="skeleton skeleton-line w-60"></div>
+          </div>
+          <div class="skeleton-section">
+            <div class="skeleton skeleton-line w-30"></div>
+            <div class="skeleton skeleton-line w-90"></div>
+            <div class="skeleton skeleton-line w-70"></div>
+            <div class="skeleton skeleton-line w-50"></div>
+          </div>
+        </div>
         <div id="summaryCard"></div>
         <div id="introBlock"></div>
         <div id="articleBody"></div>
