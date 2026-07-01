@@ -42,6 +42,9 @@
       <div class="hero-badge">청년주택 공고 분석</div>
       <h1 class="hero-title" id="reportTitle"><span class="skeleton skeleton-title"></span></h1>
       <p class="hero-subtitle" id="reportSubtitle"><span class="skeleton skeleton-subtitle"></span></p>
+      <div class="hero-meta">
+        <span id="readingTime" class="reading-time-badge"></span>
+      </div>
     </div>
   </section>
 
@@ -96,5 +99,22 @@
   </footer>
 
   <script type="module" src="js/app.js"></script>
+
+<!-- Mobile TOC FAB + Drawer -->
+<button class="toc-fab" id="tocFab" aria-label="목차 열기" aria-expanded="false">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+  </svg>
+</button>
+
+<div class="toc-drawer" id="tocDrawer" aria-hidden="true">
+  <div class="toc-drawer-handle"></div>
+  <div class="toc-drawer-inner">
+    <p class="toc-drawer-title">목차</p>
+    <ul class="toc-drawer-list" id="tocDrawerList"></ul>
+  </div>
+</div>
+<div class="toc-overlay" id="tocOverlay"></div>
 </body>
 </html>

@@ -72,10 +72,14 @@ async function loadReport(slug) {
     if (subtitleEl) subtitleEl.textContent = data.meta.subtitle;
     if (badgeEl && data.meta.badge) badgeEl.textContent = data.meta.badge;
 
+    const readTimeEl = document.getElementById('readingTime');
+    if (readTimeEl) readTimeEl.textContent = calcReadingTime(data);
+
     const articleBody = document.getElementById('articleBody');
     const sectionIndexList = document.getElementById('sectionIndexList');
     renderReport(data, articleBody, sectionIndexList);
     initSectionObserver();
+    if (window._syncMobileToc) window._syncMobileToc();
 
     // Hide skeleton after render
     const sk = document.getElementById('loadingSkeleton');
@@ -100,7 +104,70 @@ async function loadReport(slug) {
 }
 
 // ============================================
-// 4. 사이드바 목차 스크롤 하이라이트
+// 4. 읽기 시간 계산
+// ============================================
+function calcReadingTime(data) {
+  const text = (data.sections || []).map(s => {
+    let t = s.lead || '';
+    if (s.component?.data?.groups) {
+      s.component.data.groups.forEach(g => { t += g.items.join(' '); });
+    }
+    if (s.terms) s.terms.forEach(t2 => { t += t2.term + t2.definition; });
+    return t;
+  }).join(' ');
+  const words = text.trim().split(/\s+/).length;
+  const minutes = Math.max(1, Math.round(words / 300));
+  return `약 ${minutes}분 읽기`;
+}
+
+// ============================================
+// 5. 모바일 TOC 드로어
+// ============================================
+function initMobileToc() {
+  const fab = document.getElementById('tocFab');
+  const drawer = document.getElementById('tocDrawer');
+  const overlay = document.getElementById('tocOverlay');
+  const drawerList = document.getElementById('tocDrawerList');
+  if (!fab || !drawer || !overlay) return;
+
+  function openDrawer() {
+    overlay.style.display = 'block';
+    requestAnimationFrame(() => {
+      overlay.classList.add('open');
+      drawer.classList.add('open');
+    });
+    fab.setAttribute('aria-expanded', 'true');
+    drawer.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeDrawer() {
+    overlay.classList.remove('open');
+    drawer.classList.remove('open');
+    fab.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
+    setTimeout(() => { overlay.style.display = 'none'; }, 250);
+  }
+
+  fab.addEventListener('click', openDrawer);
+  overlay.addEventListener('click', closeDrawer);
+
+  window._syncMobileToc = function() {
+    const mainLinks = document.querySelectorAll('#sectionIndexList a');
+    drawerList.innerHTML = '';
+    mainLinks.forEach(link => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.textContent = link.textContent;
+      a.addEventListener('click', closeDrawer);
+      li.appendChild(a);
+      drawerList.appendChild(li);
+    });
+  };
+}
+
+// ============================================
+// 6. 사이드바 목차 스크롤 하이라이트
 // ============================================
 function initSectionObserver() {
   const sections = document.querySelectorAll('#articleBody section[data-section-id]');
@@ -129,6 +196,7 @@ function initSectionObserver() {
 document.addEventListener('DOMContentLoaded', () => {
   initViewToggle();
   initScrollProgress();
+  initMobileToc();
 
   // ?slug=xxx (로컬 테스트) 또는 /report/xxx (Vercel 배포) 둘 다 지원
   const params = new URLSearchParams(window.location.search);
