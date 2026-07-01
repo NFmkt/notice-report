@@ -1,0 +1,12 @@
+{
+  "name": "notice-admin",
+  "version": "1.0.0",
+  "description": "Local admin for notice report viewer",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

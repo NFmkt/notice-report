@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>리포트 편집</title>
+  <link rel="stylesheet" href="../css/design-system.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <header class="admin-header">
+      <a href="/" class="btn btn-ghost">← 목록</a>
+      <h1 class="admin-title" id="pageTitle">편집 중...</h1>
+      <div class="header-actions">
+        <button class="btn btn-secondary" id="saveBtn">저장</button>
+        <button class="btn btn-primary" id="deployBtn">배포</button>
+      </div>
+    </header>
+    <main class="admin-main edit-layout">
+      <!-- LEFT: Form fields -->
+      <section class="edit-form-panel">
+        <div class="panel-title">기본 정보</div>
+        <div class="form-section">
+          <div class="field-group">
+            <label>제목 (title)</label>
+            <input type="text" id="f-title" class="field-input">
+          </div>
+          <div class="field-group">
+            <label>부제목 (subtitle)</label>
+            <input type="text" id="f-subtitle" class="field-input">
+          </div>
+          <div class="field-group">
+            <label>배지 (badge)</label>
+            <input type="text" id="f-badge" class="field-input">
+          </div>
+          <div class="field-group">
+            <label>발행일 (publishedAt)</label>
+            <input type="text" id="f-publishedAt" class="field-input" placeholder="YY.MM.DD">
+          </div>
+          <div class="field-group">
+            <label>원문 URL (sourceUrl)</label>
+            <input type="text" id="f-sourceUrl" class="field-input">
+          </div>
+        </div>
+
+        <div class="panel-title" style="margin-top:24px">요약 정보</div>
+        <div class="form-section">
+          <div class="field-group">
+            <label>공급기관 (organizer)</label>
+            <input type="text" id="f-organizer" class="field-input">
+          </div>
+          <div class="field-group">
+            <label>총 모집 호수 (totalUnits)</label>
+            <input type="number" id="f-totalUnits" class="field-input">
+          </div>
+          <div class="field-group">
+            <label>최저 월세 (minRent)</label>
+            <input type="text" id="f-minRent" class="field-input">
+          </div>
+          <div class="field-group">
+            <label>신청 시작일 (applyStart)</label>
+            <input type="text" id="f-applyStart" class="field-input" placeholder="YY.MM.DD">
+          </div>
+          <div class="field-group">
+            <label>신청 종료일 (applyEnd)</label>
+            <input type="text" id="f-applyEnd" class="field-input" placeholder="YY.MM.DD">
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: JSON Editors -->
+      <section class="edit-editors-panel">
+        <div class="editor-block">
+          <div class="panel-title">인트로 (intro)</div>
+          <div id="editor-intro" class="monaco-wrap"></div>
+        </div>
+        <div class="editor-block">
+          <div class="panel-title">섹션 (sections)</div>
+          <div id="editor-sections" class="monaco-wrap monaco-tall"></div>
+        </div>
+        <div class="editor-block">
+          <div class="panel-title">아웃트로 (outro)</div>
+          <div id="editor-outro" class="monaco-wrap"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <!-- Monaco Editor from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  <script type="module" src="js/edit.js"></script>
+</body>
+</html>
