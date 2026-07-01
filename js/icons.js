@@ -68,11 +68,11 @@ export const ICONS = {
   // 임대조건 — 계약서
   lease: svg(`
     <rect x="3" y="1.5" width="14" height="17" rx="1.5" fill="#313D4C"/>
-    <rect x="5" y="4" width="10" height="1.5" rx="0.75" fill="#64A7FF"/>
+    <rect x="5" y="4" width="10" height="1.5" rx="0.75" fill="#FFC84D"/>
     <rect x="5" y="7" width="10" height="1.5" rx="0.75" fill="#FFFFFF"/>
     <rect x="5" y="10" width="7" height="1.5" rx="0.75" fill="#FFFFFF"/>
     <rect x="5" y="13" width="5" height="1.5" rx="0.75" fill="#FFC84D"/>
-    <circle cx="13.5" cy="13.75" r="3" fill="#23B169"/>
+    <circle cx="13.5" cy="13.75" r="3" fill="#F59E0B"/>
     <rect x="12.5" y="13.25" width="2" height="1" rx="0.5" fill="#FFFFFF"/>
     <rect x="13" y="12.75" width="1" height="2" rx="0.5" fill="#FFFFFF"/>
   `),

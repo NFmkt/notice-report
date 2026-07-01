@@ -1193,8 +1193,18 @@ a {
 .summary-item { display: flex; flex-direction: column; gap: 4px; }
 .summary-label { font-size: 12px; color: var(--ink-muted); }
 .summary-value { font-size: 18px; font-weight: 700; color: var(--ink); }
-.summary-item.highlight .summary-value { color: var(--blue); }
-.summary-icon { display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+.summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  width: 36px;
+  height: 36px;
+}
+.summary-icon svg {
+  width: 36px;
+  height: 36px;
+}
 
 /* ── Section Icon ─────────────────────────────── */
 .section-icon {
