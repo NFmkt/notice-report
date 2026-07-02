@@ -8,7 +8,6 @@ export function renderOutroBlock(outro) {
       <p class="outro-body">${body}</p>
       <div class="outro-cta-wrap">
         <a class="outro-cta" href="${ctaUrl}" target="_blank" rel="noopener">
-          <span class="outro-cta-icon">${ICONS.lease}</span>
           ${ctaLabel}
         </a>
       </div>

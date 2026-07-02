@@ -2,23 +2,115 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>공고 리포트 어드민</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>리포트 관리</title>
   <link rel="stylesheet" href="../css/design-system.css">
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
   <div class="admin-layout">
     <header class="admin-header">
-      <h1 class="admin-title">공고 리포트 어드민</h1>
-      <button class="btn btn-primary" id="deployBtn">🚀 전체 배포</button>
-    </header>
-    <main class="admin-main">
-      <div class="report-grid" id="reportGrid">
-        <!-- JS로 동적 삽입 -->
+      <h1 class="admin-title">리포트 관리</h1>
+      <div class="header-search">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5.5" stroke="#94A3B8" stroke-width="1.5"/>
+          <path d="M11 11L14 14" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="search" id="searchInput" placeholder="리포트 검색..." autocomplete="off">
       </div>
+      <span class="report-count" id="reportCount"></span>
+      <div class="header-actions">
+        <button class="btn btn-secondary" id="deployBtn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 1v9M5 4l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          배포
+        </button>
+        <button class="btn btn-primary" id="newBtn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          새 리포트
+        </button>
+      </div>
+    </header>
+
+    <div class="list-toolbar">
+      <div class="filter-tabs" id="filterTabs" role="tablist">
+        <button class="filter-tab active" data-filter="all" role="tab">전체 <span class="tab-count" id="countAll">0</span></button>
+        <button class="filter-tab" data-filter="draft" role="tab">초안 <span class="tab-count" id="countDraft">0</span></button>
+        <button class="filter-tab" data-filter="published" role="tab">배포완료 <span class="tab-count" id="countPublished">0</span></button>
+      </div>
+      <select class="sort-select" id="sortSelect" aria-label="정렬 기준">
+        <option value="createdAt-desc">생성일 최신순</option>
+        <option value="createdAt-asc">생성일 오래된순</option>
+        <option value="publishedAt-desc">발행일 최신순</option>
+      </select>
+    </div>
+
+    <main class="admin-main">
+      <table class="report-table" aria-label="리포트 목록">
+        <thead>
+          <tr>
+            <th class="col-title">리포트</th>
+            <th class="col-status">상태</th>
+            <th class="col-date">생성일</th>
+            <th class="col-date">발행일</th>
+            <th class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody id="reportList">
+          <tr class="skeleton-row"><td colspan="5"><div class="skeleton"></div></td></tr>
+          <tr class="skeleton-row"><td colspan="5"><div class="skeleton"></div></td></tr>
+          <tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="width:70%"></div></td></tr>
+        </tbody>
+      </table>
     </main>
   </div>
-  <div class="toast" id="toast"></div>
+
+  <!-- 새 리포트 모달 -->
+  <div class="modal-overlay" id="newModal" role="dialog" aria-modal="true" aria-label="새 리포트 만들기" hidden>
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">새 리포트 만들기</h2>
+        <button class="modal-close" id="newModalClose" aria-label="닫기">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label for="newSlug">슬러그 <span class="required">*</span></label>
+          <input class="field-input" type="text" id="newSlug" placeholder="20260702-LH-청년임대-모집공고" autocomplete="off">
+          <p class="field-hint">파일명이 됩니다. 영문·숫자·한글·하이픈만 사용하세요.</p>
+        </div>
+        <div class="field-group" style="margin-top:14px">
+          <label for="newBadge">배지</label>
+          <input class="field-input" type="text" id="newBadge" placeholder="청년주택 공고 분석" autocomplete="off">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="newModalCancel">취소</button>
+        <button class="btn btn-primary" id="newModalConfirm">만들기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 삭제 확인 모달 -->
+  <div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" hidden>
+    <div class="modal-box modal-box--sm">
+      <h2 class="modal-title" style="margin-bottom:8px">삭제할까요?</h2>
+      <p class="modal-desc" id="confirmMsg"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="confirmCancel">취소</button>
+        <button class="btn btn-danger" id="confirmOk">삭제</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script type="module" src="js/list.js"></script>
 </body>
 </html>

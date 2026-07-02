@@ -8,85 +8,174 @@
 </head>
 <body>
   <div class="admin-layout">
+
+    <!-- Header -->
     <header class="admin-header">
-      <a href="/" class="btn btn-ghost">← 목록</a>
+      <a href="/" class="btn btn-ghost header-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        목록
+      </a>
+      <span class="header-sep">/</span>
       <h1 class="admin-title" id="pageTitle">편집 중...</h1>
+      <div class="dirty-indicator" id="dirtyIndicator" hidden>
+        <span class="dirty-dot"></span>미저장
+      </div>
       <div class="header-actions">
-        <button class="btn btn-secondary" id="saveBtn">저장</button>
-        <button class="btn btn-primary" id="deployBtn">배포</button>
+        <a class="btn btn-ghost" id="openViewerBtn" href="#" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          뷰어에서 열기
+        </a>
+        <button class="btn btn-save" id="saveBtn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          저장
+          <kbd class="shortcut-hint">⌘S</kbd>
+        </button>
+        <button class="btn btn-deploy" id="deployBtn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          배포
+        </button>
       </div>
     </header>
-    <main class="admin-main edit-layout">
-      <!-- LEFT: Form fields -->
-      <section class="edit-form-panel">
-        <div class="panel-title">기본 정보</div>
-        <div class="form-section">
-          <div class="field-group">
-            <label>제목 (title)</label>
-            <input type="text" id="f-title" class="field-input">
+
+    <!-- Main shell -->
+    <div class="editor-shell">
+
+      <!-- Icon sidebar -->
+      <nav class="icon-sidebar" aria-label="패널 전환">
+        <button class="sidebar-icon active" id="btn-meta" data-panel="meta" title="메타 정보" aria-pressed="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span class="sidebar-label">메타</span>
+        </button>
+        <button class="sidebar-icon" id="btn-editor" data-panel="editor" title="JSON 에디터" aria-pressed="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="sidebar-label">에디터</span>
+        </button>
+      </nav>
+
+      <!-- Resizable left panel -->
+      <div class="left-panel" id="leftPanel">
+
+        <!-- Meta pane -->
+        <div class="panel-pane active" id="pane-meta">
+          <div class="pane-header">
+            <span class="pane-title">메타 정보</span>
           </div>
-          <div class="field-group">
-            <label>부제목 (subtitle)</label>
-            <input type="text" id="f-subtitle" class="field-input">
-          </div>
-          <div class="field-group">
-            <label>배지 (badge)</label>
-            <input type="text" id="f-badge" class="field-input">
-          </div>
-          <div class="field-group">
-            <label>발행일 (publishedAt)</label>
-            <input type="text" id="f-publishedAt" class="field-input" placeholder="YY.MM.DD">
-          </div>
-          <div class="field-group">
-            <label>원문 URL (sourceUrl)</label>
-            <input type="text" id="f-sourceUrl" class="field-input">
+          <div class="pane-scroll">
+            <div class="field-section">
+              <div class="field-section-label">공고 기본</div>
+              <div class="field-group">
+                <label for="f-title">제목</label>
+                <input type="text" id="f-title" class="field-input">
+              </div>
+              <div class="field-group">
+                <label for="f-subtitle">부제목</label>
+                <input type="text" id="f-subtitle" class="field-input">
+              </div>
+              <div class="field-group">
+                <label for="f-badge">배지</label>
+                <input type="text" id="f-badge" class="field-input">
+              </div>
+              <div class="field-group">
+                <label for="f-publishedAt">발행일</label>
+                <input type="text" id="f-publishedAt" class="field-input" placeholder="YY.MM.DD">
+              </div>
+              <div class="field-group">
+                <label for="f-sourceUrl">원문 URL</label>
+                <input type="text" id="f-sourceUrl" class="field-input">
+              </div>
+            </div>
+            <div class="field-section">
+              <div class="field-section-label">요약 수치</div>
+              <div class="field-group">
+                <label for="f-organizer">공급기관</label>
+                <input type="text" id="f-organizer" class="field-input">
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="f-totalUnits">총 호수</label>
+                  <input type="number" id="f-totalUnits" class="field-input">
+                </div>
+                <div class="field-group">
+                  <label for="f-minRent">최저 월세</label>
+                  <input type="text" id="f-minRent" class="field-input">
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="f-applyStart">신청 시작</label>
+                  <input type="text" id="f-applyStart" class="field-input" placeholder="YY.MM.DD">
+                </div>
+                <div class="field-group">
+                  <label for="f-applyEnd">신청 종료</label>
+                  <input type="text" id="f-applyEnd" class="field-input" placeholder="YY.MM.DD">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="panel-title" style="margin-top:24px">요약 정보</div>
-        <div class="form-section">
-          <div class="field-group">
-            <label>공급기관 (organizer)</label>
-            <input type="text" id="f-organizer" class="field-input">
+        <!-- Editor pane -->
+        <div class="panel-pane" id="pane-editor">
+          <div class="pane-header editor-pane-header">
+            <div class="editor-tabs">
+              <button class="editor-tab active" data-editor="intro">인트로</button>
+              <button class="editor-tab" data-editor="sections">
+                섹션
+                <span class="tab-dirty" id="tab-dirty-sections" hidden></span>
+              </button>
+              <button class="editor-tab" data-editor="outro">아웃트로</button>
+            </div>
+            <div class="editor-status" id="editorStatus">
+              <span class="status-ok" id="statusOk">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                JSON 유효
+              </span>
+              <span class="status-err" id="statusErr" hidden>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                JSON 오류
+              </span>
+            </div>
           </div>
-          <div class="field-group">
-            <label>총 모집 호수 (totalUnits)</label>
-            <input type="number" id="f-totalUnits" class="field-input">
-          </div>
-          <div class="field-group">
-            <label>최저 월세 (minRent)</label>
-            <input type="text" id="f-minRent" class="field-input">
-          </div>
-          <div class="field-group">
-            <label>신청 시작일 (applyStart)</label>
-            <input type="text" id="f-applyStart" class="field-input" placeholder="YY.MM.DD">
-          </div>
-          <div class="field-group">
-            <label>신청 종료일 (applyEnd)</label>
-            <input type="text" id="f-applyEnd" class="field-input" placeholder="YY.MM.DD">
+          <div class="editors-wrap">
+            <div id="editor-intro"    class="monaco-container"></div>
+            <div id="editor-sections" class="monaco-container hidden"></div>
+            <div id="editor-outro"    class="monaco-container hidden"></div>
           </div>
         </div>
-      </section>
 
-      <!-- RIGHT: JSON Editors -->
-      <section class="edit-editors-panel">
-        <div class="editor-block">
-          <div class="panel-title">인트로 (intro)</div>
-          <div id="editor-intro" class="monaco-wrap"></div>
+        <!-- Drag handle -->
+        <div class="drag-handle" id="dragHandle" title="드래그해서 패널 너비 조절"></div>
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-area">
+        <div class="preview-toolbar">
+          <span class="preview-label">
+            <span class="live-dot"></span>
+            미리보기
+          </span>
+          <div class="preview-vp-btns">
+            <button class="vp-btn active" id="vpDesktop" title="데스크톱">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </button>
+            <button class="vp-btn" id="vpMobile" title="모바일">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </button>
+          </div>
+          <button class="icon-action-btn" id="refreshPreviewBtn" title="미리보기 새로고침">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </button>
         </div>
-        <div class="editor-block">
-          <div class="panel-title">섹션 (sections)</div>
-          <div id="editor-sections" class="monaco-wrap monaco-tall"></div>
+        <div class="preview-frame-wrap" id="previewFrameWrap">
+          <iframe id="previewFrame" title="리포트 미리보기"></iframe>
         </div>
-        <div class="editor-block">
-          <div class="panel-title">아웃트로 (outro)</div>
-          <div id="editor-outro" class="monaco-wrap"></div>
-        </div>
-      </section>
-    </main>
-  </div>
-  <div class="toast" id="toast"></div>
-  <!-- Monaco Editor from CDN -->
+      </div>
+
+    </div><!-- /editor-shell -->
+  </div><!-- /admin-layout -->
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
   <script type="module" src="js/edit.js"></script>
 </body>

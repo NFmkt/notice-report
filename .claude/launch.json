@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "notice-admin",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["admin/server.js"],
+      "port": 4711
+    },
+    {
       "name": "notice-report",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "-p", "4710", "--no-clipboard", "."],

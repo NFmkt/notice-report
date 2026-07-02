@@ -1,29 +1,27 @@
 """
-to_json.py  —  공고문 PDF → reports/[slug].json 변환
+md_to_json.py  —  공고 MD 두 파일 → reports/[slug].json 변환
 
 사용법:
-  python to_json.py --pdf "C:/path/to/notice.pdf" --url "https://gobang.kr/notices/xxx"
+  python md_to_json.py --summary "summary.md" --content "content.md"
 
 옵션:
   --badge   (기본값: "청년주택 공고 분석")
   --model   (기본값: "claude-haiku-4-5-20251001")
+  --url     (기본값: MD 파일 내 ✅ 공고문 확인하기 링크에서 자동 추출)
 """
 
 import argparse
 import json
-import os
 import re
 from pathlib import Path
 
 import anthropic
-import pypdf
 
 REPORTS_DIR = Path(__file__).parent / "reports"
 
-# ── 스키마 (Tool Use input_schema) ───────────────────────────────────────── #
 TOOL_SCHEMA = {
     "name": "parse_notice",
-    "description": "공고문 텍스트를 파싱하여 랜딩 페이지 JSON을 생성합니다.",
+    "description": "공고문 마크다운을 파싱하여 랜딩 페이지 JSON을 생성합니다.",
     "input_schema": {
         "type": "object",
         "required": ["meta", "summary", "intro", "sections", "outro"],
@@ -61,7 +59,8 @@ TOOL_SCHEMA = {
             },
             "sections": {
                 "type": "array",
-                "minItems": 5,
+                "description": "공고에 존재하는 섹션만 포함. supply가 없으면 4개도 가능.",
+                "minItems": 4,
                 "maxItems": 5,
                 "items": {
                     "type": "object",
@@ -107,11 +106,12 @@ TOOL_SCHEMA = {
 }
 
 SYSTEM_PROMPT = """당신은 공공임대주택 공고문을 분석하는 전문가입니다.
-주어진 공고문 텍스트를 parse_notice 도구를 사용하여 정확하게 파싱해주세요.
+summary(요약본)와 content(상세본) 두 마크다운 파일을 종합하여 parse_notice 도구로 정확하게 파싱해주세요.
+summary는 핵심 수치·조건 파악에, content는 상세 문맥·서술 작성에 활용하세요.
 
 파싱 규칙:
-1. sections는 반드시 supply, eligibility, lease, schedule, caution 순서로 5개 고정
-2. supply.component.type은 항상 "supply-overview"
+1. sections는 MD에 존재하는 섹션만 포함 (supply가 없으면 4개)
+2. supply 섹션이 있으면: component.type은 항상 "supply-overview"
 3. eligibility.component.type은 항상 "bullet-card"
 4. lease.component.type은 항상 "table-card"
 5. schedule.component.type은 항상 "timeline"
@@ -124,29 +124,35 @@ SYSTEM_PROMPT = """당신은 공공임대주택 공고문을 분석하는 전문
 12. timeline의 steps에서 신청접수 단계는 반드시 highlight: true"""
 
 
-def extract_text(pdf_path: str) -> str:
-    reader = pypdf.PdfReader(pdf_path)
-    pages = [page.extract_text() or "" for page in reader.pages]
-    return "\n\n".join(pages)
+def extract_url(text: str) -> str:
+    """MD 파일에서 공고문 확인하기 URL 추출"""
+    # [공고문 확인하기 >](URL) 형식
+    m = re.search(r'\[공고문 확인하기[^\]]*\]\((https?://[^\)]+)\)', text)
+    if m:
+        return m.group(1)
+    # 공고문 확인하기 >(URL) 형식
+    m = re.search(r'공고문 확인하기[^(]*\((https?://[^\)]+)\)', text)
+    if m:
+        return m.group(1)
+    return ""
 
 
-def parse_with_claude(text: str, source_url: str, badge: str, model: str) -> dict:
+def parse_with_claude(summary_text: str, content_text: str, source_url: str, badge: str, model: str) -> dict:
     client = anthropic.Anthropic()
+    user_message = (
+        f"아래 두 마크다운 파일을 종합해서 파싱해주세요.\n\n"
+        f"sourceUrl: {source_url}\n"
+        f"badge: {badge}\n\n"
+        f"=== summary (요약본) ===\n{summary_text}\n\n"
+        f"=== content (상세본) ===\n{content_text}"
+    )
     response = client.messages.create(
         model=model,
         max_tokens=8192,
         system=SYSTEM_PROMPT,
         tools=[TOOL_SCHEMA],
         tool_choice={"type": "tool", "name": "parse_notice"},
-        messages=[{
-            "role": "user",
-            "content": (
-                f"아래 공고문을 파싱해주세요.\n\n"
-                f"sourceUrl: {source_url}\n"
-                f"badge: {badge}\n\n"
-                f"---\n{text}"
-            )
-        }]
+        messages=[{"role": "user", "content": user_message}]
     )
     for block in response.content:
         if block.type == "tool_use" and block.name == "parse_notice":
@@ -173,23 +179,34 @@ def update_index(slug: str, data: dict):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="공고문 PDF → reports/[slug].json")
-    parser.add_argument("--pdf",   required=True, help="공고문 PDF 경로")
-    parser.add_argument("--url",   default="",    help="원문 URL (gobang.kr 링크 등)")
+    parser = argparse.ArgumentParser(description="공고 MD 두 파일 → reports/[slug].json")
+    parser.add_argument("--summary", required=True, help="요약본 MD 경로")
+    parser.add_argument("--content", required=True, help="상세본 MD 경로")
+    parser.add_argument("--url",   default="",    help="원문 URL (생략 시 MD에서 자동 추출)")
     parser.add_argument("--badge", default="청년주택 공고 분석")
     parser.add_argument("--model", default="claude-haiku-4-5-20251001")
     args = parser.parse_args()
 
-    pdf_path = Path(args.pdf)
-    if not pdf_path.exists():
-        raise FileNotFoundError(f"PDF 파일을 찾을 수 없습니다: {pdf_path}")
+    summary_path = Path(args.summary)
+    content_path = Path(args.content)
+    for p in (summary_path, content_path):
+        if not p.exists():
+            raise FileNotFoundError(f"파일을 찾을 수 없습니다: {p}")
 
-    print(f"[1/3] PDF 텍스트 추출 중... ({pdf_path.name})")
-    text = extract_text(str(pdf_path))
-    print(f"      추출 완료: {len(text):,}자")
+    summary_text = summary_path.read_text(encoding="utf-8")
+    content_text = content_path.read_text(encoding="utf-8")
+
+    source_url = args.url or extract_url(summary_text) or extract_url(content_text)
+    if not source_url:
+        print("[경고] URL을 찾을 수 없습니다. --url 옵션으로 직접 지정하세요.")
+
+    print(f"[1/3] MD 파일 읽기 완료")
+    print(f"      summary: {summary_path.name} ({len(summary_text):,}자)")
+    print(f"      content: {content_path.name} ({len(content_text):,}자)")
+    print(f"      URL: {source_url or '(없음)'}")
 
     print(f"[2/3] Claude({args.model}) 파싱 중...")
-    data = parse_with_claude(text, args.url, args.badge, args.model)
+    data = parse_with_claude(summary_text, content_text, source_url, args.badge, args.model)
 
     REPORTS_DIR.mkdir(exist_ok=True)
     slug = data["meta"]["slug"]

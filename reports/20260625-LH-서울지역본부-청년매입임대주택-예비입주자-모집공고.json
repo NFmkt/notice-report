@@ -1,22 +1,22 @@
 {
   "meta": {
     "slug": "20260625-LH-서울지역본부-청년매입임대주택-예비입주자-모집공고",
-    "title": "서울지역본부 청년매입임대주택 예비입주자 모집공고",
-    "subtitle": "서울 22개 자치구에 가전 완비 청년 임대주택이 떴어요!",
+    "title": "LH 청년매입임대, 드디어 떴다!",
+    "subtitle": "",
     "publishedAt": "26.06.25",
     "sourceUrl": "https://gobang.kr/notices/20544",
-    "badge": "청년주택 공고 분석"
+    "badge": "청년주택"
   },
   "summary": {
     "organizer": "LH 서울지역본부",
     "totalUnits": 493,
     "minRent": "156,170원",
-    "applyStart": "26.07.06",
-    "applyEnd": "26.07.08"
+    "applyStart": "7/6 (월)",
+    "applyEnd": "7/8 (수)"
   },
   "intro": {
-    "headline": "서울 22개 자치구에 가전 완비 청년 임대주택이 떴어요!",
-    "body": "<p>한국토지주택공사(LH) 서울지역본부가 총 <strong>493호</strong>의 예비입주자를 모집해요...</p>"
+    "headline": "서에 가전 완비 청년 임대주택이 떴어요!",
+    "body": "<p>한국토지주택공사(LH) 서울지역본부가 총 <strong>493호</strong>의 예비입주자를 모집해요.</p>"
   },
   "sections": [
     {
@@ -30,20 +30,53 @@
           "organizer": "LH 서울지역본부",
           "totalUnits": 493,
           "houseTypes": [
-            { "type": "오피스텔", "units": 236 },
-            { "type": "도시형생활주택", "units": 156 },
-            { "type": "다세대주택", "units": 71 },
-            { "type": "다가구주택", "units": 23 },
-            { "type": "아파트", "units": 7 }
+            {
+              "type": "오피스텔",
+              "units": 236
+            },
+            {
+              "type": "도시형생활주택",
+              "units": 156
+            },
+            {
+              "type": "다세대주택",
+              "units": 71
+            },
+            {
+              "type": "다가구주택",
+              "units": 23
+            },
+            {
+              "type": "아파트",
+              "units": 7
+            }
           ],
           "areaRange": "12.06㎡~59.41㎡",
           "locations": [
-            { "district": "관악구", "units": 84 },
-            { "district": "강서구", "units": 76 },
-            { "district": "중랑구", "units": 74 },
-            { "district": "동대문구", "units": 54 },
-            { "district": "서초구", "units": 50 },
-            { "district": "강동구", "units": 40 }
+            {
+              "district": "관악구",
+              "units": 84
+            },
+            {
+              "district": "강서구",
+              "units": 76
+            },
+            {
+              "district": "중랑구",
+              "units": 74
+            },
+            {
+              "district": "동대문구",
+              "units": 54
+            },
+            {
+              "district": "서초구",
+              "units": 50
+            },
+            {
+              "district": "강동구",
+              "units": 40
+            }
           ]
         }
       },
@@ -75,11 +108,21 @@
               ],
               "incomeTable": {
                 "title": "가구원수별 월평균소득 100% 기준 (단위: 원)",
-                "sizes": ["1인", "2인", "3인", "4인", "5인"],
+                "sizes": [
+                  "1인",
+                  "2인",
+                  "3인",
+                  "4인"
+                ],
                 "rows": [
                   {
                     "label": "2·3순위 기준",
-                    "values": [4576036, 6452897, 8168429, 8802202, 9326985]
+                    "values": [
+                      4576036,
+                      6452897,
+                      8168429,
+                      8802202
+                    ]
                   }
                 ]
               }
@@ -110,8 +153,18 @@
         "type": "table-card",
         "data": {
           "rentRows": [
-            { "label": "1순위", "ratio": "시세 40%", "deposit": "100만원", "rentRange": "156,170원~818,920원" },
-            { "label": "2·3순위", "ratio": "시세 50%", "deposit": "200만원", "rentRange": "189,520원~1,008,340원" }
+            {
+              "label": "1순위",
+              "ratio": "시세 40%",
+              "deposit": "100만원",
+              "rentRange": "156,170원~818,920원"
+            },
+            {
+              "label": "2·3순위",
+              "ratio": "시세 50%",
+              "deposit": "200만원",
+              "rentRange": "189,520원~1,008,340원"
+            }
           ],
           "leaseTerm": "2년, 재계약 4회 (최장 10년)",
           "renewalBonus": "혼인 시 5회 추가 연장 (최장 20년)",
@@ -137,13 +190,33 @@
       "component": {
         "type": "timeline",
         "data": {
-          "method": "LH 청약플러스(apply.lh.or.kr) 또는 LH청약플러스 앱 (PC·모바일, 방문 접수 없음)",
+          "method": "LH 청약플러스 PC 또는 모바일 앱",
           "steps": [
-            { "label": "청약 신청접수", "date": "26.07.06(월) 10:00 ~ 07.08(수) 16:00", "highlight": true },
-            { "label": "서류제출 대상자 발표", "date": "26.07.10(금) 14:00 이후", "highlight": false },
-            { "label": "서류제출 (온라인)", "date": "26.07.13(월) ~ 07.15(수) 16:00", "highlight": false },
-            { "label": "예비자 순번 발표", "date": "26.09.18(금) 14:00 이후", "highlight": false },
-            { "label": "계약 및 입주", "date": "순번 도래 시 개별 안내", "highlight": false }
+            {
+              "label": "청약 신청접수",
+              "date": "26.07.06(월) 10:00 ~ 07.08(수) 16:00",
+              "highlight": true
+            },
+            {
+              "label": "서류제출 대상자 발표",
+              "date": "26.07.10(금) 14:00 이후",
+              "highlight": false
+            },
+            {
+              "label": "서류제출 (온라인)",
+              "date": "26.07.13(월) ~ 07.15(수) 16:00",
+              "highlight": false
+            },
+            {
+              "label": "예비자 순번 발표",
+              "date": "26.09.18(금) 14:00 이후",
+              "highlight": false
+            },
+            {
+              "label": "계약 및 입주",
+              "date": "순번 도래 시 개별 안내",
+              "highlight": false
+            }
           ]
         }
       },
@@ -168,7 +241,9 @@
             },
             {
               "label": "문의처",
-              "items": ["LH 마이홈센터 ☎1600-1004 (평일 09:00~18:00, 2번→3번)"]
+              "items": [
+                "LH 마이홈센터 ☎1600-1004 (평일 09:00~18:00, 2번→3번)"
+              ]
             }
           ],
           "qa": [

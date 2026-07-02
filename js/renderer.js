@@ -20,7 +20,7 @@ const COMPONENT_RENDERERS = {
 };
 
 // TOC에 포함할 섹션 id 목록 (supply/intro/outro 제외)
-const TOC_SECTION_IDS = ['eligibility', 'lease', 'schedule', 'caution'];
+const TOC_SECTION_IDS = ['supply', 'eligibility', 'lease', 'schedule', 'caution'];
 
 function renderTerms(terms) {
   if (!terms || terms.length === 0) return '';
