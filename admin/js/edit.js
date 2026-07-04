@@ -1,12 +1,12 @@
 // js/edit.js
+import { initLocationMaps } from '../../js/location-map.js';
 
 const slug = new URLSearchParams(location.search).get('slug');
 if (!slug) location.href = '/';
 
-const VIEWER_URL = `http://localhost:4710/report?slug=${encodeURIComponent(slug)}`;
+const VIEWER_URL = `/report.html?slug=${encodeURIComponent(slug)}`;
 
 let data = null;
-let editors = {};
 let isDirty = false;
 
 // ─── Toast ───────────────────────────────────────────
@@ -63,9 +63,7 @@ function collectData() {
     applyStart: document.getElementById('f-applyStart').value,
     applyEnd:   document.getElementById('f-applyEnd').value,
   };
-  try { d.intro    = JSON.parse(editors.intro.getValue());    } catch(e) {}
-  try { d.sections = JSON.parse(editors.sections.getValue()); } catch(e) {}
-  try { d.outro    = JSON.parse(editors.outro.getValue());    } catch(e) {}
+  // intro/sections/outro will be wired in later slices
   return d;
 }
 
@@ -132,8 +130,6 @@ function switchPanel(panelId) {
   if (isSame) {
     const isCollapsed = leftPanel.classList.contains('collapsed');
     leftPanel.classList.toggle('collapsed', !isCollapsed);
-    // re-layout Monaco if expanding
-    if (isCollapsed) setTimeout(() => Object.values(editors).forEach(e => e.layout()), 200);
     return;
   }
 
@@ -152,9 +148,8 @@ function switchPanel(panelId) {
     pane.classList.toggle('active', pane.id === `pane-${panelId}`);
   });
 
-  // re-layout Monaco when editor pane becomes visible
-  if (panelId === 'editor') {
-    setTimeout(() => Object.values(editors).forEach(e => e.layout()), 50);
+  if (panelId === 'location') {
+    updateLocationPanel();
   }
 }
 
@@ -168,22 +163,9 @@ function switchEditor(editorKey) {
     btn.classList.toggle('active', btn.dataset.editor === editorKey);
   });
 
-  document.querySelectorAll('.monaco-container').forEach(el => {
-    el.classList.toggle('hidden', el.id !== `editor-${editorKey}`);
+  document.querySelectorAll('.form-pane').forEach(el => {
+    el.classList.toggle('hidden', el.id !== `form-${editorKey}`);
   });
-
-  // Monaco needs a layout call after becoming visible
-  setTimeout(() => editors[editorKey]?.layout(), 30);
-}
-
-// ─── JSON validation status ───────────────────────────
-function updateJsonStatus() {
-  const key = activeEditor;
-  const val = editors[key]?.getValue() || '';
-  let valid = true;
-  try { JSON.parse(val); } catch(e) { valid = false; }
-  document.getElementById('statusOk').hidden = !valid;
-  document.getElementById('statusErr').hidden = valid;
 }
 
 // ─── Drag to resize left panel ───────────────────────
@@ -205,8 +187,6 @@ function initDragResize() {
     if (!dragging) return;
     const newW = Math.max(200, Math.min(600, e.clientX - iconSidebarW));
     panel.style.width = newW + 'px';
-    // throttled Monaco layout
-    Object.values(editors).forEach(ed => ed.layout());
   });
 
   document.addEventListener('mouseup', () => {
@@ -233,23 +213,58 @@ function initViewportToggle() {
   });
 }
 
-// ─── Monaco setup ────────────────────────────────────
-function createEditor(containerId, value) {
-  return monaco.editor.create(document.getElementById(containerId), {
-    value,
-    language: 'json',
-    theme: 'vs',
-    minimap: { enabled: false },
-    fontSize: 12,
-    lineNumbers: 'on',
-    scrollBeyondLastLine: false,
-    wordWrap: 'off',
-    automaticLayout: false, // manual layout for performance
-    formatOnPaste: true,
-    tabSize: 2,
-    renderLineHighlight: 'line',
-    scrollbar: { verticalScrollbarSize: 8, horizontalScrollbarSize: 8 },
+// ─── Location panel ──────────────────────────────────
+function updateLocationPanel() {
+  const content = document.getElementById('locationPaneContent');
+  if (!content) return;
+
+  // Clear previous map canvases to avoid re-initialization issues
+  content.innerHTML = '';
+
+  let sections = [];
+  try {
+    sections = data?.sections || [];
+  } catch {
+    content.innerHTML = '<div class="loc-panel-empty loc-panel-error">섹션 데이터가 유효하지 않습니다.</div>';
+    return;
+  }
+
+  // Collect all location-card locations from sections
+  const allLocs = [];
+  sections.forEach(sec => {
+    if (sec.component?.type === 'location-card') {
+      (sec.component.data?.locations || []).forEach(l => allLocs.push(l));
+    }
+    (sec.blocks || []).forEach(block => {
+      if (block.type === 'location-card') {
+        (block.data?.locations || []).forEach(l => allLocs.push(l));
+      }
+    });
   });
+
+  if (!allLocs.length) {
+    content.innerHTML = '<div class="loc-panel-empty">섹션 JSON에 location-card 블록을<br>추가하면 지도가 표시됩니다.</div>';
+    return;
+  }
+
+  const listHtml = allLocs.map(l => `
+    <div class="loc-panel-item">
+      <div class="loc-panel-name">${l.name || ''}</div>
+      <div class="loc-panel-addr">${l.address || ''}${l.detail ? `<span class="loc-panel-detail"> ${l.detail}</span>` : ''}</div>
+      ${l.transit ? `<div class="loc-panel-transit">${l.transit}</div>` : ''}
+    </div>
+  `).join('');
+
+  const mapData = encodeURIComponent(JSON.stringify(
+    allLocs.map(l => ({ name: l.name || '', address: l.address || '' }))
+  ));
+
+  content.innerHTML = `
+    <div class="loc-panel-list">${listHtml}</div>
+    <div class="loc-map-container loc-map-admin" data-locations="${mapData}"></div>
+  `;
+
+  initLocationMaps(content);
 }
 
 // ─── Init ────────────────────────────────────────────
@@ -262,23 +277,6 @@ async function init() {
   // Load preview
   document.getElementById('previewFrame').src = VIEWER_URL;
 
-  // Monaco
-  require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' } });
-  require(['vs/editor/editor.main'], () => {
-    editors.intro    = createEditor('editor-intro',    JSON.stringify(data.intro    || {}, null, 2));
-    editors.sections = createEditor('editor-sections', JSON.stringify(data.sections || [], null, 2));
-    editors.outro    = createEditor('editor-outro',    JSON.stringify(data.outro    || {}, null, 2));
-
-    // watch for changes
-    Object.entries(editors).forEach(([key, ed]) => {
-      ed.onDidChangeModelContent(() => {
-        markDirty();
-        if (key === activeEditor) updateJsonStatus();
-      });
-    });
-    updateJsonStatus();
-  });
-
   // Sidebar icon clicks
   document.querySelectorAll('.sidebar-icon').forEach(btn => {
     btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
@@ -286,10 +284,7 @@ async function init() {
 
   // Editor sub-tab clicks
   document.querySelectorAll('.editor-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      switchEditor(btn.dataset.editor);
-      updateJsonStatus();
-    });
+    btn.addEventListener('click', () => switchEditor(btn.dataset.editor));
   });
 
   // Form dirty on any input
@@ -301,6 +296,7 @@ async function init() {
   document.getElementById('saveBtn').addEventListener('click', save);
   document.getElementById('deployBtn').addEventListener('click', deploy);
   document.getElementById('refreshPreviewBtn').addEventListener('click', refreshPreview);
+  document.getElementById('refreshLocationBtn').addEventListener('click', updateLocationPanel);
 
   // Keyboard shortcut
   document.addEventListener('keydown', e => {
