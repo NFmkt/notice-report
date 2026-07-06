@@ -2,6 +2,7 @@
  * app.js — 공고 리포트 뷰어
  */
 import { renderReport } from './renderer.js';
+import { initLocationMaps } from './location-map.js';
 
 
 // ============================================
@@ -42,6 +43,7 @@ async function loadReport(slug) {
     const articleBody = document.getElementById('articleBody');
     const sectionIndexList = document.getElementById('sectionIndexList');
     renderReport(data, articleBody, sectionIndexList);
+    initLocationMaps();
     initSectionObserver();
     if (window._syncMobileToc) window._syncMobileToc();
     initSectionAnimations();

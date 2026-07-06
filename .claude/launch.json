@@ -5,7 +5,8 @@
       "name": "notice-admin",
       "runtimeExecutable": "node",
       "runtimeArgs": ["admin/server.js"],
-      "port": 4711
+      "port": 4711,
+      "autoPort": false
     },
     {
       "name": "notice-report",

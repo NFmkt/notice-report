@@ -8,6 +8,7 @@ import { renderBulletCard } from './components/bullet-card.js';
 import { renderTableCard } from './components/table-card.js';
 import { renderTimeline } from './components/timeline.js';
 import { renderQaList } from './components/qa-list.js';
+import { renderLocationCard } from './components/location-card.js';
 import { renderOutroBlock } from './components/outro-block.js';
 import { SECTION_ICONS } from './icons.js';
 
@@ -17,6 +18,7 @@ const COMPONENT_RENDERERS = {
   'table-card':      renderTableCard,
   'timeline':        renderTimeline,
   'qa-list':         renderQaList,
+  'location-card':   renderLocationCard,
 };
 
 // TOC에 포함할 섹션 id 목록 (supply/intro/outro 제외)
@@ -36,6 +38,10 @@ function renderTerms(terms) {
 function renderSection(section) {
   const renderer = COMPONENT_RENDERERS[section.component && section.component.type];
   const componentHtml = renderer ? renderer(section.component.data) : '';
+  const blocksHtml = (section.blocks || []).map(block => {
+    const r = COMPONENT_RENDERERS[block.type];
+    return r ? `<div class="section-block">${r(block.data)}</div>` : '';
+  }).join('');
   const iconSvg = SECTION_ICONS[section.id] || '';
   return `
     <section id="section-${section.id}" class="article-section" data-section-id="${section.id}">
@@ -45,6 +51,7 @@ function renderSection(section) {
       </h2>
       ${section.lead ? `<p class="section-lead">${section.lead}</p>` : ''}
       ${componentHtml}
+      ${blocksHtml}
       ${renderTerms(section.terms)}
     </section>
   `;

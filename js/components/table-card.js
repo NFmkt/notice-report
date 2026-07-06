@@ -13,15 +13,14 @@ function extractPct(ratio) {
 function renderRentRow(row) {
   const color = getRatioColor(row.label);
   const pct = extractPct(row.ratio);
+  const showBar = pct > 0 && row.ratio;
   return `
     <div class="lease-row">
       <div class="lease-row-head">
         <span class="lease-priority lease-priority--${color}">${row.label}</span>
-        <span class="lease-ratio-badge lease-ratio--${color}">${row.ratio}</span>
+        ${showBar ? `<span class="lease-ratio-badge lease-ratio--${color}">${row.ratio}</span>` : ''}
       </div>
-      <div class="lease-bar-track">
-        <div class="lease-bar-fill lease-bar--${color}" style="width:${pct}%"></div>
-      </div>
+      ${showBar ? `<div class="lease-bar-track"><div class="lease-bar-fill lease-bar--${color}" style="width:${pct}%"></div></div>` : ''}
       <div class="lease-meta">
         <span class="lease-meta-item"><span class="lease-meta-key">보증금</span>${row.deposit}</span>
         <span class="lease-meta-item"><span class="lease-meta-key">월임대료</span>${row.rentRange}</span>

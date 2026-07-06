@@ -77,7 +77,7 @@ export function renderSupplyOverview(data) {
     <div class="supply-overview-v2">
       <div class="supply-cols">
         <div class="supply-col-district">
-          <p class="supply-col-title">자치구별 공급</p>
+          <p class="supply-col-title">모집호수</p>
           ${districtHtml}
         </div>
         <div class="supply-col-types">

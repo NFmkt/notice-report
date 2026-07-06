@@ -8,7 +8,10 @@ const PORT = 4711;
 const REPORTS_DIR = path.join(__dirname, '..', 'reports');
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+// 개발용: 정적 파일 캐시 비활성화 (편집 즉시 반영)
+const noCache = { etag: false, lastModified: false, setHeaders: (res) => res.setHeader('Cache-Control', 'no-store') };
+app.use(express.static(path.join(__dirname), noCache));
+app.use(express.static(path.join(__dirname, '..'), noCache));
 
 // GET /api/reports — list all
 app.get('/api/reports', (req, res) => {

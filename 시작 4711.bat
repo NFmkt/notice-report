@@ -1,5 +1,5 @@
 @echo off
 chcp 65001
-cd /d "%~dp0"
-start http://localhost:4711
-node admin/server.js
+cd /d "%~dp0admin"
+start "" http://localhost:4711
+npx nodemon server.js

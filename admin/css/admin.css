@@ -186,8 +186,8 @@
 .left-panel {
   position: relative;
   width: 320px;
-  min-width: 200px;
-  max-width: 600px;
+  min-width: 240px;
+  max-width: 640px;
   flex-shrink: 0;
   background: #fff;
   border-right: 1px solid #E2E8F0;
@@ -196,6 +196,7 @@
   overflow: hidden;
   transition: width 0.18s ease;
 }
+.left-panel.resizing { transition: none; }
 
 .left-panel.collapsed {
   width: 0 !important;
@@ -206,15 +207,16 @@
 .drag-handle {
   position: absolute;
   top: 0;
-  right: -3px;
-  width: 6px;
+  right: 0;
+  width: 8px;
   height: 100%;
   cursor: col-resize;
-  z-index: 10;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.left-panel.collapsed .drag-handle { display: none; }
 .drag-handle::after {
   content: '';
   width: 2px;
@@ -393,6 +395,348 @@
   gap: 16px;
 }
 .form-pane.hidden { display: none; }
+
+/* ========================================
+   Quill Editor
+   ======================================== */
+.quill-mount { border: 1px solid #E2E8F0; border-radius: 8px; overflow: hidden; }
+.quill-mount .ql-toolbar { border: none; border-bottom: 1px solid #E2E8F0; padding: 6px 10px; background: #F8FAFC; }
+.quill-mount .ql-container { border: none; font-family: 'Pretendard Variable', 'Pretendard', sans-serif; font-size: 13px; min-height: 100px; }
+.quill-mount .ql-editor { min-height: 100px; padding: 10px 12px; line-height: 1.65; }
+.quill-mount .ql-editor.ql-blank::before { color: #94A3B8; font-style: normal; }
+
+/* ========================================
+   Sections list
+   ======================================== */
+.sections-list { display: flex; flex-direction: column; gap: 10px; }
+
+.section-card {
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-left: 3px solid var(--card-color, #CBD5E1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.section-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s;
+}
+.section-card-header:hover { background: #F8FAFC; }
+
+.section-drag-handle {
+  color: #94A3B8;
+  cursor: grab;
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.section-drag-handle:active { cursor: grabbing; }
+
+.section-card-emoji { font-size: 16px; flex-shrink: 0; }
+.section-card-title { font-size: 13px; font-weight: 600; color: #1E293B; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.section-type-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.section-card-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94A3B8;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.section-card-delete:hover { color: #DC2626; background: #FEF2F2; }
+
+.section-card-body { padding: 12px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #F1F5F9; }
+.section-card-body.collapsed { display: none; }
+
+.section-card-chevron { color: #CBD5E1; flex-shrink: 0; transition: transform 0.15s; }
+.section-card.open { box-shadow: 0 2px 12px rgba(37,99,235,0.1); }
+.section-card.open .section-card-chevron { transform: rotate(180deg); color: #2563EB; }
+.section-card.open .section-card-header { background: #F8FAFC; }
+
+/* ========================================
+   Dynamic field lists
+   ======================================== */
+.dyn-list { display: flex; flex-direction: column; gap: 6px; }
+.dyn-item  { display: flex; align-items: center; gap: 6px; }
+.dyn-item .field-input { flex: 1; }
+
+.dyn-add-btn {
+  font-size: 12px;
+  color: #2563EB;
+  background: none;
+  border: 1px dashed #BFDBFE;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.1s, border-color 0.1s;
+  margin-top: 4px;
+}
+.dyn-add-btn:hover { background: #EFF6FF; border-color: #93C5FD; }
+
+.dyn-delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94A3B8;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.dyn-delete-btn:hover { color: #DC2626; background: #FEF2F2; }
+.dyn-delete-btn.row-del { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 4px 8px; }
+
+/* ========================================
+   Group blocks (nested form sections)
+   ======================================== */
+.group-block {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.group-block-header { display: flex; align-items: center; gap: 6px; }
+.group-block-header .field-input { flex: 1; }
+.group-block-footer { display: flex; justify-content: flex-end; padding-top: 4px; }
+
+.step-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ========================================
+   Component form area
+   ======================================== */
+.comp-form {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.comp-form-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94A3B8;
+  margin-bottom: 2px;
+}
+.comp-form-fields { display: flex; flex-direction: column; gap: 10px; }
+.comp-no-form { font-size: 12px; color: #94A3B8; padding: 4px 0; margin: 0; }
+
+.comp-type-select {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #1E293B;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+.comp-type-select:focus { border-color: #2563EB; }
+
+/* ========================================
+   Toggle label (checkbox)
+   ======================================== */
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+}
+.toggle-label input[type="checkbox"] { cursor: pointer; accent-color: #2563EB; }
+
+/* ========================================
+   Textarea
+   ======================================== */
+.field-textarea { resize: vertical; min-height: 68px; line-height: 1.55; }
+.field-num { width: 80px !important; flex: none !important; }
+
+/* ========================================
+   Terms accordion
+   ======================================== */
+.terms-accordion {
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.terms-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748B;
+  background: #F8FAFC;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+.terms-toggle:hover { background: #F1F5F9; }
+.terms-body { padding: 10px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #E2E8F0; }
+.terms-body.hidden { display: none; }
+
+.term-item {
+  position: relative;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 10px;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.term-del {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #CBD5E1;
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.1s, background 0.1s;
+}
+.term-del:hover { color: #DC2626; background: #FEF2F2; }
+
+/* ========================================
+   Add section button
+   ======================================== */
+.add-section-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2563EB;
+  background: none;
+  border: 2px dashed #BFDBFE;
+  border-radius: 8px;
+  cursor: pointer;
+  justify-content: center;
+  margin-top: 4px;
+  transition: background 0.12s, border-color 0.12s;
+}
+.add-section-btn:hover { background: #EFF6FF; border-color: #93C5FD; }
+
+/* ========================================
+   Sortable drag states
+   ======================================== */
+.sortable-ghost  { opacity: 0.4; }
+.sortable-chosen { background: #F0F9FF !important; }
+
+/* ========================================
+   Type picker modal
+   ======================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  backdrop-filter: blur(2px);
+  padding: 16px;
+}
+.modal-box {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #E2E8F0;
+}
+.modal-title { font-size: 15px; font-weight: 700; color: #1E293B; margin: 0; }
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #94A3B8;
+  padding: 4px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.1s;
+}
+.modal-close:hover { color: #1E293B; }
+.modal-desc { font-size: 13px; color: #64748B; padding: 12px 20px 4px; margin: 0; }
+
+.type-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 12px 20px 20px;
+}
+.type-picker-card {
+  padding: 12px 14px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s, box-shadow 0.12s;
+}
+.type-picker-card:hover { background: #F8FAFC; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.type-picker-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.type-picker-id  { font-size: 11px; color: #94A3B8; font-family: 'Menlo', 'Consolas', monospace; }
 
 /* ========================================
    Preview Area
