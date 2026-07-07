@@ -16,6 +16,41 @@ function ensureKakao() {
   return _loading;
 }
 
+// 위치 하나의 좌표를 찾는다: 주소 검색(정확) → 실패 시 키워드(장소) 검색으로 fallback.
+// 도로명 주소든 "안양종합운동장" 같은 장소명이든 모두 핀이 찍히도록. LatLng 또는 null 반환.
+function findPosition(loc, geo, places) {
+  return new Promise(resolve => {
+    const OK = kakao.maps.services.Status.OK;
+    const addr = (loc.address || '').trim();
+    const name = (loc.name || '').trim();
+
+    const keywordFallback = () => {
+      // 주소 → 이름+주소 → 이름 순으로 장소 검색 시도 (건물명·장소명 대응)
+      const queries = [...new Set([addr, [name, addr].filter(Boolean).join(' '), name].filter(Boolean))];
+      let i = 0;
+      const tryNext = () => {
+        if (i >= queries.length) return resolve(null);
+        places.keywordSearch(queries[i++], (res, status) => {
+          if (status === OK && res[0]) return resolve(new kakao.maps.LatLng(res[0].y, res[0].x));
+          tryNext();
+        });
+      };
+      tryNext();
+    };
+
+    if (addr) {
+      geo.addressSearch(addr, (res, status) => {
+        if (status === OK && res[0]) return resolve(new kakao.maps.LatLng(res[0].y, res[0].x));
+        keywordFallback();
+      });
+    } else if (name) {
+      keywordFallback();
+    } else {
+      resolve(null);
+    }
+  });
+}
+
 function renderMapInEl(el) {
   const raw = el.dataset.locations;
   if (!raw) return;
@@ -33,13 +68,14 @@ function renderMapInEl(el) {
   });
   const bounds = new kakao.maps.LatLngBounds();
   const geo = new kakao.maps.services.Geocoder();
-  let remaining = locs.length;
+  const places = new kakao.maps.services.Places();
 
-  locs.forEach(loc => {
-    if (!loc.address) { remaining--; return; }
-    geo.addressSearch(loc.address, (res, status) => {
-      if (status === kakao.maps.services.Status.OK) {
-        const pos = new kakao.maps.LatLng(res[0].y, res[0].x);
+  Promise.all(locs.map(loc => findPosition(loc, geo, places).then(pos => ({ loc, pos }))))
+    .then(results => {
+      let found = 0;
+      results.forEach(({ loc, pos }) => {
+        if (!pos) return;
+        found++;
         bounds.extend(pos);
         const marker = new kakao.maps.Marker({ map, position: pos });
         if (loc.name) {
@@ -47,14 +83,12 @@ function renderMapInEl(el) {
             content: `<div style="padding:5px 10px;font-size:12px;font-weight:600;font-family:Pretendard,sans-serif;white-space:nowrap;color:#1E293B">${loc.name}</div>`,
           }).open(map, marker);
         }
-      }
-      remaining--;
-      if (remaining === 0 && !bounds.isEmpty()) {
+      });
+      if (!bounds.isEmpty()) {
         map.setBounds(bounds);
-        if (locs.length === 1) map.setLevel(4);
+        if (found === 1) map.setLevel(4);
       }
     });
-  });
 }
 
 export async function initLocationMaps(root = document) {
