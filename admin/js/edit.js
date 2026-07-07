@@ -263,6 +263,7 @@ function buildSectionCard(sec, i) {
         </div>
       </div>
       ${buildLocationBlockForm(sec, i)}
+      ${buildImagesForm(sec, i)}
       ${buildTermsAccordion(sec.terms || [], i)}
     </div>
   `;
@@ -687,6 +688,61 @@ function buildLocationBlockForm(sec, si) {
     </div>
   `;
 }
+
+// ─── Images form ─────────────────────────────────────
+function buildImagesForm(sec, si) {
+  const imgs = sec.images || [];
+  return `
+    <div class="comp-form">
+      <div class="comp-form-label">🖼️ 사진</div>
+      ${imgs.length ? `
+        <div class="img-attach-list">
+          ${imgs.map((img, ii) => `
+            <div class="img-attach-item">
+              <img class="img-attach-thumb" src="${esc(img.src)}" alt="">
+              <input type="text" class="field-input img-attach-cap" placeholder="캡션 (선택)" value="${esc(img.caption || '')}"
+                oninput="_e.d.sections[${si}].images[${ii}].caption=this.value;_e.sp()">
+              ${delBtn(`_e.d.sections[${si}].images.splice(${ii},1);_e.rs()`)}
+            </div>`).join('')}
+        </div>` : ''}
+      <label class="dyn-add-btn img-add-btn">
+        + 사진 추가
+        <input type="file" accept="image/*" hidden onchange="_e.upimg(${si}, this)">
+      </label>
+    </div>
+  `;
+}
+
+// base64로 이미지를 서버에 업로드 → 섹션 images 배열에 경로 추가
+_e.upimg = async function (si, input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { showToast('이미지 파일만 첨부할 수 있어요.', true); return; }
+  showToast('사진 업로드 중...');
+  try {
+    const dataUrl = await new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload  = () => resolve(r.result);
+      r.onerror = () => reject(new Error('파일 읽기 실패'));
+      r.readAsDataURL(file);
+    });
+    const res = await fetch(`/api/upload/${encodeURIComponent(slug)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: file.name, dataUrl }),
+    });
+    const json = await res.json();
+    if (!res.ok) { showToast('업로드 실패: ' + (json.error || ''), true); return; }
+    if (!data.sections[si].images) data.sections[si].images = [];
+    data.sections[si].images.push({ src: json.path, caption: '' });
+    renderSectionsForm();
+    schedulePreview();
+    showToast('사진이 첨부됐어요.');
+  } catch (e) {
+    showToast('업로드 실패: ' + e.message, true);
+  }
+};
 
 // ─── Terms accordion ─────────────────────────────────
 function buildTermsAccordion(terms, si) {

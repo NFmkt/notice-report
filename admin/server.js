@@ -7,7 +7,7 @@ const app = express();
 const PORT = 4711;
 const REPORTS_DIR = path.join(__dirname, '..', 'reports');
 
-app.use(express.json());
+app.use(express.json({ limit: '25mb' }));
 // 개발용: 정적 파일 캐시 비활성화 (편집 즉시 반영)
 const noCache = { etag: false, lastModified: false, setHeaders: (res) => res.setHeader('Cache-Control', 'no-store') };
 app.use(express.static(path.join(__dirname), noCache));
@@ -95,6 +95,35 @@ app.delete('/api/reports/:slug', (req, res) => {
     if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'Not found' });
     fs.unlinkSync(filePath);
     res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /api/upload/:slug — base64 이미지를 public/uploads/{slug}/ 에 파일로 저장
+const IMG_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif', 'image/avif': 'avif' };
+app.post('/api/upload/:slug', (req, res) => {
+  try {
+    const { filename, dataUrl } = req.body || {};
+    const m = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/.exec(dataUrl || '');
+    if (!m) return res.status(400).json({ error: '유효하지 않은 이미지 데이터' });
+    const ext = IMG_EXT[m[1]];
+    if (!ext) return res.status(400).json({ error: '지원하지 않는 이미지 형식' });
+
+    // 경로 구분자·상위 이동만 차단 (한글 등 유니코드 슬러그는 보존)
+    const slug = String(req.params.slug).replace(/[\/\\]/g, '').replace(/\.\./g, '');
+    if (!slug) return res.status(400).json({ error: '유효하지 않은 슬러그' });
+    const dir = path.join(__dirname, '..', 'public', 'uploads', slug);
+    fs.mkdirSync(dir, { recursive: true });
+
+    const base = String(filename || 'image')
+      .replace(/\.[^.]+$/, '')
+      .replace(/[^a-zA-Z0-9._-]/g, '_')
+      .slice(0, 40) || 'image';
+    const name = `${Date.now()}-${base}.${ext}`;
+    fs.writeFileSync(path.join(dir, name), Buffer.from(m[2], 'base64'));
+
+    res.json({ ok: true, path: `public/uploads/${slug}/${name}` });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

@@ -553,6 +553,21 @@
   margin-bottom: 2px;
 }
 .comp-form-fields { display: flex; flex-direction: column; gap: 10px; }
+
+/* 사진 첨부 */
+.img-attach-list { display: flex; flex-direction: column; gap: 8px; }
+.img-attach-item {
+  display: flex; align-items: center; gap: 8px;
+  background: #FFFFFF; border: 1px solid #E2E8F0;
+  border-radius: 6px; padding: 6px;
+}
+.img-attach-thumb {
+  width: 48px; height: 48px; flex-shrink: 0;
+  object-fit: cover; border-radius: 4px; border: 1px solid #E2E8F0;
+  background: #F1F5F9;
+}
+.img-attach-cap { flex: 1; }
+.img-add-btn { text-align: center; }
 .comp-no-form { font-size: 12px; color: #94A3B8; padding: 4px 0; margin: 0; }
 
 .comp-type-select {

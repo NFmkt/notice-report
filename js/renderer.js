@@ -35,6 +35,17 @@ function renderTerms(terms) {
   return `<dl class="terms-box">${items}</dl>`;
 }
 
+function renderImages(images) {
+  if (!images || images.length === 0) return '';
+  const items = images.map(img => `
+    <figure class="section-figure">
+      <img class="section-figure-img" src="${img.src}" alt="${(img.caption || '').replace(/"/g, '&quot;')}" loading="lazy">
+      ${img.caption ? `<figcaption class="section-figure-cap">${img.caption}</figcaption>` : ''}
+    </figure>
+  `).join('');
+  return `<div class="section-figures">${items}</div>`;
+}
+
 function renderSection(section) {
   const renderer = COMPONENT_RENDERERS[section.component && section.component.type];
   const componentHtml = renderer ? renderer(section.component.data) : '';
@@ -52,6 +63,7 @@ function renderSection(section) {
       ${section.lead ? `<p class="section-lead">${section.lead}</p>` : ''}
       ${componentHtml}
       ${blocksHtml}
+      ${renderImages(section.images)}
       ${renderTerms(section.terms)}
     </section>
   `;

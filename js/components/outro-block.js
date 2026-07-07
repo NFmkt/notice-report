@@ -5,7 +5,7 @@ export function renderOutroBlock(outro) {
   const { body, ctaLabel, ctaUrl } = outro;
   return `
     <div class="outro-block">
-      <p class="outro-body">${body}</p>
+      <div class="outro-body">${body}</div>
       <div class="outro-cta-wrap">
         <a class="outro-cta" href="${ctaUrl}" target="_blank" rel="noopener">
           ${ctaLabel}

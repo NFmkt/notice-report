@@ -430,7 +430,7 @@ a:focus-visible {
 }
 
 .card-body {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text-secondary);
   line-height: 1.7;
 }
@@ -584,7 +584,7 @@ a:focus-visible {
 
 .card-body {
   padding: var(--space-lg);
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text-secondary);
   line-height: 1.7;
 }
@@ -593,7 +593,7 @@ a:focus-visible {
   line-height: 1.8;
   color: var(--text-secondary);
   margin-bottom: var(--space-sm);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .card-body ul,
@@ -603,7 +603,7 @@ a:focus-visible {
 }
 
 .card-body li {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.7;
   margin-bottom: 4px;
   color: var(--text-secondary);
@@ -1104,7 +1104,7 @@ a:focus-visible {
   display: block;
 }
 .bullet-list { padding-left: 18px; }
-.bullet-list li { margin-bottom: 5px; line-height: 1.65; font-size: 14px; color: var(--ink-muted); }
+.bullet-list li { margin-bottom: 5px; line-height: 1.65; font-size: 15px; color: var(--ink-muted); }
 
 /* ── Eligibility Badges ──────────────────────── */
 .elig-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
@@ -1125,7 +1125,7 @@ a:focus-visible {
 .elig-icon { display: flex; align-items: center; justify-content: center; }
 .elig-text { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .elig-name { font-size: 13px; font-weight: 600; }
-.elig-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+.elig-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
 .elig-blue   .elig-icon, .elig-blue   .elig-name { color: #2563EB; }
 .elig-green  .elig-icon, .elig-green  .elig-name { color: #16A34A; }
 .elig-amber  .elig-icon, .elig-amber  .elig-name { color: #D97706; }
@@ -1180,7 +1180,7 @@ a:focus-visible {
   font-size: 11px; font-weight: 600; color: #fff; mix-blend-mode: difference;
 }
 .lease-meta { display: flex; gap: 16px; flex-wrap: wrap; }
-.lease-meta-item { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
+.lease-meta-item { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
 .lease-meta-key { font-weight: 600; color: var(--text-primary); }
 .lease-notes { margin-top: 4px; }
 .lease-note { font-size: 11px; color: var(--text-secondary); }
@@ -1245,7 +1245,7 @@ a:focus-visible {
 .tl-step:last-child::before { display: none; }
 .tl-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--border); margin-top: 2px; }
 .tl-content { display: flex; flex-direction: column; gap: 3px; }
-.tl-label { font-size: 12px; font-weight: 500; color: var(--text-primary); }
+.tl-label { font-size: 13px; font-weight: 500; color: var(--text-primary); }
 .tl-date-badge { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; width: fit-content; line-height: 1.5; }
 
 /* ── QA List ─────────────────────────────────── */
@@ -1257,7 +1257,7 @@ a:focus-visible {
 .qa-item { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
 .qa-question { padding: 12px 16px; cursor: pointer; font-weight: 600; list-style: none; background: var(--surface); }
 .qa-question::-webkit-details-marker { display: none; }
-.qa-answer { padding: 12px 16px; line-height: 1.7; font-size: 14px; }
+.qa-answer { padding: 12px 16px; line-height: 1.7; font-size: 15px; }
 
 /* ── Caution Card ── */
 .caution-card { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 0; }
@@ -1404,18 +1404,35 @@ a:focus-visible {
 
 /* ── Terms Box ───────────────────────────────── */
 .terms-box {
-  background: var(--surface); border-left: 3px solid var(--blue);
-  border-radius: 6px; padding: 12px 16px; margin-top: 16px;
-  display: flex; flex-direction: column; gap: 10px;
+  background: var(--surface-2);
+  border-radius: 10px; padding: 12px 14px; margin-top: 16px;
+  display: flex; flex-direction: column; gap: 8px;
 }
-.term-item  { display: flex; flex-direction: column; gap: 3px; }
-.term-name  { font-weight: 700; color: var(--ink); font-size: 14px; }
-.term-def   { color: var(--ink-muted); line-height: 1.6; font-size: 14px; margin: 0; }
+.term-item  { display: flex; flex-direction: column; gap: 2px; }
+.term-name  { font-weight: 600; color: var(--blue); font-size: 13px; }
+.term-def   { color: var(--ink-muted); line-height: 1.55; font-size: 13px; margin: 0; }
+
+/* ── Section Figures (사진 첨부) ──────────────── */
+.section-figures { display: flex; flex-direction: column; gap: 18px; margin-top: 20px; }
+.section-figure  { margin: 0; }
+.section-figure-img {
+  display: block; width: 100%; height: auto;
+  border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.section-figure-cap {
+  margin-top: 8px; font-size: 13px; line-height: 1.55;
+  color: var(--ink-muted); text-align: center;
+}
 
 /* ── Outro Block ─────────────────────────────── */
-.outro-block    { text-align: left; padding: 32px 0; }
-.outro-body     { line-height: 1.8; color: var(--ink); margin-bottom: 32px; }
-.outro-cta-wrap { text-align: center; padding-top: 8px; }
+/* 마지막 섹션 margin을 중화해 아웃트로 위/아래 여백을 뷰포트 무관하게 대칭 고정 */
+#articleBody > .article-section:last-child { margin-bottom: 0; }
+.outro-block    { text-align: left; padding: 24px 0 32px; }
+.outro-body     { line-height: 1.8; color: var(--ink); margin-bottom: 24px; }
+.outro-body p   { margin: 0 0 12px; }
+.outro-body p:last-child { margin-bottom: 0; }
+.outro-cta-wrap { text-align: center; padding-top: 0; }
 .outro-cta {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 14px 28px;

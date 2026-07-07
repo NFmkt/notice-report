@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이동 중…</title>
+  <script>
+    // GitHub Pages에는 서버 rewrite가 없으므로, /report/SLUG 요청은 404로 떨어진다.
+    // 여기서 경로를 파싱해 report.html?slug=SLUG 로 리다이렉트한다 (하위경로 배포도 자동 대응).
+    (function () {
+      var path = location.pathname;
+      var m = path.match(/\/report\/(.+?)\/?$/);
+      if (m) {
+        var slug = decodeURIComponent(m[1]);
+        var base = path.slice(0, m.index); // /report/ 앞부분 (예: /notice-report)
+        location.replace(base + '/report.html?slug=' + encodeURIComponent(slug) + location.hash);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <p style="font-family:'Pretendard Variable',Pretendard,sans-serif;color:#64748B;padding:40px;text-align:center">
+    페이지를 찾을 수 없습니다. <a href="index.html">목록으로 돌아가기</a>
+  </p>
+</body>
+</html>
