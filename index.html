@@ -22,20 +22,51 @@
 
   <section class="index-page-hero">
     <h1>공고 분석 리포트</h1>
-    <p>청년주택 공고를 쉽고 빠르게 분석해드려요!</p>
+    <p>청년주택 공고를 쉽고 빠르게 분석해드려요.</p>
   </section>
 
   <main class="index-content">
+    <!-- 로딩 스켈레톤 -->
+    <div id="listSkeleton" aria-hidden="true">
+      <div class="skeleton sk-hero"></div>
+      <div class="sk-grid">
+        <div class="skeleton sk-card"></div>
+        <div class="skeleton sk-card"></div>
+        <div class="skeleton sk-card"></div>
+        <div class="skeleton sk-card"></div>
+        <div class="skeleton sk-card"></div>
+        <div class="skeleton sk-card"></div>
+      </div>
+    </div>
+
     <!-- 히어로 카드 -->
-    <div id="heroCard"></div>
+    <div id="heroCard" style="display:none"></div>
+
+    <!-- 검색 + 정렬/필터 -->
+    <div class="list-controls" id="listControls" style="display:none">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 2a6.5 6.5 0 1 0 3.98 11.64l3.94 3.94a1 1 0 0 0 1.42-1.42l-3.94-3.94A6.5 6.5 0 0 0 8.5 2Zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z"/></svg>
+        <input id="searchInput" type="search" placeholder="공고명 검색" aria-label="공고명 검색" autocomplete="off">
+      </div>
+      <div class="sort-toggle" role="group" aria-label="정렬 및 필터">
+        <button type="button" class="sort-btn active" data-sort="latest" aria-pressed="true">최신순</button>
+        <button type="button" class="sort-btn" data-sort="open" aria-pressed="false">모집중</button>
+      </div>
+    </div>
+
     <!-- 그리드 -->
     <div id="gridSection" style="display:none">
-      <p class="grid-section-label">지난 리포트</p>
+      <p class="grid-section-label">전체 리포트</p>
       <div class="reports-grid" id="reportsGrid"></div>
+      <p class="no-results" id="noResults" style="display:none">검색 결과가 없어요.</p>
+      <nav class="pagination" id="pagination" style="display:none" aria-label="페이지 이동"></nav>
     </div>
+
     <!-- 빈 상태 -->
     <div class="empty-state" id="emptyState" style="display:none">
-      <p>아직 등록된 리포트가 없습니다.</p>
+      <svg class="empty-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 2.5A1.5 1.5 0 0 1 5.5 1h5.09a1.5 1.5 0 0 1 1.06.44l3.91 3.91A1.5 1.5 0 0 1 16 6.41V17.5A1.5 1.5 0 0 1 14.5 19h-9A1.5 1.5 0 0 1 4 17.5v-15Zm7 .91V6a.5.5 0 0 0 .5.5h2.59L11 3.41Z"/></svg>
+      <p class="empty-title">아직 등록된 리포트가 없어요</p>
+      <p>새 공고 분석 리포트가 준비되면 이곳에 올라와요.</p>
     </div>
   </main>
 
@@ -44,79 +75,201 @@
   </footer>
 
   <script>
-  async function loadIndex() {
-    try {
-      const res = await fetch('reports/index.json');
-      const data = await res.json();
-      const reports = data.reports || [];
+  (function () {
+    var PAGE_SIZE = 6;
 
-      if (!reports.length) {
-        document.getElementById('emptyState').style.display = 'block';
-        return;
-      }
+    var ICON = {
+      cal:  '<svg class="cal-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 1.75a.9.9 0 0 1 .9.9V3.2h5.2v-.55a.9.9 0 1 1 1.8 0V3.2h.35A2.5 2.5 0 0 1 17.25 5.7v8.6a2.5 2.5 0 0 1-2.5 2.5H5.25a2.5 2.5 0 0 1-2.5-2.5V5.7a2.5 2.5 0 0 1 2.5-2.5h.35v-.55a.9.9 0 0 1 .9-.9ZM4.55 7.9v6.4c0 .39.31.7.7.7h9.5a.7.7 0 0 0 .7-.7V7.9H4.55Z"/></svg>',
+      dot:  '<svg class="st-dot" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><circle cx="10" cy="10" r="4.5"/></svg>',
+      chevL:'<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M12.28 4.72a1 1 0 0 1 0 1.41L8.4 10l3.88 3.87a1 1 0 1 1-1.41 1.42l-4.59-4.58a1 1 0 0 1 0-1.42l4.59-4.58a1 1 0 0 1 1.41 0Z"/></svg>',
+      chevR:'<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.72 4.72a1 1 0 0 0 0 1.41L11.6 10l-3.88 3.87a1 1 0 1 0 1.41 1.42l4.59-4.58a1 1 0 0 0 0-1.42L9.13 4.72a1 1 0 0 0-1.41 0Z"/></svg>'
+    };
 
-      // 히어로 (첫 번째)
-      const hero = reports[0];
-      document.getElementById('heroCard').innerHTML = `
-        <a href="report.html?slug=${hero.slug}" class="hero-report-card">
-          <div class="hero-report-inner">
-            <div class="hero-report-content">
-              <span class="report-badge">${hero.badge}</span>
-              <h2 class="hero-report-title">${hero.title}</h2>
-              <p class="hero-report-subtitle">${hero.subtitle}</p>
-              <div class="hero-report-meta">
-                <span class="report-date">${hero.createdAt || hero.publishedAt}</span>
-                <span class="report-cta">리포트 읽기 →</span>
-              </div>
-            </div>
-            <div class="hero-report-icon">
-              <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <!-- 지붕 -->
-                <path d="M10 1.5L1.5 7.5H3V18.5H17V7.5H18.5L10 1.5Z" fill="white" opacity="0.15"/>
-                <!-- 건물 본체 -->
-                <rect x="3" y="7.5" width="14" height="11" rx="0.5" fill="white" opacity="0.15"/>
-                <!-- 지붕 삼각형 (진하게) -->
-                <path d="M10 2.5L2.5 8H17.5L10 2.5Z" fill="white" opacity="0.5"/>
-                <!-- 굴뚝 -->
-                <rect x="13" y="3.5" width="1.5" height="3" rx="0.5" fill="white" opacity="0.4"/>
-                <!-- 창문 왼쪽 위 -->
-                <rect x="4.5" y="9.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>
-                <!-- 창문 오른쪽 위 -->
-                <rect x="12.5" y="9.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>
-                <!-- 창문 왼쪽 아래 -->
-                <rect x="4.5" y="13.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>
-                <!-- 창문 오른쪽 아래 -->
-                <rect x="12.5" y="13.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>
-                <!-- 현관문 -->
-                <rect x="8.5" y="13" width="3" height="5.5" rx="0.5" fill="white" opacity="0.7"/>
-                <!-- 문 손잡이 -->
-                <circle cx="11" cy="15.8" r="0.4" fill="#2563EB" opacity="0.5"/>
-              </svg>
-            </div>
-          </div>
-        </a>`;
+    var HOUSE =
+      '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<path d="M10 1.5L1.5 7.5H3V18.5H17V7.5H18.5L10 1.5Z" fill="white" opacity="0.15"/>' +
+        '<rect x="3" y="7.5" width="14" height="11" rx="0.5" fill="white" opacity="0.15"/>' +
+        '<path d="M10 2.5L2.5 8H17.5L10 2.5Z" fill="white" opacity="0.5"/>' +
+        '<rect x="13" y="3.5" width="1.5" height="3" rx="0.5" fill="white" opacity="0.4"/>' +
+        '<rect x="4.5" y="9.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>' +
+        '<rect x="12.5" y="9.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>' +
+        '<rect x="4.5" y="13.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>' +
+        '<rect x="12.5" y="13.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>' +
+        '<rect x="8.5" y="13" width="3" height="5.5" rx="0.5" fill="white" opacity="0.7"/>' +
+        '<circle cx="11" cy="15.8" r="0.4" fill="#2563EB" opacity="0.5"/>' +
+      '</svg>';
 
-      // 그리드 (나머지)
-      const rest = reports.slice(1);
-      if (rest.length) {
-        document.getElementById('gridSection').style.display = 'block';
-        document.getElementById('reportsGrid').innerHTML = rest.map(r => `
-          <a href="report.html?slug=${r.slug}" class="report-card-item">
-            <span class="report-badge">${r.badge}</span>
-            <h3 class="report-card-title">${r.title}</h3>
-            <p class="report-card-subtitle">${r.subtitle}</p>
-            <div class="report-card-meta">
-              <span class="report-date">${r.createdAt || r.publishedAt}</span>
-              <span class="report-cta">읽기 →</span>
-            </div>
-          </a>`).join('');
-      }
-    } catch(e) {
-      console.error(e);
-      document.getElementById('emptyState').style.display = 'block';
+    var els = {
+      skeleton: document.getElementById('listSkeleton'),
+      hero:     document.getElementById('heroCard'),
+      controls: document.getElementById('listControls'),
+      search:   document.getElementById('searchInput'),
+      gridSec:  document.getElementById('gridSection'),
+      grid:     document.getElementById('reportsGrid'),
+      noResults:document.getElementById('noResults'),
+      pagination: document.getElementById('pagination'),
+      empty:    document.getElementById('emptyState')
+    };
+
+    var ALL = [];
+    var query = '';
+    var sortMode = 'latest';
+    var page = 1;
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
     }
-  }
-  loadIndex();
+    function slugKey(slug) { var m = /^(\d{8})/.exec(slug || ''); return m ? m[1] : '00000000'; }
+    function deadlineNum(r) { return r.applyEndISO ? Number(r.applyEndISO.replace(/-/g, '')) : Infinity; }
+
+    function computeStatus(iso) {
+      if (!iso) return null;
+      var p = iso.split('-').map(Number);
+      if (p.length < 3 || p.some(isNaN)) return null;
+      var end = new Date(p[0], p[1] - 1, p[2]); end.setHours(0, 0, 0, 0);
+      var today = new Date(); today.setHours(0, 0, 0, 0);
+      var diff = Math.round((end - today) / 86400000);
+      if (diff < 0) return { kind: 'closed', label: '마감' };
+      if (diff === 0) return { kind: 'urgent', label: '마감임박 · D-DAY' };
+      if (diff <= 3) return { kind: 'urgent', label: '마감임박 · D-' + diff };
+      return { kind: 'open', label: '모집중 · D-' + diff };
+    }
+    function fmtDeadline(iso) { return iso ? iso.replace(/-/g, '.') + ' 마감' : ''; }
+
+    function href(slug) { return 'report.html?slug=' + encodeURIComponent(slug); }
+
+    function heroHTML(r) {
+      var st = r.status;
+      var stBadge = st ? '<span class="hero-status hero-status--' + st.kind + '">' + ICON.dot + esc(st.label) + '</span>' : '';
+      var dl = r.applyEndISO ? '<span class="hero-report-deadline">' + ICON.cal + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
+      return '<a href="' + href(r.slug) + '" class="hero-report-card">' +
+        '<div class="hero-report-inner">' +
+          '<div class="hero-report-content">' +
+            '<div class="hero-badge-row"><span class="report-badge">최신 리포트</span>' + stBadge + '</div>' +
+            '<h2 class="hero-report-title">' + esc(r.title) + '</h2>' +
+            '<p class="hero-report-subtitle">' + esc(r.subtitle) + '</p>' +
+            '<div class="hero-report-meta">' + dl + '</div>' +
+          '</div>' +
+          '<div class="hero-report-icon">' + HOUSE + '</div>' +
+        '</div></a>';
+    }
+
+    function cardHTML(r) {
+      var st = r.status;
+      var stBadge = st ? '<span class="status-badge status-badge--' + st.kind + '">' + ICON.dot + esc(st.label) + '</span>' : '';
+      var dl = r.applyEndISO ? ICON.cal + '<span>' + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
+      return '<a href="' + href(r.slug) + '" class="report-card-item' + (st && st.kind === 'closed' ? ' is-closed' : '') + '">' +
+        '<div class="report-card-status">' + stBadge + '</div>' +
+        '<h3 class="report-card-title">' + esc(r.title) + '</h3>' +
+        '<p class="report-card-subtitle">' + esc(r.subtitle) + '</p>' +
+        '<div class="report-card-foot">' + dl + '</div>' +
+      '</a>';
+    }
+
+    function renderPagination(totalPages) {
+      if (totalPages <= 1) { els.pagination.style.display = 'none'; els.pagination.innerHTML = ''; return; }
+      var h = '<button type="button" class="pg-btn" data-pg="' + (page - 1) + '"' + (page === 1 ? ' disabled' : '') + ' aria-label="이전 페이지">' + ICON.chevL + '</button>';
+      for (var p = 1; p <= totalPages; p++) {
+        h += '<button type="button" class="pg-num' + (p === page ? ' active' : '') + '" data-pg="' + p + '"' + (p === page ? ' aria-current="page"' : '') + '>' + p + '</button>';
+      }
+      h += '<button type="button" class="pg-btn" data-pg="' + (page + 1) + '"' + (page === totalPages ? ' disabled' : '') + ' aria-label="다음 페이지">' + ICON.chevR + '</button>';
+      els.pagination.style.display = 'flex';
+      els.pagination.innerHTML = h;
+    }
+
+    function render() {
+      var q = query.trim().toLowerCase();
+      var base = ALL.slice();
+      if (q) base = base.filter(function (r) { return (r.title + ' ' + r.subtitle).toLowerCase().indexOf(q) !== -1; });
+
+      var isDefault = sortMode === 'latest' && !q;
+
+      if (sortMode === 'open') {
+        base = base.filter(function (r) { return r.status && r.status.kind !== 'closed'; });
+        base.sort(function (a, b) { return deadlineNum(a) - deadlineNum(b); });
+      } else {
+        base.sort(function (a, b) { return slugKey(b.slug).localeCompare(slugKey(a.slug)); });
+      }
+
+      var gridItems;
+      if (isDefault) {
+        els.hero.innerHTML = base.length ? heroHTML(base[0]) : '';
+        els.hero.style.display = base.length ? 'block' : 'none';
+        gridItems = base.slice(1);
+      } else {
+        els.hero.style.display = 'none';
+        els.hero.innerHTML = '';
+        gridItems = base;
+      }
+
+      var totalPages = Math.max(1, Math.ceil(gridItems.length / PAGE_SIZE));
+      if (page > totalPages) page = totalPages;
+      if (page < 1) page = 1;
+      var pageItems = gridItems.slice((page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + PAGE_SIZE);
+
+      els.grid.innerHTML = pageItems.map(cardHTML).join('');
+      for (var i = 0; i < els.grid.children.length; i++) els.grid.children[i].style.setProperty('--i', i);
+
+      var hasResults = gridItems.length > 0;
+      els.gridSec.style.display = 'block';
+      els.grid.style.display = hasResults ? 'grid' : 'none';
+      document.querySelector('.grid-section-label').style.display = hasResults ? 'block' : 'none';
+      els.noResults.style.display = hasResults ? 'none' : 'block';
+      els.noResults.textContent = q ? '검색 결과가 없어요.' : (sortMode === 'open' ? '진행 중인 공고가 없어요.' : '표시할 리포트가 없어요.');
+
+      renderPagination(totalPages);
+    }
+
+    function bind() {
+      els.search.addEventListener('input', function (e) { query = e.target.value; page = 1; render(); });
+      var btns = els.controls.querySelectorAll('.sort-btn');
+      Array.prototype.forEach.call(btns, function (btn) {
+        btn.addEventListener('click', function () {
+          if (btn.classList.contains('active')) return;
+          Array.prototype.forEach.call(btns, function (b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+          btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
+          sortMode = btn.getAttribute('data-sort'); page = 1; render();
+        });
+      });
+      els.pagination.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-pg]');
+        if (!b || b.disabled) return;
+        var p = Number(b.getAttribute('data-pg'));
+        if (!p || p === page) return;
+        page = p; render();
+        els.gridSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    function loadIndex() {
+      fetch('reports/index.json')
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          var reports = (data && data.reports) || [];
+          els.skeleton.style.display = 'none';
+
+          if (!reports.length) { els.empty.style.display = 'block'; return; }
+
+          ALL = reports.map(function (r) {
+            r.status = computeStatus(r.applyEndISO);
+            return r;
+          });
+
+          if (ALL.length > 1) els.controls.style.display = 'flex';
+          bind();
+          render();
+        })
+        .catch(function (e) {
+          console.error(e);
+          els.skeleton.style.display = 'none';
+          els.empty.style.display = 'block';
+        });
+    }
+
+    loadIndex();
+  })();
   </script>
 </body>
 </html>
