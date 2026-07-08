@@ -1,4 +1,4 @@
-admin/node_modules/
+admin/
 .claude/
 
 # 로컬 전용 — 공개 레포/배포에서 제외 (로컬 디스크에는 유지)
