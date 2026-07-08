@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>리포트 제작 의뢰 | 공고 분석 리포트</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
   <link rel="stylesheet" href="css/design-system.css">
@@ -20,7 +21,7 @@
     const d = JSON.parse(e.postData.contents);
     SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().appendRow([
       new Date(), d.product, d.orgName, d.phone, d.email,
-      d.noticeName, d.noticeType, d.noticeUrl, d.desiredDate, d.notes
+      d.noticeName, d.noticeUrl, d.desiredDate, d.notes
     ]);
     return ContentService
       .createTextOutput(JSON.stringify({ result: 'ok' }))
@@ -37,49 +38,67 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--surface); }
 
-    /* ── Header ── */
-    .ap-header {
+    /* ── Top shortcut bar ── */
+    .ap-topbar {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(255,255,255,.92); backdrop-filter: blur(10px);
+      background: rgba(255,255,255,.9); backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
     }
-    .ap-header-inner {
-      max-width: 720px; margin: 0 auto; padding: 0 20px;
-      height: 52px; display: flex; align-items: center; justify-content: space-between;
+    .ap-topbar-inner {
+      max-width: 720px; margin: 0 auto; padding: 10px 12px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
-    .ap-logo { font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -.01em; }
-    .ap-logo-dot { color: var(--blue); }
-    .ap-header-cta { font-size: 12px; color: var(--ink-muted); }
+    .ap-topbar-inner::-webkit-scrollbar { display: none; }
+    .ap-shortcut {
+      display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0;
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 13px; font-weight: 600; color: var(--ink);
+      text-decoration: none; white-space: nowrap;
+      transition: transform .15s ease, border-color .15s, box-shadow .15s, background .15s;
+    }
+    .ap-shortcut:hover {
+      transform: translateY(-2px);
+      border-color: var(--blue); background: #fff;
+      box-shadow: 0 6px 16px rgba(37,99,235,.14);
+    }
+    .ap-shortcut svg { width: 18px; height: 18px; flex-shrink: 0; display: block; }
 
     /* ── Hero ── */
     .ap-hero {
-      background: var(--ink);
-      padding: 72px 20px 64px;
+      position: relative; overflow: hidden;
+      background: linear-gradient(140deg, #3B82F6 0%, #2563EB 55%, #1D4ED8 100%);
+      padding: 68px 20px 58px;
       text-align: center;
     }
-    .ap-hero-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(37,99,235,.25); color: #93C5FD;
-      font-size: 12px; font-weight: 600; padding: 5px 12px;
-      border-radius: 20px; margin-bottom: 20px;
-      letter-spacing: .04em;
+    .ap-hero::before, .ap-hero::after {
+      content: ''; position: absolute; border-radius: 34px;
+      transform: rotate(35deg); pointer-events: none;
     }
-    .ap-hero-badge-dot { width: 6px; height: 6px; background: #60A5FA; border-radius: 50%; flex-shrink: 0; }
+    .ap-hero::before { width: 320px; height: 320px; top: -130px; right: -90px; background: rgba(255,255,255,.08); }
+    .ap-hero::after  { width: 210px; height: 210px; bottom: -120px; left: -70px; background: rgba(255,255,255,.06); }
+    .ap-hero > * { position: relative; z-index: 1; }
+    .ap-hero-eyebrow {
+      display: inline-block; font-size: 14px; font-weight: 700;
+      color: rgba(255,255,255,.82); letter-spacing: .02em; margin-bottom: 12px;
+    }
     .ap-hero-title {
       font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
       font-size: clamp(28px, 6vw, 42px); font-weight: 800;
-      color: #fff; line-height: 1.2; letter-spacing: -.02em;
+      color: #fff; line-height: 1.22; letter-spacing: -.02em;
       margin-bottom: 16px;
     }
-    .ap-hero-title em { color: #60A5FA; font-style: normal; }
-    .ap-hero-desc { font-size: 15px; color: #94A3B8; line-height: 1.7; max-width: 480px; margin: 0 auto 36px; }
+    .ap-hero-title em { color: #fff; font-style: normal; }
+    .ap-hero-desc { font-size: 17px; color: rgba(255,255,255,.9); line-height: 1.75; max-width: 480px; margin: 0 auto 36px; }
     .ap-hero-stats {
       display: flex; justify-content: center; gap: 32px;
-      padding-top: 32px; border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 32px; border-top: 1px solid rgba(255,255,255,.2);
       max-width: 420px; margin: 0 auto;
     }
     .ap-stat-val { font-size: 24px; font-weight: 800; color: #fff; }
-    .ap-stat-label { font-size: 11px; color: #64748B; margin-top: 2px; }
+    .ap-stat-label { font-size: 12px; color: rgba(255,255,255,.74); margin-top: 2px; }
 
     /* ── Process flow ── */
     .ap-process {
@@ -88,24 +107,29 @@
       padding: 32px 20px;
     }
     .ap-process-inner { max-width: 720px; margin: 0 auto; }
-    .ap-process-title { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-subtle); margin-bottom: 20px; text-align: center; }
+    .ap-process-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-subtle); margin-bottom: 20px; text-align: center; }
     .ap-flow {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0; flex-wrap: wrap;
+      display: flex; align-items: flex-start; justify-content: center;
+      gap: 0; flex-wrap: nowrap;
     }
-    .ap-flow-step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 80px; }
+    .ap-flow-step { display: flex; flex-direction: column; align-items: center; gap: 7px; flex: 1 1 0; min-width: 0; }
     .ap-flow-num {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 34px; height: 34px; border-radius: 50%;
       background: var(--blue); color: #fff;
-      font-size: 13px; font-weight: 700;
+      font-size: 14px; font-weight: 700; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
     }
-    .ap-flow-label { font-size: 12px; font-weight: 600; color: var(--ink); text-align: center; }
-    .ap-flow-sub { font-size: 11px; color: var(--ink-muted); text-align: center; }
-    .ap-flow-arrow { color: var(--border-strong); font-size: 14px; margin: 0 4px; padding-bottom: 20px; }
+    .ap-flow-label { font-size: 13px; font-weight: 600; color: var(--ink); text-align: center; line-height: 1.3; }
+    .ap-flow-sub { font-size: 12px; color: var(--ink-muted); text-align: center; line-height: 1.3; }
+    .ap-flow-arrow {
+      color: var(--border-strong); font-size: 15px; flex-shrink: 0;
+      height: 34px; display: flex; align-items: center; margin: 0 2px;
+    }
 
     /* ── Main content wrapper ── */
-    .ap-body { max-width: 720px; margin: 0 auto; padding: 0 20px 80px; }
+    .ap-body { max-width: 720px; margin: 0 auto; padding: 0 20px 40px; }
+    /* footer clears fixed CTA bar */
+    .ap-footer { padding-bottom: 110px !important; }
 
     /* ── Section card ── */
     .ap-section {
@@ -123,8 +147,8 @@
       display: flex; align-items: center; justify-content: center;
       margin-top: 1px;
     }
-    .ap-section-title { font-size: 16px; font-weight: 700; color: var(--ink); }
-    .ap-section-desc { font-size: 13px; color: var(--ink-muted); margin-top: 3px; }
+    .ap-section-title { font-size: 18px; font-weight: 700; color: var(--ink); }
+    .ap-section-desc { font-size: 14px; color: var(--ink-muted); margin-top: 3px; line-height: 1.5; }
     .ap-section-body { padding: 20px 24px 24px; }
 
     /* ── Product cards ── */
@@ -146,33 +170,37 @@
       opacity: 0; transition: opacity .15s;
     }
     .ap-product-tag {
-      display: inline-block; font-size: 11px; font-weight: 700;
-      padding: 3px 8px; border-radius: 6px; margin-bottom: 10px;
+      display: inline-block; font-size: 12px; font-weight: 700;
+      padding: 3px 9px; border-radius: 6px; margin-bottom: 10px;
       background: var(--surface-2); color: var(--ink-muted);
     }
     .ap-product-tag.premium { background: #FEF3C7; color: #92400E; }
-    .ap-product-name { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
-    .ap-product-price { font-size: 20px; font-weight: 800; color: var(--blue); margin-bottom: 12px; }
-    .ap-product-price span { font-size: 12px; font-weight: 500; color: var(--ink-muted); }
-    .ap-product-features { display: flex; flex-direction: column; gap: 5px; }
+    .ap-product-name { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .ap-product-price { font-size: 22px; font-weight: 800; color: var(--blue); margin-bottom: 12px; }
+    .ap-product-price span { font-size: 13px; font-weight: 500; color: var(--ink-muted); }
+    .ap-product-features { display: flex; flex-direction: column; gap: 7px; }
     .ap-product-feat {
-      font-size: 12px; color: var(--ink-muted); display: flex; gap: 6px; align-items: flex-start;
+      font-size: 13.5px; color: var(--ink-muted); display: flex; gap: 6px; align-items: flex-start; line-height: 1.45;
     }
     .ap-product-feat::before { content: '✓'; color: var(--emerald); font-weight: 700; flex-shrink: 0; }
+    .ap-product-subfeat {
+      font-size: 12.5px; color: var(--ink-subtle); line-height: 1.45;
+      margin-top: -2px; padding-left: 18px;
+    }
 
     /* ── Form fields ── */
     .ap-field-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
     .ap-field-group:last-child { margin-bottom: 0; }
     .ap-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .ap-label {
-      font-size: 13px; font-weight: 600; color: var(--ink);
+      font-size: 15px; font-weight: 600; color: var(--ink);
       display: flex; align-items: center; gap: 4px;
     }
-    .ap-req { color: var(--blue); font-size: 12px; }
+    .ap-req { color: var(--blue); font-size: 13px; }
     .ap-input, .ap-select, .ap-textarea {
-      width: 100%; padding: 10px 14px;
+      width: 100%; padding: 12px 14px;
       border: 1.5px solid var(--border); border-radius: 8px;
-      font-family: inherit; font-size: 14px; color: var(--ink);
+      font-family: inherit; font-size: 16px; color: var(--ink);
       background: #fff;
       transition: border-color .15s, box-shadow .15s;
       outline: none;
@@ -185,33 +213,36 @@
     .ap-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
     .ap-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
     .ap-textarea.tall { min-height: 130px; }
-    .ap-field-hint { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
+    .ap-field-hint { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
 
     /* ── Notice box ── */
     .ap-notice {
-      background: var(--surface); border-radius: 10px;
+      background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px;
       padding: 14px 16px; margin-top: 16px;
-      display: flex; gap: 10px;
+      display: flex; align-items: flex-start; gap: 10px;
     }
-    .ap-notice-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .ap-notice-text { font-size: 13px; color: var(--ink-muted); line-height: 1.7; }
-    .ap-notice-text strong { color: var(--ink); font-weight: 600; }
+    .ap-notice-icon { flex-shrink: 0; margin-top: 2px; }
+    .ap-notice-icon svg, .ap-warn-icon svg { width: 18px; height: 18px; display: block; }
+    .ap-notice-text { font-size: 14.5px; color: #1E40AF; line-height: 1.7; }
+    .ap-notice-text strong { color: #1E3A8A; font-weight: 700; }
 
     /* ── Warning box ── */
     .ap-warn {
       background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px;
       padding: 14px 16px; margin-top: 16px;
-      display: flex; gap: 10px;
+      display: flex; align-items: flex-start; gap: 10px;
     }
-    .ap-warn-text { font-size: 13px; color: #92400E; line-height: 1.7; }
+    .ap-warn-icon { flex-shrink: 0; margin-top: 2px; }
+    .ap-warn-text { font-size: 14.5px; color: #92400E; line-height: 1.7; }
+    .ap-warn-text strong { color: #78350F; font-weight: 700; }
 
     /* ── Checklist ── */
     .ap-checklist { display: flex; flex-direction: column; gap: 10px; }
     .ap-check-item {
       display: flex; align-items: flex-start; gap: 10px;
-      font-size: 13px; color: var(--ink); line-height: 1.5; cursor: pointer;
+      font-size: 14.5px; color: var(--ink); line-height: 1.55; cursor: pointer;
     }
-    .ap-check-item input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; accent-color: var(--blue); width: 15px; height: 15px; cursor: pointer; }
+    .ap-check-item input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; accent-color: var(--blue); width: 17px; height: 17px; cursor: pointer; }
     .ap-check-item a { color: var(--blue); }
 
     /* ── Submit section ── */
@@ -220,19 +251,29 @@
       border-radius: 16px; margin-top: 20px; padding: 24px;
     }
     .ap-submit-btn {
-      width: 100%; padding: 16px;
+      width: 100%; padding: 17px;
       background: var(--blue); color: #fff;
-      font-family: inherit; font-size: 16px; font-weight: 700;
+      font-family: inherit; font-size: 17px; font-weight: 700;
       border: none; border-radius: 10px; cursor: pointer;
       transition: background .15s, transform .1s;
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .ap-submit-btn:hover { background: #1D4ED8; }
-    .ap-submit-btn:active { transform: scale(.99); }
-    .ap-submit-btn:disabled { background: var(--ink-subtle); cursor: not-allowed; transform: none; }
+    .ap-submit-btn:hover { background: #1D4ED8; transform: translateY(-2px); box-shadow: 0 10px 24px rgba(37,99,235,.28); }
+    .ap-submit-btn:active { transform: translateY(0) scale(.99); box-shadow: none; }
+    .ap-submit-btn:disabled { background: var(--ink-subtle); cursor: not-allowed; transform: none; box-shadow: none; }
     .ap-submit-note {
-      font-size: 12px; color: var(--ink-muted); text-align: center; margin-top: 12px; line-height: 1.6;
+      font-size: 13px; color: var(--ink-muted); text-align: center; margin-top: 4px; line-height: 1.6;
     }
+
+    /* ── Fixed bottom CTA bar ── */
+    .ap-cta-bar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+      background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -6px 20px rgba(15,23,42,.06);
+      padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+    }
+    .ap-cta-inner { max-width: 720px; margin: 0 auto; }
 
     /* ── Success state ── */
     .ap-success {
@@ -242,8 +283,8 @@
       width: 64px; height: 64px; border-radius: 50%;
       background: #ECFDF5; margin: 0 auto 20px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
     }
+    .ap-success-icon svg { width: 40px; height: 40px; display: block; }
     .ap-success-title { font-size: 20px; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
     .ap-success-desc { font-size: 14px; color: var(--ink-muted); line-height: 1.7; }
 
@@ -254,39 +295,94 @@
     }
     .ap-footer a { color: var(--ink-muted); text-decoration: none; }
 
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1); }
+    .reveal.in-view { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .ap-shortcut:hover, .ap-submit-btn:hover { transform: none; }
+    }
+
     /* ── Mobile ── */
     @media (max-width: 520px) {
       .ap-product-grid { grid-template-columns: 1fr; }
       .ap-field-row { grid-template-columns: 1fr; }
+      .ap-hero { padding: 44px 20px 40px; }
+      .ap-hero-eyebrow { font-size: 13px; margin-bottom: 10px; }
+      .ap-hero-desc { font-size: 15px; line-height: 1.72; max-width: 340px; }
+      .ap-hero-desc .d-br { display: none; }
+      .ap-topbar-inner {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+        padding: 7px 8px; overflow: visible;
+      }
+      .ap-shortcut {
+        flex-direction: column; gap: 5px; padding: 8px 2px;
+        background: transparent; border: none; border-radius: 12px;
+        font-size: 11px; text-align: center; line-height: 1.2;
+      }
+      .ap-shortcut:hover { transform: none; box-shadow: none; background: var(--surface); }
+      .ap-shortcut svg { width: 24px; height: 24px; }
       .ap-hero-stats { gap: 20px; }
-      .ap-flow-label { font-size: 11px; }
+      .ap-process { padding: 28px 12px; }
+      .ap-flow-num { width: 30px; height: 30px; font-size: 13px; }
+      .ap-flow-arrow { height: 30px; font-size: 13px; margin: 0; }
+      .ap-flow-step { gap: 6px; }
+      .ap-flow-label { font-size: 12px; }
       .ap-flow-sub { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="ap-header">
-    <div class="ap-header-inner">
-      <a href="index.html" class="ap-logo">공고분석<span class="ap-logo-dot">.</span>리포트</a>
-      <span class="ap-header-cta">문의: gobang.kr</span>
-    </div>
-  </header>
+  <!-- Top shortcut bar -->
+  <div class="ap-topbar">
+    <nav class="ap-topbar-inner" aria-label="바로가기">
+      <a class="ap-shortcut" href="https://gobang.kr/home?p=homeAdvertisingPopup" target="_blank" rel="noopener">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 2.3 2.5 8.1c-.3.2-.5.6-.5 1v7.3c0 .6.5 1.1 1.1 1.1H8v-5.1h4v5.1h4.9c.6 0 1.1-.5 1.1-1.1V9.1c0-.4-.2-.8-.5-1L10 2.3Z" fill="#2563EB"/>
+        </svg>
+        고방 홈페이지
+      </a>
+      <a class="ap-shortcut" href="https://blog.naver.com/neoflat1116" target="_blank" rel="noopener">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="16" height="16" rx="4.5" fill="#03C75A"/>
+          <rect x="5.4" y="6.1" width="9.2" height="1.9" rx=".95" fill="#fff"/>
+          <rect x="5.4" y="9.1" width="9.2" height="1.9" rx=".95" fill="#fff"/>
+          <rect x="5.4" y="12.1" width="6" height="1.9" rx=".95" fill="#fff"/>
+        </svg>
+        블로그
+      </a>
+      <a class="ap-shortcut" href="https://www.instagram.com/gobang.kr" target="_blank" rel="noopener">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="16" height="16" rx="5" fill="#E4405F"/>
+          <circle cx="10" cy="10" r="3.6" fill="#fff"/>
+          <circle cx="10" cy="10" r="2.1" fill="#E4405F"/>
+          <circle cx="14.1" cy="5.9" r="1.15" fill="#fff"/>
+        </svg>
+        인스타그램
+      </a>
+      <a class="ap-shortcut" href="https://open.kakao.com/o/gspAuZ5" target="_blank" rel="noopener">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 3C5.6 3 2 5.85 2 9.35c0 2.28 1.53 4.28 3.85 5.4-.17.6-.62 2.2-.71 2.54-.11.42.15.42.32.3.13-.09 2.06-1.4 2.9-1.97.53.08 1.07.12 1.64.12 4.4 0 8-2.85 8-6.39C18 5.85 14.4 3 10 3Z" fill="#FEE500"/>
+          <circle cx="7.3" cy="9.2" r="1" fill="#3C1E1E"/>
+          <circle cx="10" cy="9.2" r="1" fill="#3C1E1E"/>
+          <circle cx="12.7" cy="9.2" r="1" fill="#3C1E1E"/>
+        </svg>
+        오픈채팅방
+      </a>
+    </nav>
+  </div>
 
   <!-- Hero -->
   <section class="ap-hero">
-    <div class="ap-hero-badge">
-      <span class="ap-hero-badge-dot"></span>
-      리포트 제작 의뢰
-    </div>
+    <span class="ap-hero-eyebrow">공고 분석 리포트 제작</span>
     <h1 class="ap-hero-title">
       공고, 그냥 올리지 말고<br>
       <em>리포트로 전달하세요</em>
     </h1>
     <p class="ap-hero-desc">
-      청년주택 공고를 읽기 쉬운 분석 리포트로 제작해 드립니다.<br>
-      신청 → 검수 → 제작 → 게시까지 보통 3영업일 이내.
+      청년주택 공고를 읽기 쉬운 분석 리포트로 제작해 드립니다.<br class="d-br">
+      신청 → 검수 → 제작 → 게시까지 평균 3영업일 이내 소요됩니다.
     </p>
     <div class="ap-hero-stats">
       <div>
@@ -347,51 +443,57 @@
     <form id="applyForm" novalidate>
 
       <!-- Step 1: 상품 선택 -->
-      <div class="ap-section">
+      <div class="ap-section reveal">
         <div class="ap-section-head">
           <div class="ap-step-badge">1</div>
           <div>
             <div class="ap-section-title">상품 선택</div>
-            <div class="ap-section-desc">제작 범위와 게시 기간을 선택하세요</div>
+            <div class="ap-section-desc">제작 범위에 따른 상품 타입을 선택해주세요.</div>
           </div>
         </div>
         <div class="ap-section-body">
           <div class="ap-product-grid">
 
             <label class="ap-product-card" id="card-basic">
-              <input type="radio" name="product" value="기본형 (150,000원)" required>
+              <input type="radio" name="product" value="A타입 (150,000원)" required>
               <div class="ap-product-check">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
               <div class="ap-product-tag">기본형</div>
-              <div class="ap-product-name">기본 리포트</div>
+              <div class="ap-product-name">A타입</div>
               <div class="ap-product-price">150,000<span>원</span></div>
               <div class="ap-product-features">
                 <div class="ap-product-feat">공고 분석 리포트 제작 1편</div>
-                <div class="ap-product-feat">리포트 페이지 14일 게시</div>
                 <div class="ap-product-feat">모바일·PC 최적화</div>
               </div>
             </label>
 
-            <label class="ap-product-card" id="card-premium">
-              <input type="radio" name="product" value="프리미엄형 (280,000원)" required>
+            <label class="ap-product-card selected" id="card-premium">
+              <input type="radio" name="product" value="B타입 (200,000원)" required checked>
               <div class="ap-product-check">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
               <div class="ap-product-tag premium">프리미엄</div>
-              <div class="ap-product-name">프리미엄 리포트</div>
-              <div class="ap-product-price">280,000<span>원</span></div>
+              <div class="ap-product-name">B타입</div>
+              <div class="ap-product-price">200,000<span>원</span></div>
               <div class="ap-product-features">
                 <div class="ap-product-feat">공고 분석 리포트 제작 1편</div>
-                <div class="ap-product-feat">리포트 페이지 60일 게시</div>
-                <div class="ap-product-feat">카카오 오픈채팅방 공유</div>
-                <div class="ap-product-feat">SNS 공유 카드 제작 포함</div>
+                <div class="ap-product-feat">모바일·PC 최적화</div>
+                <div class="ap-product-feat">SNS 전용 콘텐츠 제작 포함</div>
+                <div class="ap-product-feat">멀티 채널 발행</div>
+                <div class="ap-product-subfeat">(블로그, 인스타그램, 카카오 오픈채팅방)</div>
               </div>
             </label>
 
           </div>
           <div class="ap-notice">
-            <div class="ap-notice-icon">💡</div>
+            <div class="ap-notice-icon">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M10 2c-3.2 0-5.7 2.5-5.7 5.6 0 2 1.1 3.5 2.2 4.6.4.4.7.9.8 1.4h5.4c.1-.5.4-1 .8-1.4 1.1-1.1 2.2-2.6 2.2-4.6C15.7 4.5 13.2 2 10 2Z" fill="#FFC84D"/>
+                <path d="M7.1 12.6h5.8v1c0 .4-.3.7-.7.7H7.8c-.4 0-.7-.3-.7-.7v-1Z" fill="#313D4C"/>
+                <rect x="8.2" y="15.4" width="3.6" height="2.6" rx="1.3" fill="#313D4C"/>
+              </svg>
+            </div>
             <div class="ap-notice-text">
               <strong>지금은 결제 단계가 아닙니다.</strong> 신청서를 검토한 후 결제 링크를 연락처로 보내드립니다.
             </div>
@@ -400,40 +502,47 @@
       </div>
 
       <!-- Step 2: 의뢰인 정보 -->
-      <div class="ap-section">
+      <div class="ap-section reveal">
         <div class="ap-section-head">
           <div class="ap-step-badge">2</div>
           <div>
             <div class="ap-section-title">의뢰인 정보</div>
-            <div class="ap-section-desc">검수 결과와 결제 링크를 안내해 드릴 연락처입니다</div>
+            <div class="ap-section-desc">검수 결과와 결제 링크를 안내해 드릴 연락처를 입력해주세요.</div>
           </div>
         </div>
         <div class="ap-section-body">
-          <div class="ap-field-row">
-            <div class="ap-field-group">
-              <label class="ap-label" for="f-orgname">기관명 / 성함 <span class="ap-req">*</span></label>
-              <input class="ap-input" id="f-orgname" name="orgName" type="text" placeholder="예: LH한국토지주택공사" required>
-            </div>
-            <div class="ap-field-group">
-              <label class="ap-label" for="f-phone">연락처 <span class="ap-req">*</span></label>
-              <input class="ap-input" id="f-phone" name="phone" type="tel" placeholder="010-0000-0000" required>
-            </div>
+          <div class="ap-field-group">
+            <label class="ap-label" for="f-orgname">기관명 / 성함 <span class="ap-req">*</span></label>
+            <input class="ap-input" id="f-orgname" name="orgName" type="text" placeholder="예: LH한국토지주택공사" required>
+          </div>
+          <div class="ap-field-group">
+            <label class="ap-label" for="f-phone">연락처 <span class="ap-req">*</span></label>
+            <input class="ap-input" id="f-phone" name="phone" type="tel" placeholder="010-0000-0000" required>
           </div>
           <div class="ap-field-group">
             <label class="ap-label" for="f-email">이메일 <span class="ap-req">*</span></label>
             <input class="ap-input" id="f-email" name="email" type="email" placeholder="example@company.com" required>
-            <div class="ap-field-hint">검수 완료 안내 및 결제 링크를 이 이메일로 발송합니다.</div>
+          </div>
+          <div class="ap-notice">
+            <div class="ap-notice-icon">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <circle cx="10" cy="3" r="1.35" fill="#FF9000"/>
+                <path d="M10 3.3c-2.9 0-4.95 2.12-4.95 4.9v3l-1.06 1.72c-.33.53.05 1.22.67 1.22h10.68c.62 0 1-.69.67-1.22L14.95 11.2v-3c0-2.78-2.05-4.9-4.95-4.9Z" fill="#FFC84D"/>
+                <path d="M7.85 15.7a2.15 2.15 0 0 0 4.3 0H7.85Z" fill="#FF9000"/>
+              </svg>
+            </div>
+            <div class="ap-notice-text"><strong>검수 완료 안내 및 결제 링크</strong>를 이 연락처로 발송합니다.</div>
           </div>
         </div>
       </div>
 
       <!-- Step 3: 공고 정보 -->
-      <div class="ap-section">
+      <div class="ap-section reveal">
         <div class="ap-section-head">
           <div class="ap-step-badge">3</div>
           <div>
             <div class="ap-section-title">공고 정보</div>
-            <div class="ap-section-desc">분석할 공고의 정보를 입력해 주세요</div>
+            <div class="ap-section-desc">분석할 공고의 정보를 입력해주세요.</div>
           </div>
         </div>
         <div class="ap-section-body">
@@ -441,45 +550,36 @@
             <label class="ap-label" for="f-noticename">공고명 <span class="ap-req">*</span></label>
             <input class="ap-input" id="f-noticename" name="noticeName" type="text" placeholder="예: 2026년 LH 청년매입임대주택 예비입주자 모집공고" required>
           </div>
-          <div class="ap-field-row">
-            <div class="ap-field-group">
-              <label class="ap-label" for="f-noticetype">공고 유형 <span class="ap-req">*</span></label>
-              <select class="ap-select" id="f-noticetype" name="noticeType" required>
-                <option value="" disabled selected>유형 선택</option>
-                <option>청년주택 / 행복주택</option>
-                <option>공공임대 (영구·국민)</option>
-                <option>매입임대주택</option>
-                <option>분양·청약</option>
-                <option>전세임대</option>
-                <option>기타</option>
-              </select>
-            </div>
-            <div class="ap-field-group">
-              <label class="ap-label" for="f-desireddate">희망 게시일 <span class="ap-req">*</span></label>
-              <input class="ap-input" id="f-desireddate" name="desiredDate" type="date" required>
-            </div>
+          <div class="ap-field-group">
+            <label class="ap-label" for="f-desireddate">희망 게시일 <span class="ap-req">*</span></label>
+            <input class="ap-input" id="f-desireddate" name="desiredDate" type="date" required>
           </div>
           <div class="ap-field-group">
             <label class="ap-label" for="f-noticeurl">원문 공고 URL <span class="ap-req">*</span></label>
             <input class="ap-input" id="f-noticeurl" name="noticeUrl" type="url" placeholder="https://청약홈 또는 공공기관 공고 URL" required>
-            <div class="ap-field-hint">공고문 원본 링크 (청약홈, 기관 홈페이지 등)</div>
           </div>
           <div class="ap-warn">
-            <div style="font-size:16px;flex-shrink:0;margin-top:1px">⚠️</div>
+            <div class="ap-warn-icon">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M8.7 3.2 1.85 15.3c-.57 1 .16 2.25 1.3 2.25h13.7c1.14 0 1.87-1.25 1.3-2.25L11.3 3.2c-.57-1.01-2.03-1.01-2.6 0Z" fill="#FF9000"/>
+                <rect x="9" y="7.1" width="2" height="4.8" rx="1" fill="#fff"/>
+                <circle cx="10" cy="14.2" r="1.15" fill="#fff"/>
+              </svg>
+            </div>
             <div class="ap-warn-text">
-              <strong>다음 유형은 게재가 제한됩니다:</strong> 오피스텔·상업용 분양, 불법 전대·대부업 관련, 허위·과장 광고, 투기조장 목적 공고. 검수 과정에서 반려될 수 있습니다.
+              불법 전대·대부업 관련, 허위·과장 광고, 투기조장 목적 공고는 <strong>검수 과정에서 반려</strong>될 수 있습니다.
             </div>
           </div>
         </div>
       </div>
 
       <!-- Step 4: 추가 요청사항 -->
-      <div class="ap-section">
+      <div class="ap-section reveal">
         <div class="ap-section-head">
           <div class="ap-step-badge">4</div>
           <div>
             <div class="ap-section-title">추가 요청사항</div>
-            <div class="ap-section-desc">강조할 내용이나 특이사항이 있으면 알려주세요 (선택)</div>
+            <div class="ap-section-desc">강조할 내용이나 특이사항이 있으면 알려주세요. (선택)</div>
           </div>
         </div>
         <div class="ap-section-body">
@@ -492,7 +592,7 @@
       </div>
 
       <!-- 개인정보 + 제출 -->
-      <div class="ap-submit-wrap">
+      <div class="ap-submit-wrap reveal">
         <div class="ap-checklist" style="margin-bottom:20px">
           <label class="ap-check-item">
             <input type="checkbox" id="agree1" required>
@@ -500,23 +600,31 @@
           </label>
           <label class="ap-check-item">
             <input type="checkbox" id="agree2" required>
-            <span>[필수] <a href="#" onclick="return false">개인정보 수집·이용</a>에 동의합니다. (기관명, 연락처, 이메일 — 의뢰 처리 목적으로만 사용)</span>
+            <span>[필수] <a href="#" onclick="return false">개인정보 수집·이용</a>에 동의합니다. (기관명, 연락처, 이메일은 의뢰 처리 목적으로만 사용합니다.)</span>
           </label>
         </div>
-        <button type="submit" class="ap-submit-btn" id="submitBtn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          검수 신청하기
-        </button>
         <p class="ap-submit-note">신청서 검토 후 1영업일 이내에 입력하신 연락처로 안내 드립니다.</p>
 
         <!-- Success state (hidden until submission) -->
         <div class="ap-success" id="successMsg">
-          <div class="ap-success-icon">✅</div>
+          <div class="ap-success-icon">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="#23B169"/>
+              <path d="M7.5 13.48 4.03 10.0 2.84 11.18 7.5 15.83 17.5 5.83 16.33 4.66Z" fill="#fff"/>
+            </svg>
+          </div>
           <div class="ap-success-title">신청이 완료됐습니다!</div>
           <div class="ap-success-desc">
             입력하신 이메일로 접수 확인 메일을 보내드렸어요.<br>
             검토 후 <strong>1영업일 이내</strong>에 연락드리겠습니다.
           </div>
+        </div>
+      </div>
+
+      <!-- Fixed bottom CTA -->
+      <div class="ap-cta-bar" id="ctaBar">
+        <div class="ap-cta-inner">
+          <button type="submit" class="ap-submit-btn" id="submitBtn">검수 신청하기</button>
         </div>
       </div>
 
@@ -531,7 +639,7 @@
   <script>
     // ── Google Apps Script 엔드포인트 ───────────────────────────────────
     // Apps Script 배포 후 아래 URL 교체 (앞의 주석 참고)
-    const SHEET_URL = '';
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzCvOrlxDqlUQyoqLujcmDpMT0Uunjd2gf7HJTmbYSseIdfFyAXAVj0-qolpmk-fabC/exec';
 
     // ── 상품 카드 선택 토글 ──────────────────────────────────────────────
     document.querySelectorAll('.ap-product-card').forEach(card => {
@@ -542,6 +650,40 @@
         radio.checked = true;
       });
     });
+
+    // ── 연락처 자동 하이픈 (숫자만 입력해도 010-0000-0000 형태) ─────────────
+    const phoneEl = document.getElementById('f-phone');
+    phoneEl?.addEventListener('input', () => {
+      let d = phoneEl.value.replace(/\D/g, '').slice(0, 11);
+      let out = d;
+      if (d.startsWith('02')) {
+        // 서울 지역번호 (02-XXX(X)-XXXX)
+        if (d.length < 3) out = d;
+        else if (d.length < 6) out = d.replace(/(\d{2})(\d+)/, '$1-$2');
+        else if (d.length < 10) out = d.replace(/(\d{2})(\d{3})(\d+)/, '$1-$2-$3');
+        else out = d.replace(/(\d{2})(\d{4})(\d+)/, '$1-$2-$3');
+      } else {
+        // 휴대폰·기타 (010-XXXX-XXXX / 3-3-4)
+        if (d.length < 4) out = d;
+        else if (d.length < 7) out = d.replace(/(\d{3})(\d+)/, '$1-$2');
+        else if (d.length < 11) out = d.replace(/(\d{3})(\d{3})(\d+)/, '$1-$2-$3');
+        else out = d.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+      }
+      phoneEl.value = out;
+    });
+
+    // ── 스크롤 리빌 애니메이션 ──────────────────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if (en.isIntersecting) { en.target.classList.add('in-view'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(el => io.observe(el));
+    } else {
+      revealEls.forEach(el => el.classList.add('in-view'));
+    }
 
     // ── 글자수 카운터 ────────────────────────────────────────────────────
     const notesEl = document.getElementById('f-notes');
@@ -558,7 +700,7 @@
       const form = e.target;
 
       // 기본 유효성
-      if (!form.product.value) { alert('상품을 선택해 주세요.'); return; }
+      if (!form.product.value) { alert('상품을 선택해주세요.'); return; }
       if (!document.getElementById('agree1').checked || !document.getElementById('agree2').checked) {
         alert('필수 동의 항목을 모두 체크해 주세요.');
         return;
@@ -578,7 +720,6 @@
         phone:       form.phone.value,
         email:       form.email.value,
         noticeName:  form.noticeName.value,
-        noticeType:  form.noticeType.value,
         noticeUrl:   form.noticeUrl.value,
         desiredDate: form.desiredDate.value,
         notes:       form.notes.value,
@@ -601,11 +742,11 @@
         // 성공 상태
         form.querySelectorAll('input, select, textarea, button').forEach(el => el.disabled = true);
         document.getElementById('successMsg').style.display = 'block';
-        btn.style.display = 'none';
+        document.getElementById('ctaBar').style.display = 'none';
         document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
       } catch (err) {
         btn.disabled = false;
-        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> 검수 신청하기`;
+        btn.textContent = '검수 신청하기';
         alert('제출 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
       }
     });
