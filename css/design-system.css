@@ -21,9 +21,12 @@
 
 * { box-sizing: border-box; }
 
+/* 전체 사이즈 스케일 ~1.18x — rem 기반 요소는 이 root 값에 비례해 함께 커짐 */
+html { font-size: 118.75%; }
+
 body {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 16px;
+  font-size: 19px;
   line-height: 1.6;
   color: var(--ink);
   background: var(--bg);

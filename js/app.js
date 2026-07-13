@@ -211,5 +211,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (slug) {
     loadReport(slug);
+  } else {
+    showNoSlugError();
   }
 });
+
+// slug 파라미터 자체가 없을 때 — 스켈레톤이 무한 로딩처럼 보이는 것을 방지
+function showNoSlugError() {
+  const sk = document.getElementById('loadingSkeleton');
+  if (sk) sk.style.display = 'none';
+
+  const articleBody = document.getElementById('articleBody');
+  if (articleBody) {
+    articleBody.innerHTML = `
+      <div class="article-section">
+        <h2 class="article-section-title">리포트 주소가 올바르지 않습니다</h2>
+        <p>URL에 <code>?slug=xxx</code> 파라미터가 없습니다.<br>
+        예: <code>report.html?slug=리포트slug</code> 또는 <code>/report/리포트slug</code> 형식으로 접속해 주세요.<br>
+        ("report.html?slug=..." 형태 그대로는 로컬 서버(serve)의 clean-URL 리다이렉트로 쿼리가 날아갈 수 있으니, 로컬 테스트 시 확장자 없는 <code>/report?slug=...</code> 사용을 권장합니다.)</p>
+      </div>`;
+  }
+}
