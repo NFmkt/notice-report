@@ -1763,6 +1763,7 @@ a:focus-visible {
 }
 .channel-badge--youth   { background: var(--accent-light); color: var(--accent-dark); }
 .channel-badge--bunyang { background: var(--teal-light); color: var(--teal); }
+.channel-badge--minjian { background: #F5F3FF; color: #7C3AED; }
 .channel-badge-icon { width: 12px; height: 12px; flex-shrink: 0; }
 .hero-channel-badge {
   display: inline-flex; align-items: center; gap: 4px;
@@ -1773,6 +1774,7 @@ a:focus-visible {
 }
 .hero-channel-badge--youth   { color: var(--accent); border-color: var(--accent); }
 .hero-channel-badge--bunyang { color: var(--teal); border-color: var(--teal); }
+.hero-channel-badge--minjian { color: #7C3AED; border-color: #7C3AED; }
 
 /* ── 상태 배지 (채널 배지와 구분되도록 테두리형으로) ── */
 .status-badge {
