@@ -1782,12 +1782,18 @@ a:focus-visible {
 /* ── 채널 배지 ── */
 .channel-badge {
   display: inline-flex; align-items: center; gap: 4px;
-  font-size: 13px; font-weight: 700; line-height: 1;
+  font-size: 14px; font-weight: 700; line-height: 1;
   padding: 4px 10px; border-radius: 999px;
 }
 .channel-badge--youth   { background: var(--accent-light); color: var(--accent-dark); }
 .channel-badge--bunyang { background: var(--teal-light); color: var(--teal); }
-.hero-channel-badge { background: #fff; color: var(--text-primary); font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+.hero-channel-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2); color: #fff;
+  font-size: 0.72rem; font-weight: 700;
+  padding: 4px 12px; border-radius: 999px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
 
 /* ── 상태 배지 ── */
 .status-badge {

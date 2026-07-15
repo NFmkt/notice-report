@@ -120,14 +120,13 @@
       '줍줍분양': { cls: 'bunyang', label: '줍줍분양' }
     };
     function channelMeta(ch) { return CH_META[ch] || { cls: 'youth', label: ch || '청년주택' }; }
-    function channelCatSuffix(r) { return r.category ? ' · ' + esc(r.category) : ''; }
+    function channelLabel(r) { var m = channelMeta(r.channel); return r.category || m.label; }
     function channelBadgeHTML(r) {
       var m = channelMeta(r.channel);
-      return '<span class="channel-badge channel-badge--' + m.cls + '">' + esc(m.label) + channelCatSuffix(r) + '</span>';
+      return '<span class="channel-badge channel-badge--' + m.cls + '">' + esc(channelLabel(r)) + '</span>';
     }
     function heroChannelBadgeHTML(r) {
-      var m = channelMeta(r.channel);
-      return '<span class="hero-channel-badge">' + esc(m.label) + channelCatSuffix(r) + '</span>';
+      return '<span class="hero-channel-badge">' + esc(channelLabel(r)) + '</span>';
     }
 
     var ALL = [];
