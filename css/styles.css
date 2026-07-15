@@ -946,11 +946,13 @@ a:focus-visible {
 .hero-report-icon svg { width: 100%; height: 100%; }
 .report-badge {
   display: inline-block;
-  background: rgba(255,255,255,0.2);
-  color: white;
-  font-size: 0.72rem;
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  font-size: 13px;
   font-weight: 700;
-  padding: 4px 12px;
+  line-height: 1;
+  padding: 5px 10px;
   border-radius: 999px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1756,17 +1758,21 @@ a:focus-visible {
 .channel-badge {
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 14px; font-weight: 700; line-height: 1;
-  padding: 4px 10px; border-radius: 999px;
+  padding: 3px 9px; border-radius: 999px;
+  border: 1.5px solid transparent;
 }
 .channel-badge--youth   { background: var(--accent-light); color: var(--accent-dark); }
 .channel-badge--bunyang { background: var(--teal-light); color: var(--teal); }
+.channel-badge-icon { width: 12px; height: 12px; flex-shrink: 0; }
 .hero-channel-badge {
-  display: inline-block;
-  background: rgba(255,255,255,0.2); color: #fff;
-  font-size: 0.72rem; font-weight: 700;
-  padding: 4px 12px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #fff; border: 1.5px solid;
+  font-size: 13px; font-weight: 700; line-height: 1;
+  padding: 5px 10px; border-radius: 999px;
   letter-spacing: 0.06em; text-transform: uppercase;
 }
+.hero-channel-badge--youth   { color: var(--accent); border-color: var(--accent); }
+.hero-channel-badge--bunyang { color: var(--teal); border-color: var(--teal); }
 
 /* ── 상태 배지 (채널 배지와 구분되도록 테두리형으로) ── */
 .status-badge {
@@ -1776,7 +1782,7 @@ a:focus-visible {
   background: #fff; border: 1.5px solid;
 }
 .status-badge--open   { color: #16A34A; border-color: #16A34A; }
-.status-badge--urgent { color: #D97706; border-color: #D97706; }
+.status-badge--urgent { color: #EF4452; border-color: #EF4452; }
 .status-badge--closed { color: #64748B; border-color: #CBD5E1; }
 
 /* ── 카드 (마감일 하단 고정) ── */
@@ -1797,10 +1803,13 @@ a:focus-visible {
 .hero-report-card .report-badge { margin-bottom: 0; }
 .hero-status {
   display: inline-flex; align-items: center; gap: 5px;
-  font-size: 14px; font-weight: 600; line-height: 1;
-  padding: 4px 10px; border-radius: 999px;
-  background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.4);
+  font-size: 13px; font-weight: 600; line-height: 1;
+  padding: 5px 10px; border-radius: 999px;
+  background: #fff; border: 1.5px solid;
 }
+.hero-status--open   { color: #16A34A; border-color: #16A34A; }
+.hero-status--urgent { color: #EF4452; border-color: #EF4452; }
+.hero-status--closed { color: #64748B; border-color: #CBD5E1; }
 .hero-report-deadline { display: inline-flex; align-items: center; gap: 5px; font-size: 15px; color: rgba(255,255,255,0.85); }
 .hero-report-deadline .cal-icon { width: 14px; height: 14px; flex-shrink: 0; }
 

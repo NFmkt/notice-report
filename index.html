@@ -90,6 +90,11 @@
       chevR:'<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.72 4.72a1 1 0 0 0 0 1.41L11.6 10l-3.88 3.87a1 1 0 1 0 1.41 1.42l4.59-4.58a1 1 0 0 0 0-1.42L9.13 4.72a1 1 0 0 0-1.41 0Z"/></svg>'
     };
 
+    var CH_ICON = {
+      youth:   '<svg class="channel-badge-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><circle cx="10" cy="6.8" r="3.4"/><path d="M3.6 17.2c0-3.9 2.9-6.4 6.4-6.4s6.4 2.5 6.4 6.4a1 1 0 0 1-1 1H4.6a1 1 0 0 1-1-1Z"/></svg>',
+      bunyang: '<svg class="channel-badge-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M11.2 1.5 3.8 11.6h4.4l-1.4 6.9 8-10.8h-4.6z"/></svg>'
+    };
+
     var HOUSE =
       '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
         '<rect x="4" y="3" width="12" height="15" rx="1.4" fill="#FFFFFF"/>' +
@@ -121,10 +126,11 @@
     function channelLabel(r) { var m = channelMeta(r.channel); return r.category || m.label; }
     function channelBadgeHTML(r) {
       var m = channelMeta(r.channel);
-      return '<span class="channel-badge channel-badge--' + m.cls + '">' + esc(channelLabel(r)) + '</span>';
+      return '<span class="channel-badge channel-badge--' + m.cls + '">' + CH_ICON[m.cls] + esc(channelLabel(r)) + '</span>';
     }
     function heroChannelBadgeHTML(r) {
-      return '<span class="hero-channel-badge">' + esc(channelLabel(r)) + '</span>';
+      var m = channelMeta(r.channel);
+      return '<span class="hero-channel-badge hero-channel-badge--' + m.cls + '">' + CH_ICON[m.cls] + esc(channelLabel(r)) + '</span>';
     }
 
     var ALL = [];
