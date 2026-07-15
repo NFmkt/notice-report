@@ -17,20 +17,20 @@
   <!-- ① 헤더: 뷰 토글 + 스크롤 프로그레스바 -->
   <header class="site-header">
     <div class="header-inner">
-      <div class="header-left">
+      <span class="header-tag">공고 분석 리포트</span>
+      <div class="header-right">
         <a class="back-home-link" href="index.html" aria-label="목록으로 돌아가기">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
           <span>목록</span>
         </a>
-        <span class="header-tag">공고 분석 리포트</span>
+        <button class="share-btn" id="shareBtn" aria-label="리포트 공유">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          공유
+        </button>
       </div>
-      <button class="share-btn" id="shareBtn" aria-label="리포트 공유">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-        </svg>
-        공유
-      </button>
     </div>
     <div class="progress-bar" id="progressBar"></div>
   </header>
