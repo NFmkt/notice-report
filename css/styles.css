@@ -36,9 +36,6 @@
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
-
-  /* Header height */
-  --header-h: 70px;
 }
 
 /* ============================================
@@ -100,51 +97,18 @@ a:focus-visible {
 }
 
 /* ============================================
-   Header
+   히어로 툴바 — 목록/공유 (이전엔 고정 헤더 안에 있었음)
    ============================================ */
 
-.site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  height: var(--header-h);
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.header-inner {
+.hero-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-xl);
-  height: calc(var(--header-h) - 4px);
+  margin-bottom: var(--space-md);
 }
+/* 링크 내부 padding만큼 본문 텍스트(배지/제목)와 좌측이 어긋나는 것 보정 */
+.hero-toolbar .back-home-link { margin-left: -8px; }
 
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--accent);
-  text-decoration: none;
-  border-radius: var(--radius-sm);
-}
-.header-logo:hover { opacity: 0.85; }
-.header-logo-icon { flex-shrink: 0; }
-.header-logo-text {
-  font-family: var(--font-body);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.header-right { display: flex; align-items: center; gap: 10px; }
 .back-home-link {
   display: flex; align-items: center; gap: 4px;
   font-family: var(--font-body); font-size: 14px; font-weight: 600;
@@ -155,18 +119,6 @@ a:focus-visible {
 .back-home-link:hover { background: var(--accent-light); color: var(--accent); }
 .back-home-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .back-home-link svg { flex-shrink: 0; }
-
-/* ============================================
-   Progress Bar
-   ============================================ */
-
-.progress-bar {
-  height: 4px;
-  background: var(--accent);
-  width: 0%;
-  transition: width 0.1s linear;
-  flex-shrink: 0;
-}
 
 /* ============================================
    View Toggle
@@ -218,7 +170,7 @@ a:focus-visible {
    ============================================ */
 
 .hero {
-  padding-top: calc(var(--header-h) + var(--space-2xl));
+  padding-top: var(--space-2xl);
   padding-bottom: var(--space-2xl);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -942,15 +894,23 @@ a:focus-visible {
    ============================================ */
 
 .index-page-hero {
-  padding: calc(var(--header-h) + var(--space-2xl)) var(--space-xl) var(--space-xl);
+  padding: var(--space-2xl) var(--space-xl) var(--space-xl);
   max-width: 1200px;
   margin: 0 auto;
 }
 .index-page-hero h1 {
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: clamp(1.6rem, 3.6vw, 2.5rem);
   font-weight: 800;
   color: var(--text-primary);
   margin-bottom: var(--space-sm);
+}
+.index-page-hero-icon {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
 }
 .index-page-hero p { color: var(--text-secondary); font-size: 1rem; }
 
@@ -1021,14 +981,6 @@ a:focus-visible {
   border-radius: 999px;
 }
 
-.grid-section-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-lg);
-}
 .reports-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -1045,7 +997,7 @@ a:focus-visible {
 }
 .report-card-item:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
 .report-card-item .report-badge { background: var(--accent-light); color: var(--accent); margin-bottom: var(--space-sm); }
-.report-card-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.4; margin-bottom: var(--space-sm); }
+.report-card-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); line-height: 1.55; margin-bottom: var(--space-sm); }
 .report-card-subtitle {
   font-size: 0.875rem;
   color: var(--text-secondary);
@@ -1655,14 +1607,12 @@ a:focus-visible {
    ============================================================ */
 @media (max-width: 768px) {
 
-  /* ── Header ─── */
-  .header-inner { padding: 0 var(--space-md); }
-  .header-logo-text { display: none; }
+  /* ── 목록/공유 버튼 (재배치 대기 중) ─── */
   .back-home-link span { display: none; }
 
   /* ── Hero ─── */
   .hero {
-    padding-top: calc(var(--header-h) + var(--space-lg));
+    padding-top: var(--space-lg);
     padding-bottom: var(--space-lg);
   }
   .hero-inner   { padding: 0 var(--space-md); }
@@ -1742,7 +1692,7 @@ a:focus-visible {
   .toc-fab { display: flex; }
 
   /* ── Index page ─── */
-  .index-page-hero { padding: calc(var(--header-h) + var(--space-xl)) var(--space-md) var(--space-md); }
+  .index-page-hero { padding: var(--space-xl) var(--space-md) var(--space-md); }
   .index-content   { padding: 0 var(--space-md) var(--space-xl); }
   .hero-report-inner { padding: var(--space-xl) var(--space-md); }
   .hero-report-icon  { display: none; }
@@ -1834,7 +1784,7 @@ a:focus-visible {
 .report-card-item { display: flex; flex-direction: column; height: 100%; }
 .report-card-item:hover { border-color: var(--accent); }
 .report-card-item.is-closed { opacity: 0.82; }
-.report-card-status { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; margin-bottom: var(--space-sm); min-height: 20px; }
+.report-card-status { display: flex; align-items: center; justify-content: flex-start; gap: 8px; flex-wrap: wrap; margin-bottom: var(--space-sm); min-height: 20px; }
 .report-card-foot {
   margin-top: auto; display: flex; align-items: center; gap: 5px;
   padding-top: 12px; border-top: 1px solid var(--border);

@@ -14,23 +14,18 @@
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="header-logo" href="index.html" aria-label="공고 분석 리포트 홈">
-        <svg class="header-logo-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M5.5 2.5A1.5 1.5 0 0 1 7 1h3.17a1.5 1.5 0 0 1 1.06.44l2.83 2.83A1.5 1.5 0 0 1 14.5 5.33V17.5A1.5 1.5 0 0 1 13 19H7a1.5 1.5 0 0 1-1.5-1.5v-15Z" fill="currentColor"/>
-          <path d="M10.5 1.2V4.5A1.5 1.5 0 0 0 12 6h3.3L10.5 1.2Z" fill="currentColor" opacity="0.35"/>
-          <rect x="7.3" y="9" width="5.4" height="1.3" rx="0.65" fill="#fff"/>
-          <rect x="7.3" y="11.6" width="5.4" height="1.3" rx="0.65" fill="#fff"/>
-          <rect x="7.3" y="14.2" width="3.6" height="1.3" rx="0.65" fill="#fff"/>
-        </svg>
-        <span class="header-logo-text">공고 분석 리포트</span>
-      </a>
-    </div>
-  </header>
-
   <section class="index-page-hero">
-    <h1>공고 분석 리포트</h1>
+    <h1>
+      <svg class="index-page-hero-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <rect width="20" height="20" rx="4.5" fill="#2563EB"/>
+        <rect x="5" y="3.4" width="10" height="13.2" rx="1.9" fill="#fff"/>
+        <rect x="7" y="6.2" width="6" height="1.6" rx=".8" fill="#FFC84D"/>
+        <rect x="7" y="9" width="6" height="1.5" rx=".75" fill="#93C5FD"/>
+        <rect x="7" y="11.5" width="6" height="1.5" rx=".75" fill="#93C5FD"/>
+        <rect x="7" y="14" width="3.5" height="1.5" rx=".75" fill="#93C5FD"/>
+      </svg>
+      공고 분석 리포트
+    </h1>
     <p>청년주택, 줍줍분양, 민간임대 공고를 빠르게 분석해드려요.</p>
   </section>
 
@@ -68,7 +63,6 @@
 
     <!-- 그리드 -->
     <div id="gridSection" style="display:none">
-      <p class="grid-section-label">전체 리포트</p>
       <div class="reports-grid" id="reportsGrid"></div>
       <p class="no-results" id="noResults" style="display:none">검색 결과가 없어요.</p>
       <nav class="pagination" id="pagination" style="display:none" aria-label="페이지 이동"></nav>
@@ -99,16 +93,12 @@
 
     var HOUSE =
       '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-        '<path d="M10 1.5L1.5 7.5H3V18.5H17V7.5H18.5L10 1.5Z" fill="white" opacity="0.15"/>' +
-        '<rect x="3" y="7.5" width="14" height="11" rx="0.5" fill="white" opacity="0.15"/>' +
-        '<path d="M10 2.5L2.5 8H17.5L10 2.5Z" fill="white" opacity="0.5"/>' +
-        '<rect x="13" y="3.5" width="1.5" height="3" rx="0.5" fill="white" opacity="0.4"/>' +
-        '<rect x="4.5" y="9.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>' +
-        '<rect x="12.5" y="9.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>' +
-        '<rect x="4.5" y="13.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>' +
-        '<rect x="12.5" y="13.5" width="3" height="2.5" rx="0.5" fill="white" opacity="0.5"/>' +
-        '<rect x="8.5" y="13" width="3" height="5.5" rx="0.5" fill="white" opacity="0.7"/>' +
-        '<circle cx="11" cy="15.8" r="0.4" fill="#2563EB" opacity="0.5"/>' +
+        '<rect x="4" y="3" width="12" height="15" rx="1.4" fill="#FFFFFF"/>' +
+        '<rect x="6.1" y="5.3" width="2.6" height="2.6" rx="0.5" fill="#FFC84D"/>' +
+        '<rect x="11.3" y="5.3" width="2.6" height="2.6" rx="0.5" fill="#64A7FF"/>' +
+        '<rect x="6.1" y="9.3" width="2.6" height="2.6" rx="0.5" fill="#64A7FF"/>' +
+        '<rect x="11.3" y="9.3" width="2.6" height="2.6" rx="0.5" fill="#FFC84D"/>' +
+        '<rect x="8.3" y="13.3" width="3.4" height="4.7" rx="0.5" fill="#313D4C"/>' +
       '</svg>';
 
     var els = {
@@ -252,7 +242,6 @@
       var hasResults = gridItems.length > 0;
       els.gridSec.style.display = 'block';
       els.grid.style.display = hasResults ? 'grid' : 'none';
-      document.querySelector('.grid-section-label').style.display = hasResults ? 'block' : 'none';
       els.noResults.style.display = hasResults ? 'none' : 'block';
       els.noResults.textContent = q ? '검색 결과가 없어요.' : (sortMode === 'open' ? '진행 중인 공고가 없어요.' : '표시할 리포트가 없어요.');
 
