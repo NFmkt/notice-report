@@ -46,12 +46,12 @@ function renderImages(images) {
   return `<div class="section-figures">${items}</div>`;
 }
 
-function renderSection(section) {
+function renderSection(section, channel) {
   const renderer = COMPONENT_RENDERERS[section.component && section.component.type];
-  const componentHtml = renderer ? renderer(section.component.data) : '';
+  const componentHtml = renderer ? renderer(section.component.data, channel) : '';
   const blocksHtml = (section.blocks || []).map(block => {
     const r = COMPONENT_RENDERERS[block.type];
-    return r ? `<div class="section-block">${r(block.data)}</div>` : '';
+    return r ? `<div class="section-block">${r(block.data, channel)}</div>` : '';
   }).join('');
   const iconSvg = SECTION_ICONS[section.id] || '';
   return `
@@ -70,10 +70,12 @@ function renderSection(section) {
 }
 
 export function renderReport(data, container, sectionIndexList) {
+  const channel = data.meta && data.meta.channel;
+
   // 요약 카드
   const summaryEl = document.getElementById('summaryCard');
   if (summaryEl && data.summary) {
-    summaryEl.innerHTML = renderSummaryCard(data.summary);
+    summaryEl.innerHTML = renderSummaryCard(data.summary, channel);
   }
 
   // 인트로
@@ -87,7 +89,7 @@ export function renderReport(data, container, sectionIndexList) {
   if (sectionIndexList) sectionIndexList.innerHTML = '';
 
   (data.sections || []).forEach(section => {
-    container.insertAdjacentHTML('beforeend', renderSection(section));
+    container.insertAdjacentHTML('beforeend', renderSection(section, channel));
 
     // TOC: 지정된 섹션만
     if (sectionIndexList && TOC_SECTION_IDS.includes(section.id)) {

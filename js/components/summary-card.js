@@ -1,6 +1,7 @@
 // js/components/summary-card.js
-export function renderSummaryCard(summary) {
+export function renderSummaryCard(summary, channel) {
   const { organizer, totalUnits, minRent, applyStart, applyEnd } = summary;
+  const minRentLabel = channel === '줍줍분양' ? '최저 분양가' : '최저 월세';
   return `
     <div class="summary-2x2">
       <div class="s2-card">
@@ -26,7 +27,7 @@ export function renderSummaryCard(summary) {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
         <div class="s2-body">
-          <div class="s2-label">최저 월세</div>
+          <div class="s2-label">${minRentLabel}</div>
           <div class="s2-value">${minRent}~</div>
         </div>
       </div>
