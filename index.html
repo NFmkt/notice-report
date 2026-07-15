@@ -22,7 +22,7 @@
 
   <section class="index-page-hero">
     <h1>공고 분석 리포트</h1>
-    <p>청년주택 공고를 쉽고 빠르게 분석해드려요.</p>
+    <p>임대주택·분양 공고를 쉽고 빠르게 분석해드려요.</p>
   </section>
 
   <main class="index-content">
@@ -159,14 +159,15 @@
 
     function href(slug) { return 'report.html?slug=' + encodeURIComponent(slug); }
 
-    function heroHTML(r) {
+    function heroHTML(r, isFeatured) {
       var st = r.status;
       var stBadge = st ? '<span class="hero-status hero-status--' + st.kind + '">' + ICON.dot + esc(st.label) + '</span>' : '';
       var dl = r.applyEndISO ? '<span class="hero-report-deadline">' + ICON.cal + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
+      var ribbon = isFeatured ? '추천 리포트' : '최신 리포트';
       return '<a href="' + href(r.slug) + '" class="hero-report-card">' +
         '<div class="hero-report-inner">' +
           '<div class="hero-report-content">' +
-            '<div class="hero-badge-row"><span class="report-badge">최신 리포트</span>' + heroChannelBadgeHTML(r) + stBadge + '</div>' +
+            '<div class="hero-badge-row"><span class="report-badge">' + ribbon + '</span>' + heroChannelBadgeHTML(r) + stBadge + '</div>' +
             '<h2 class="hero-report-title">' + esc(r.title) + '</h2>' +
             '<p class="hero-report-subtitle">' + esc(r.subtitle) + '</p>' +
             '<div class="hero-report-meta">' + dl + '</div>' +
@@ -198,13 +199,19 @@
       els.pagination.innerHTML = h;
     }
 
+    function pickHero() {
+      var featured = ALL.filter(function (r) { return r.featured; });
+      if (featured.length) return { report: featured[0], isFeatured: true };
+      if (!ALL.length) return null;
+      var sorted = ALL.slice().sort(function (a, b) { return slugKey(b.slug).localeCompare(slugKey(a.slug)); });
+      return { report: sorted[0], isFeatured: false };
+    }
+
     function render() {
       var q = query.trim().toLowerCase();
       var base = ALL.slice();
       if (channelMode !== 'all') base = base.filter(function (r) { return (r.channel || '청년주택') === channelMode; });
       if (q) base = base.filter(function (r) { return (r.title + ' ' + r.subtitle).toLowerCase().indexOf(q) !== -1; });
-
-      var isDefault = sortMode === 'latest' && !q && channelMode === 'all';
 
       if (sortMode === 'open') {
         base = base.filter(function (r) { return r.status && r.status.kind !== 'closed'; });
@@ -213,16 +220,17 @@
         base.sort(function (a, b) { return slugKey(b.slug).localeCompare(slugKey(a.slug)); });
       }
 
-      var gridItems;
-      if (isDefault) {
-        els.hero.innerHTML = base.length ? heroHTML(base[0]) : '';
-        els.hero.style.display = base.length ? 'block' : 'none';
-        gridItems = base.slice(1);
+      // 히어로는 필터·정렬·검색과 무관하게 항상 표시(지정된 추천 리포트, 없으면 전체 중 최신)
+      var hero = pickHero();
+      if (hero) {
+        els.hero.innerHTML = heroHTML(hero.report, hero.isFeatured);
+        els.hero.style.display = 'block';
+        base = base.filter(function (r) { return r.slug !== hero.report.slug; });
       } else {
         els.hero.style.display = 'none';
         els.hero.innerHTML = '';
-        gridItems = base;
       }
+      var gridItems = base;
 
       var totalPages = Math.max(1, Math.ceil(gridItems.length / PAGE_SIZE));
       if (page > totalPages) page = totalPages;
