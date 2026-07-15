@@ -54,6 +54,9 @@
       </div>
     </div>
 
+    <!-- 채널 필터 (채널이 2종 이상일 때만 노출) -->
+    <div class="channel-filter" id="channelFilter" style="display:none" role="group" aria-label="채널 필터"></div>
+
     <!-- 그리드 -->
     <div id="gridSection" style="display:none">
       <p class="grid-section-label">전체 리포트</p>
@@ -104,6 +107,7 @@
       hero:     document.getElementById('heroCard'),
       controls: document.getElementById('listControls'),
       search:   document.getElementById('searchInput'),
+      channelFilter: document.getElementById('channelFilter'),
       gridSec:  document.getElementById('gridSection'),
       grid:     document.getElementById('reportsGrid'),
       noResults:document.getElementById('noResults'),
@@ -111,9 +115,25 @@
       empty:    document.getElementById('emptyState')
     };
 
+    var CH_META = {
+      '청년주택': { cls: 'youth',   label: '청년주택' },
+      '줍줍분양': { cls: 'bunyang', label: '줍줍분양' }
+    };
+    function channelMeta(ch) { return CH_META[ch] || { cls: 'youth', label: ch || '청년주택' }; }
+    function channelCatSuffix(r) { return r.category ? ' · ' + esc(r.category) : ''; }
+    function channelBadgeHTML(r) {
+      var m = channelMeta(r.channel);
+      return '<span class="channel-badge channel-badge--' + m.cls + '">' + esc(m.label) + channelCatSuffix(r) + '</span>';
+    }
+    function heroChannelBadgeHTML(r) {
+      var m = channelMeta(r.channel);
+      return '<span class="hero-channel-badge">' + esc(m.label) + channelCatSuffix(r) + '</span>';
+    }
+
     var ALL = [];
     var query = '';
     var sortMode = 'latest';
+    var channelMode = 'all';
     var page = 1;
 
     function esc(s) {
@@ -147,7 +167,7 @@
       return '<a href="' + href(r.slug) + '" class="hero-report-card">' +
         '<div class="hero-report-inner">' +
           '<div class="hero-report-content">' +
-            '<div class="hero-badge-row"><span class="report-badge">최신 리포트</span>' + stBadge + '</div>' +
+            '<div class="hero-badge-row"><span class="report-badge">최신 리포트</span>' + heroChannelBadgeHTML(r) + stBadge + '</div>' +
             '<h2 class="hero-report-title">' + esc(r.title) + '</h2>' +
             '<p class="hero-report-subtitle">' + esc(r.subtitle) + '</p>' +
             '<div class="hero-report-meta">' + dl + '</div>' +
@@ -161,7 +181,7 @@
       var stBadge = st ? '<span class="status-badge status-badge--' + st.kind + '">' + ICON.dot + esc(st.label) + '</span>' : '';
       var dl = r.applyEndISO ? ICON.cal + '<span>' + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
       return '<a href="' + href(r.slug) + '" class="report-card-item' + (st && st.kind === 'closed' ? ' is-closed' : '') + '">' +
-        '<div class="report-card-status">' + stBadge + '</div>' +
+        '<div class="report-card-status">' + channelBadgeHTML(r) + stBadge + '</div>' +
         '<h3 class="report-card-title">' + esc(r.title) + '</h3>' +
         '<p class="report-card-subtitle">' + esc(r.subtitle) + '</p>' +
         '<div class="report-card-foot">' + dl + '</div>' +
@@ -182,9 +202,10 @@
     function render() {
       var q = query.trim().toLowerCase();
       var base = ALL.slice();
+      if (channelMode !== 'all') base = base.filter(function (r) { return (r.channel || '청년주택') === channelMode; });
       if (q) base = base.filter(function (r) { return (r.title + ' ' + r.subtitle).toLowerCase().indexOf(q) !== -1; });
 
-      var isDefault = sortMode === 'latest' && !q;
+      var isDefault = sortMode === 'latest' && !q && channelMode === 'all';
 
       if (sortMode === 'open') {
         base = base.filter(function (r) { return r.status && r.status.kind !== 'closed'; });
@@ -222,6 +243,35 @@
       renderPagination(totalPages);
     }
 
+    function renderChannelFilter() {
+      var channels = [];
+      ALL.forEach(function (r) {
+        var ch = r.channel || '청년주택';
+        if (channels.indexOf(ch) === -1) channels.push(ch);
+      });
+      if (channels.length < 2) { els.channelFilter.style.display = 'none'; return; }
+
+      var options = ['all'].concat(channels);
+      var h = options.map(function (ch) {
+        var count = ch === 'all' ? ALL.length : ALL.filter(function (r) { return (r.channel || '청년주택') === ch; }).length;
+        var label = ch === 'all' ? '전체' : channelMeta(ch).label;
+        return '<button type="button" class="ch-filter-btn' + (ch === channelMode ? ' active' : '') + '" data-channel="' + esc(ch) + '" aria-pressed="' + (ch === channelMode) + '">' +
+          esc(label) + ' <span class="ch-filter-count">' + count + '</span></button>';
+      }).join('');
+      els.channelFilter.innerHTML = h;
+      els.channelFilter.style.display = 'flex';
+
+      var btns = els.channelFilter.querySelectorAll('.ch-filter-btn');
+      Array.prototype.forEach.call(btns, function (btn) {
+        btn.addEventListener('click', function () {
+          if (btn.classList.contains('active')) return;
+          Array.prototype.forEach.call(btns, function (b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+          btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
+          channelMode = btn.getAttribute('data-channel'); page = 1; render();
+        });
+      });
+    }
+
     function bind() {
       els.search.addEventListener('input', function (e) { query = e.target.value; page = 1; render(); });
       var btns = els.controls.querySelectorAll('.sort-btn');
@@ -233,6 +283,7 @@
           sortMode = btn.getAttribute('data-sort'); page = 1; render();
         });
       });
+      renderChannelFilter();
       els.pagination.addEventListener('click', function (e) {
         var b = e.target.closest('[data-pg]');
         if (!b || b.disabled) return;
