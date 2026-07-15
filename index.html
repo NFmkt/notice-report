@@ -221,11 +221,11 @@
       }
 
       // 히어로는 필터·정렬·검색과 무관하게 항상 표시(지정된 추천 리포트, 없으면 전체 중 최신)
+      // 그리드는 히어로 여부와 무관하게 현재 필터 기준 전체를 그대로 보여줌(중복 노출 의도됨)
       var hero = pickHero();
       if (hero) {
         els.hero.innerHTML = heroHTML(hero.report, hero.isFeatured);
         els.hero.style.display = 'block';
-        base = base.filter(function (r) { return r.slug !== hero.report.slug; });
       } else {
         els.hero.style.display = 'none';
         els.hero.innerHTML = '';
