@@ -136,6 +136,18 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
+.header-left { display: flex; align-items: center; gap: 14px; }
+.back-home-link {
+  display: flex; align-items: center; gap: 4px;
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); text-decoration: none;
+  padding: 6px 8px; margin-left: -8px; border-radius: var(--radius-sm);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.back-home-link:hover { background: var(--accent-light); color: var(--accent); }
+.back-home-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.back-home-link svg { flex-shrink: 0; }
+
 /* ============================================
    Progress Bar
    ============================================ */
@@ -1636,6 +1648,7 @@ a:focus-visible {
   /* ── Header ─── */
   .header-inner { padding: 0 var(--space-md); }
   .header-tag   { display: none; }
+  .back-home-link span { display: none; }
 
   /* ── Hero ─── */
   .hero {
