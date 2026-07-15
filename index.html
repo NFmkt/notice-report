@@ -86,7 +86,6 @@
 
     var ICON = {
       cal:  '<svg class="cal-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 1.75a.9.9 0 0 1 .9.9V3.2h5.2v-.55a.9.9 0 1 1 1.8 0V3.2h.35A2.5 2.5 0 0 1 17.25 5.7v8.6a2.5 2.5 0 0 1-2.5 2.5H5.25a2.5 2.5 0 0 1-2.5-2.5V5.7a2.5 2.5 0 0 1 2.5-2.5h.35v-.55a.9.9 0 0 1 .9-.9ZM4.55 7.9v6.4c0 .39.31.7.7.7h9.5a.7.7 0 0 0 .7-.7V7.9H4.55Z"/></svg>',
-      dot:  '<svg class="st-dot" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><circle cx="10" cy="10" r="4.5"/></svg>',
       chevL:'<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M12.28 4.72a1 1 0 0 1 0 1.41L8.4 10l3.88 3.87a1 1 0 1 1-1.41 1.42l-4.59-4.58a1 1 0 0 1 0-1.42l4.59-4.58a1 1 0 0 1 1.41 0Z"/></svg>',
       chevR:'<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.72 4.72a1 1 0 0 0 0 1.41L11.6 10l-3.88 3.87a1 1 0 1 0 1.41 1.42l4.59-4.58a1 1 0 0 0 0-1.42L9.13 4.72a1 1 0 0 0-1.41 0Z"/></svg>'
     };
@@ -160,7 +159,7 @@
 
     function heroHTML(r, isFeatured) {
       var st = r.status;
-      var stBadge = st ? '<span class="hero-status hero-status--' + st.kind + '">' + ICON.dot + esc(st.label) + '</span>' : '';
+      var stBadge = st ? '<span class="hero-status hero-status--' + st.kind + '">' + esc(st.label) + '</span>' : '';
       var dl = r.applyEndISO ? '<span class="hero-report-deadline">' + ICON.cal + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
       var ribbon = isFeatured ? '추천 리포트' : '최신 리포트';
       return '<a href="' + href(r.slug) + '" class="hero-report-card">' +
@@ -177,7 +176,7 @@
 
     function cardHTML(r) {
       var st = r.status;
-      var stBadge = st ? '<span class="status-badge status-badge--' + st.kind + '">' + ICON.dot + esc(st.label) + '</span>' : '';
+      var stBadge = st ? '<span class="status-badge status-badge--' + st.kind + '">' + esc(st.label) + '</span>' : '';
       var dl = r.applyEndISO ? ICON.cal + '<span>' + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
       return '<a href="' + href(r.slug) + '" class="report-card-item' + (st && st.kind === 'closed' ? ' is-closed' : '') + '">' +
         '<div class="report-card-status">' + channelBadgeHTML(r) + stBadge + '</div>' +

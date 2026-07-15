@@ -1768,16 +1768,16 @@ a:focus-visible {
   letter-spacing: 0.06em; text-transform: uppercase;
 }
 
-/* ── 상태 배지 ── */
+/* ── 상태 배지 (채널 배지와 구분되도록 테두리형으로) ── */
 .status-badge {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 14px; font-weight: 600; line-height: 1;
-  padding: 4px 10px; border-radius: 999px;
+  padding: 3px 9px; border-radius: 999px;
+  background: #fff; border: 1.5px solid;
 }
-.status-badge .st-dot { width: 11px; height: 11px; flex-shrink: 0; }
-.status-badge--open   { background: #ECFDF5; color: #047857; }
-.status-badge--urgent { background: #FEF3C7; color: #92400E; }
-.status-badge--closed { background: #F1F5F9; color: #64748B; }
+.status-badge--open   { color: #16A34A; border-color: #16A34A; }
+.status-badge--urgent { color: #D97706; border-color: #D97706; }
+.status-badge--closed { color: #64748B; border-color: #CBD5E1; }
 
 /* ── 카드 (마감일 하단 고정) ── */
 .reports-grid { align-items: stretch; }
@@ -1801,7 +1801,6 @@ a:focus-visible {
   padding: 4px 10px; border-radius: 999px;
   background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.4);
 }
-.hero-status .st-dot { width: 11px; height: 11px; flex-shrink: 0; }
 .hero-report-deadline { display: inline-flex; align-items: center; gap: 5px; font-size: 15px; color: rgba(255,255,255,0.85); }
 .hero-report-deadline .cal-icon { width: 14px; height: 14px; flex-shrink: 0; }
 
