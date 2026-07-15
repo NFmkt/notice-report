@@ -127,13 +127,21 @@ a:focus-visible {
   height: calc(var(--header-h) - 4px);
 }
 
-.header-tag {
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+.header-logo:hover { opacity: 0.85; }
+.header-logo-icon { flex-shrink: 0; }
+.header-logo-text {
   font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .header-right { display: flex; align-items: center; gap: 10px; }
@@ -1403,12 +1411,13 @@ a:focus-visible {
 .supply-bar-val  { font-size: 13px; color: var(--text-secondary); width: 24px; text-align: right; }
 .supply-bar-note { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
 .supply-single-district {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: flex-start; gap: 8px;
   padding: 12px 14px;
   background: var(--accent-light); border-radius: var(--radius-md); color: var(--accent);
 }
-.supply-single-name  { font-size: 16px; font-weight: 600; flex: 1; }
-.supply-single-units { font-size: 21px; font-weight: 700; }
+.supply-single-district svg { flex-shrink: 0; margin-top: 6px; }
+.supply-single-name  { font-size: 16px; font-weight: 600; flex: 1; word-break: keep-all; }
+.supply-single-units { font-size: 21px; font-weight: 700; flex-shrink: 0; }
 .supply-type-pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .supply-type-pill {
   font-size: 14px; padding: 4px 10px; border-radius: 20px;
@@ -1648,7 +1657,7 @@ a:focus-visible {
 
   /* ── Header ─── */
   .header-inner { padding: 0 var(--space-md); }
-  .header-tag   { display: none; }
+  .header-logo-text { display: none; }
   .back-home-link span { display: none; }
 
   /* ── Hero ─── */
@@ -1657,7 +1666,7 @@ a:focus-visible {
     padding-bottom: var(--space-lg);
   }
   .hero-inner   { padding: 0 var(--space-md); }
-  .hero-title   { font-size: clamp(26px, 7vw, 42px); letter-spacing: -0.01em; }
+  .hero-title   { font-size: clamp(23px, 6vw, 38px); line-height: 1.4; letter-spacing: -0.01em; }
   .hero-subtitle { font-size: 18px; }
 
   /* ── View Container ─── */
