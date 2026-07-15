@@ -23,6 +23,30 @@
       "org": "아이파크현대산업개발(주)",
       "households": 21,
       "featured": true
+    },
+    {
+      "slug": "20260715-풍무역롯데캐슬시그니처-임의공급2차",
+      "title": "풍무역 롯데캐슬 시그니처(2차) 임의공급 입주자모집공고",
+      "subtitle": "",
+      "publishedAt": "2026-07-15",
+      "badge": "줍줍분양",
+      "applyEndISO": "2026-07-16",
+      "channel": "줍줍분양",
+      "category": "줍줍",
+      "org": "롯데건설(주)",
+      "households": 13
+    },
+    {
+      "slug": "20260715-용인푸르지오클루센트-임의공급5차",
+      "title": "용인 푸르지오 클루센트(5차) 임의공급 입주자모집공고",
+      "subtitle": "",
+      "publishedAt": "2026-07-15",
+      "badge": "줍줍분양",
+      "applyEndISO": "2026-07-21",
+      "channel": "줍줍분양",
+      "category": "줍줍",
+      "org": "주식회사 대우건설",
+      "households": 15
     }
   ]
 }
