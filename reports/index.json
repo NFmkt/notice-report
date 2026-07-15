@@ -21,7 +21,8 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "아이파크현대산업개발(주)",
-      "households": 21
+      "households": 21,
+      "featured": true
     }
   ]
 }
