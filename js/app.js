@@ -36,9 +36,18 @@ async function loadReport(slug) {
     const titleEl = document.getElementById('reportTitle');
     const subtitleEl = document.getElementById('reportSubtitle');
     const badgeEl = document.querySelector('.hero-badge');
+    const thumbnailEl = document.getElementById('heroThumbnail');
     if (titleEl) titleEl.textContent = data.meta.title;
     if (subtitleEl) subtitleEl.textContent = data.meta.subtitle;
     if (badgeEl && data.meta.badge) badgeEl.textContent = data.meta.badge;
+    if (thumbnailEl) {
+      if (data.meta.thumbnail) {
+        thumbnailEl.src = data.meta.thumbnail;
+        thumbnailEl.hidden = false;
+      } else {
+        thumbnailEl.hidden = true;
+      }
+    }
 
     const articleBody = document.getElementById('articleBody');
     const sectionIndexList = document.getElementById('sectionIndexList');
