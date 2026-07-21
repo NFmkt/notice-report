@@ -962,9 +962,9 @@ a:focus-visible {
 .hero-report-icon svg { width: 100%; height: 100%; }
 .report-badge {
   display: inline-block;
-  background: rgba(255,255,255,0.16);
-  color: #fff;
-  border: 1.5px solid rgba(255,255,255,0.35);
+  background: #fff;
+  color: var(--accent-dark);
+  border: 1.5px solid var(--accent);
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
