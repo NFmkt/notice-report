@@ -35,8 +35,8 @@ export const ICONS = {
   // 신청기간 — 캘린더
   calendar: svg(`
     <rect x="2" y="4.5" width="16" height="13" rx="2" fill="#313D4C"/>
-    <rect x="2" y="4.5" width="16" height="5" rx="2" fill="#2563EB"/>
-    <rect x="9.25" y="4.5" width="1.5" height="5" fill="#2563EB"/>
+    <rect x="2" y="4.5" width="16" height="5" rx="2" fill="#64A7FF"/>
+    <rect x="9.25" y="4.5" width="1.5" height="5" fill="#64A7FF"/>
     <rect x="5.5" y="2.5" width="2" height="4" rx="1" fill="#64A7FF"/>
     <rect x="12.5" y="2.5" width="2" height="4" rx="1" fill="#64A7FF"/>
     <rect x="5" y="12" width="2.5" height="2.5" rx="0.5" fill="#FFC84D"/>
@@ -80,7 +80,7 @@ export const ICONS = {
   // 신청방법및일정 — 시계
   schedule: svg(`
     <circle cx="10" cy="10" r="8.5" fill="#313D4C"/>
-    <circle cx="10" cy="10" r="7" fill="#2563EB"/>
+    <circle cx="10" cy="10" r="7" fill="#64A7FF"/>
     <circle cx="10" cy="10" r="1.5" fill="#FFFFFF"/>
     <rect x="9.25" y="4" width="1.5" height="5" rx="0.75" fill="#FFFFFF"/>
     <rect x="10" y="9.25" width="4" height="1.5" rx="0.75" fill="#FFC84D"/>
@@ -96,9 +96,9 @@ export const ICONS = {
 
   // 타임라인 핀 — 위치 핀
   pin: svg(`
-    <circle cx="10" cy="8" r="5.5" fill="#2563EB"/>
+    <circle cx="10" cy="8" r="5.5" fill="#64A7FF"/>
     <circle cx="10" cy="8" r="2.5" fill="#FFFFFF"/>
-    <path d="M10 12.5L6.5 17H13.5L10 12.5Z" fill="#2563EB"/>
+    <path d="M10 12.5L6.5 17H13.5L10 12.5Z" fill="#64A7FF"/>
   `),
 
   // Q&A — Q 뱃지

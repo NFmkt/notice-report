@@ -4,8 +4,8 @@
 
 :root {
   /* Colors */
-  --bg: #FFFFFF;
-  --surface: #F5F6F7;
+  --bg: #F5F6F7;
+  --surface: #FFFFFF;
   --text-primary: #161B20;
   --text-secondary: #555B61;
   --text-tertiary: #6D7379;
@@ -39,9 +39,9 @@
   --radius-lg: 10px;
   --radius-chip: 4px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+  /* Shadows (톤 반전: 흰 카드가 쿨그레이 페이지 위에 뜨는 elevation) */
+  --shadow-sm: 0 1px 2px rgba(22, 27, 32, 0.04), 0 3px 10px rgba(22, 27, 32, 0.06);
+  --shadow-md: 0 2px 6px rgba(22, 27, 32, 0.06), 0 10px 24px rgba(22, 27, 32, 0.10);
 }
 
 /* ============================================
@@ -1011,6 +1011,7 @@ a:focus-visible {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s, transform 0.2s;
 }
 .report-card-item:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
@@ -1176,14 +1177,14 @@ a:focus-visible {
 .lease-row-head { display: flex; align-items: center; justify-content: space-between; }
 .lease-priority { font-size: 15px; font-weight: 600; }
 .lease-priority--green { color: #16A34A; }
-.lease-priority--blue  { color: #2563EB; }
+.lease-priority--blue  { color: var(--accent); }
 .lease-ratio-badge { font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-chip); }
 .lease-ratio--green { background: #DCFCE7; color: #16A34A; }
-.lease-ratio--blue  { background: #DBEAFE; color: #2563EB; }
+.lease-ratio--blue  { background: var(--accent-light); color: var(--accent); }
 .lease-bar-track { position: relative; height: 24px; background: var(--border); border-radius: 4px; overflow: hidden; }
 .lease-bar-fill  { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
 .lease-bar--green { background: #16A34A; }
-.lease-bar--blue  { background: #2563EB; }
+.lease-bar--blue  { background: var(--accent); }
 .lease-bar-label {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
   font-size: 13px; font-weight: 600; color: #fff; mix-blend-mode: difference;
@@ -1470,13 +1471,13 @@ a:focus-visible {
 .skeleton {
   display: block;
   border-radius: var(--radius-sm);
-  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background: linear-gradient(90deg, var(--border) 25%, var(--surface) 50%, var(--border) 75%);
   background-size: 600px 100%;
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton { animation: none; background: #e2e8f0; }
+  .skeleton { animation: none; background: var(--border); }
 }
 
 .skeleton-title    { height: 40px; width: 70%; margin-bottom: 8px; }
@@ -1793,16 +1794,23 @@ a:focus-visible {
 .hero-channel-badge--bunyang { color: var(--teal); border-color: var(--teal); }
 .hero-channel-badge--minjian { color: #7C3AED; border-color: #7C3AED; }
 
-/* ── 상태 배지 (채널 배지와 구분되도록 테두리형으로) ── */
+/* ── 상태 배지 (채널 배지와 같은 틴트 톤으로 통일, D-day는 안쪽 캡슐로 분리) ── */
 .status-badge {
-  display: inline-flex; align-items: center; gap: 5px;
+  display: inline-flex; align-items: center; gap: 4px;
   font-size: 14px; font-weight: 600; line-height: 1;
   padding: 3px 9px; border-radius: var(--radius-chip);
-  background: #fff; border: 1.5px solid;
+  border: none;
 }
-.status-badge--open   { color: #16A34A; border-color: #16A34A; }
-.status-badge--urgent { color: #EF4452; border-color: #EF4452; }
-.status-badge--closed { color: var(--text-tertiary); border-color: var(--border-input); }
+.status-badge--open   { background: #F0FDF4; color: #16A34A; }
+.status-badge--urgent { background: #FEF2F2; color: #EF4452; }
+.status-badge--closed { background: var(--border-input); color: var(--text-tertiary); }
+
+.badge-dday {
+  font-size: 11.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px;
+  font-variant-numeric: tabular-nums; line-height: 1.4;
+}
+.status-badge--open   .badge-dday { background: rgba(22,163,74,.15); }
+.status-badge--urgent .badge-dday { background: rgba(239,68,82,.15); }
 
 /* ── 카드 (마감일 하단 고정) ── */
 .reports-grid { align-items: stretch; }
@@ -1829,6 +1837,7 @@ a:focus-visible {
 .hero-status--open   { color: #16A34A; border-color: #16A34A; }
 .hero-status--urgent { color: #EF4452; border-color: #EF4452; }
 .hero-status--closed { color: var(--text-tertiary); border-color: var(--border-input); }
+.hero-status .badge-dday { background: rgba(0,0,0,.06); }
 .hero-report-deadline { display: inline-flex; align-items: center; gap: 5px; font-size: 15px; color: rgba(255,255,255,0.85); }
 .hero-report-deadline .cal-icon { width: 14px; height: 14px; flex-shrink: 0; }
 
