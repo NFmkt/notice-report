@@ -1785,14 +1785,14 @@ a:focus-visible {
 .channel-badge-icon { width: 12px; height: 12px; flex-shrink: 0; }
 .hero-channel-badge {
   display: inline-flex; align-items: center; gap: 4px;
-  background: #fff; border: 1.5px solid;
+  border: none;
   font-size: 13px; font-weight: 700; line-height: 1;
   padding: 5px 10px; border-radius: var(--radius-chip);
   letter-spacing: 0.06em; text-transform: uppercase;
 }
-.hero-channel-badge--youth   { color: var(--channel-youth); border-color: var(--channel-youth); }
-.hero-channel-badge--bunyang { color: var(--teal); border-color: var(--teal); }
-.hero-channel-badge--minjian { color: #7C3AED; border-color: #7C3AED; }
+.hero-channel-badge--youth   { background: var(--channel-youth-light); color: var(--channel-youth); }
+.hero-channel-badge--bunyang { background: var(--teal-light); color: var(--teal); }
+.hero-channel-badge--minjian { background: #F5F3FF; color: #7C3AED; }
 
 /* ── 상태 배지 (채널 배지와 같은 틴트 톤으로 통일, D-day는 안쪽 캡슐로 분리) ── */
 .status-badge {
@@ -1800,17 +1800,11 @@ a:focus-visible {
   font-size: 14px; font-weight: 600; line-height: 1;
   padding: 3px 9px; border-radius: var(--radius-chip);
   border: none;
+  font-variant-numeric: tabular-nums;
 }
 .status-badge--open   { background: #F0FDF4; color: #16A34A; }
 .status-badge--urgent { background: #FEF2F2; color: #EF4452; }
 .status-badge--closed { background: var(--border-input); color: var(--text-tertiary); }
-
-.badge-dday {
-  font-size: 11.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px;
-  font-variant-numeric: tabular-nums; line-height: 1.4;
-}
-.status-badge--open   .badge-dday { background: rgba(22,163,74,.15); }
-.status-badge--urgent .badge-dday { background: rgba(239,68,82,.15); }
 
 /* ── 카드 (마감일 하단 고정) ── */
 .reports-grid { align-items: stretch; }
@@ -1832,12 +1826,12 @@ a:focus-visible {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 13px; font-weight: 600; line-height: 1;
   padding: 5px 10px; border-radius: var(--radius-chip);
-  background: #fff; border: 1.5px solid;
+  border: none;
+  font-variant-numeric: tabular-nums;
 }
-.hero-status--open   { color: #16A34A; border-color: #16A34A; }
-.hero-status--urgent { color: #EF4452; border-color: #EF4452; }
-.hero-status--closed { color: var(--text-tertiary); border-color: var(--border-input); }
-.hero-status .badge-dday { background: rgba(0,0,0,.06); }
+.hero-status--open   { background: #F0FDF4; color: #16A34A; }
+.hero-status--urgent { background: #FEF2F2; color: #EF4452; }
+.hero-status--closed { background: var(--border-input); color: var(--text-tertiary); }
 .hero-report-deadline { display: inline-flex; align-items: center; gap: 5px; font-size: 15px; color: rgba(255,255,255,0.85); }
 .hero-report-deadline .cal-icon { width: 14px; height: 14px; flex-shrink: 0; }
 

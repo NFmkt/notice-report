@@ -162,20 +162,17 @@
       var today = new Date(); today.setHours(0, 0, 0, 0);
       var diff = Math.round((end - today) / 86400000);
       if (diff < 0) return { kind: 'closed', label: '마감' };
-      if (diff === 0) return { kind: 'urgent', label: '마감임박', dday: 'D-DAY' };
-      if (diff <= 3) return { kind: 'urgent', label: '마감임박', dday: 'D-' + diff };
-      return { kind: 'open', label: '모집중', dday: 'D-' + diff };
+      if (diff === 0) return { kind: 'urgent', label: 'D-DAY' };
+      if (diff <= 3) return { kind: 'urgent', label: 'D-' + diff };
+      return { kind: 'open', label: 'D-' + diff };
     }
     function fmtDeadline(iso) { return iso ? iso.replace(/-/g, '.') + ' 마감' : ''; }
-    function statusBadgeInner(st) {
-      return esc(st.label) + (st.dday ? '<span class="badge-dday">' + esc(st.dday) + '</span>' : '');
-    }
 
     function href(slug) { return 'report.html?slug=' + encodeURIComponent(slug); }
 
     function heroHTML(r, isFeatured) {
       var st = r.status;
-      var stBadge = st ? '<span class="hero-status hero-status--' + st.kind + '">' + statusBadgeInner(st) + '</span>' : '';
+      var stBadge = st ? '<span class="hero-status hero-status--' + st.kind + '">' + esc(st.label) + '</span>' : '';
       var dl = r.applyEndISO ? '<span class="hero-report-deadline">' + ICON.cal + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
       var ribbon = isFeatured ? '추천 리포트' : '최신 리포트';
       return '<a href="' + href(r.slug) + '" class="hero-report-card">' +
@@ -192,7 +189,7 @@
 
     function cardHTML(r) {
       var st = r.status;
-      var stBadge = st ? '<span class="status-badge status-badge--' + st.kind + '">' + statusBadgeInner(st) + '</span>' : '';
+      var stBadge = st ? '<span class="status-badge status-badge--' + st.kind + '">' + esc(st.label) + '</span>' : '';
       var dl = r.applyEndISO ? ICON.cal + '<span>' + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
       return '<a href="' + href(r.slug) + '" class="report-card-item' + (st && st.kind === 'closed' ? ' is-closed' : '') + '">' +
         '<div class="report-card-status">' + channelBadgeHTML(r) + stBadge + '</div>' +
