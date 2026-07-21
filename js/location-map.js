@@ -80,7 +80,7 @@ function renderMapInEl(el) {
         const marker = new kakao.maps.Marker({ map, position: pos });
         if (loc.name) {
           new kakao.maps.InfoWindow({
-            content: `<div style="padding:5px 10px;font-size:12px;font-weight:600;font-family:Pretendard,sans-serif;white-space:nowrap;color:#1E293B">${loc.name}</div>`,
+            content: `<div style="padding:5px 10px;font-size:12px;font-weight:600;font-family:Pretendard,sans-serif;white-space:nowrap;color:#161B20">${loc.name}</div>`,
           }).open(map, marker);
         }
       });

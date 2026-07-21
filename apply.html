@@ -62,14 +62,14 @@
     .ap-shortcut:hover {
       transform: translateY(-2px);
       border-color: var(--blue); background: #fff;
-      box-shadow: 0 6px 16px rgba(37,99,235,.14);
+      box-shadow: 0 6px 16px rgba(37,185,185,.14);
     }
     .ap-shortcut svg { width: 18px; height: 18px; flex-shrink: 0; display: block; }
 
     /* ── Hero ── */
     .ap-hero {
       position: relative; overflow: hidden;
-      background: linear-gradient(140deg, #3B82F6 0%, #2563EB 55%, #1D4ED8 100%);
+      background: var(--blue);
       padding: 68px 20px 58px;
       text-align: center;
     }
@@ -134,7 +134,7 @@
     /* ── Section card ── */
     .ap-section {
       background: #fff; border: 1px solid var(--border);
-      border-radius: 16px; margin-top: 20px; overflow: hidden;
+      border-radius: 10px; margin-top: 20px; overflow: hidden;
     }
     .ap-section-head {
       padding: 20px 24px 0;
@@ -154,13 +154,13 @@
     /* ── Product cards ── */
     .ap-product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .ap-product-card {
-      border: 2px solid var(--border); border-radius: 12px; padding: 18px;
+      border: 2px solid var(--border); border-radius: 10px; padding: 18px;
       cursor: pointer; transition: border-color .15s, background .15s;
       position: relative;
     }
     .ap-product-card:hover { border-color: var(--blue); }
     .ap-product-card input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
-    .ap-product-card.selected { border-color: var(--blue); background: var(--blue-light, #EFF6FF); }
+    .ap-product-card.selected { border-color: var(--blue); background: var(--blue-light, #E7F7F7); }
     .ap-product-card.selected .ap-product-check { opacity: 1; }
     .ap-product-check {
       position: absolute; top: 12px; right: 12px;
@@ -171,7 +171,7 @@
     }
     .ap-product-tag {
       display: inline-block; font-size: 12px; font-weight: 700;
-      padding: 3px 9px; border-radius: 6px; margin-bottom: 10px;
+      padding: 3px 9px; border-radius: 4px; margin-bottom: 10px;
       background: var(--surface-2); color: var(--ink-muted);
     }
     .ap-product-tag.premium { background: #FEF3C7; color: #92400E; }
@@ -208,7 +208,7 @@
     }
     .ap-input:focus, .ap-select:focus, .ap-textarea:focus {
       border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+      box-shadow: 0 0 0 3px rgba(37,185,185,.1);
     }
     .ap-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
     .ap-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
@@ -217,14 +217,14 @@
 
     /* ── Notice box ── */
     .ap-notice {
-      background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px;
+      background: var(--blue-light, #E7F7F7); border: 1px solid #B9E8E8; border-radius: 10px;
       padding: 14px 16px; margin-top: 16px;
       display: flex; align-items: flex-start; gap: 10px;
     }
     .ap-notice-icon { flex-shrink: 0; margin-top: 2px; }
     .ap-notice-icon svg, .ap-warn-icon svg { width: 18px; height: 18px; display: block; }
-    .ap-notice-text { font-size: 14.5px; color: #1E40AF; line-height: 1.7; }
-    .ap-notice-text strong { color: #1E3A8A; font-weight: 700; }
+    .ap-notice-text { font-size: 14.5px; color: #0E6E6E; line-height: 1.7; }
+    .ap-notice-text strong { color: #0A5757; font-weight: 700; }
 
     /* ── Warning box ── */
     .ap-warn {
@@ -248,7 +248,7 @@
     /* ── Submit section ── */
     .ap-submit-wrap {
       background: #fff; border: 1px solid var(--border);
-      border-radius: 16px; margin-top: 20px; padding: 24px;
+      border-radius: 10px; margin-top: 20px; padding: 24px;
     }
     .ap-submit-btn {
       width: 100%; padding: 17px;
@@ -258,7 +258,7 @@
       transition: background .15s, transform .1s;
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .ap-submit-btn:hover { background: #1D4ED8; transform: translateY(-2px); box-shadow: 0 10px 24px rgba(37,99,235,.28); }
+    .ap-submit-btn:hover { background: var(--blue-hover, #10A6A6); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(37,185,185,.28); }
     .ap-submit-btn:active { transform: translateY(0) scale(.99); box-shadow: none; }
     .ap-submit-btn:disabled { background: var(--ink-subtle); cursor: not-allowed; transform: none; box-shadow: none; }
     .ap-submit-note {
@@ -339,7 +339,7 @@
     <nav class="ap-topbar-inner" aria-label="바로가기">
       <a class="ap-shortcut" href="https://gobang.kr/home?p=homeAdvertisingPopup" target="_blank" rel="noopener">
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M10 2.3 2.5 8.1c-.3.2-.5.6-.5 1v7.3c0 .6.5 1.1 1.1 1.1H8v-5.1h4v5.1h4.9c.6 0 1.1-.5 1.1-1.1V9.1c0-.4-.2-.8-.5-1L10 2.3Z" fill="#2563EB"/>
+          <path d="M10 2.3 2.5 8.1c-.3.2-.5.6-.5 1v7.3c0 .6.5 1.1 1.1 1.1H8v-5.1h4v5.1h4.9c.6 0 1.1-.5 1.1-1.1V9.1c0-.4-.2-.8-.5-1L10 2.3Z" fill="#25B9B9"/>
         </svg>
         고방 홈페이지
       </a>
