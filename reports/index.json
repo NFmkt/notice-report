@@ -59,6 +59,18 @@
       "org": "디비종합건설",
       "households": 30,
       "featured": true
+    },
+    {
+      "slug": "20260722-리아츠더인천",
+      "title": "청약통장 없이 무주택 유지! 인천 송림동 리아츠 더 인천 잔여 7세대 줍줍",
+      "subtitle": "계약금 5% 분납으로 가볍게 도전하는 기회예요.",
+      "publishedAt": "2026-07-22",
+      "badge": "줍줍분양",
+      "applyEndISO": "2026-07-28",
+      "channel": "줍줍분양",
+      "category": "줍줍",
+      "org": "파인건설(주)",
+      "households": 7
     }
   ]
 }
