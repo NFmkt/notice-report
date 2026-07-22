@@ -57,8 +57,7 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "디비종합건설",
-      "households": 30,
-      "featured": true
+      "households": 30
     },
     {
       "slug": "20260722-리아츠더인천",
@@ -70,7 +69,8 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "파인건설(주)",
-      "households": 7
+      "households": 7,
+      "featured": true
     }
   ]
 }

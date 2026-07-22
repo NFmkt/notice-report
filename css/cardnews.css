@@ -1,0 +1,213 @@
+/* css/cardnews.css — 인스타그램 카드뉴스 전용 디자인 시스템 (1080x1350, 4:5)
+   report.html의 컴포넌트 클래스를 재사용하지 않는다 — 세로형 카드 캔버스(600x750, 1.8x 스케일)에
+   맞춘 전용 타이포/레이아웃. 색상은 사이트 채널 컬러(줍줍분양=teal)를 계승하되 스케일은 완전히 새로 설계. */
+
+:root {
+  --cn-ink: #161B20;
+  --cn-muted: #5B6472;
+  --cn-muted-2: #94A0AC;
+  --cn-teal: #0F766E;
+  --cn-teal-light: #F0FDFA;
+  --cn-bg: #FAFAF9;
+  --cn-surface: #FFFFFF;
+  --cn-surface-2: #F5F6F7;
+  --cn-border: #E7EAEE;
+  --cn-radius-chip: 6px;
+  --cn-radius-md: 12px;
+  --cn-radius-lg: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 600px;
+  font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--cn-ink);
+  background: var(--cn-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+#cardRoot {
+  position: relative;
+  width: 600px;
+  min-height: 750px;
+  background: var(--cn-surface);
+}
+
+.cn-logo {
+  position: absolute;
+  left: 271px;
+  top: 702px;
+  width: 58px;
+  height: 17.44px;
+}
+/* 표지(1번)는 사진(고정 높이) 아래 텍스트 블록이 남은 공간을 채우고,
+   그 안에서 요약 표는 margin-top:auto로 카드 하단에 고정된다. */
+#cardRoot.cn-card--1 { display: flex; flex-direction: column; }
+
+/* 2/3번 카드는 설명글(lead)이 빠진 자리로 섹션 타이틀이 내려오도록 상단 여백을 크게 잡는다.
+   1번(표지)은 .cn-pad--cover가 padding-top을 0으로 덮어써서 영향받지 않는다. */
+.cn-pad { padding: 96px 52px 40px; }
+
+/* ── 공통: 섹션 헤더 ── */
+.cn-card-header { display: flex; align-items: center; gap: 11px; margin-bottom: 24px; }
+.cn-accent-bar { width: 5px; height: 25px; background: var(--cn-teal); border-radius: 3px; flex-shrink: 0; }
+.cn-card-title { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; }
+
+/* ── 공통: 히어로 숫자 ── */
+.cn-eyebrow {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cn-teal);
+  margin-bottom: 7px;
+}
+.cn-hero-num { font-size: 68px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+.cn-hero-unit { font-size: 30px; font-weight: 700; color: var(--cn-muted); margin-left: 3px; }
+.cn-hero-stat { margin-bottom: 26px; }
+.cn-hero-stat--boxed {
+  padding: 24px 26px;
+  background: var(--cn-teal-light);
+  border-radius: var(--cn-radius-lg);
+  margin: 4px 0 26px;
+}
+.cn-hero-stat--boxed .cn-hero-num { color: var(--cn-teal); }
+.cn-hero-caption { display: block; font-size: 16.5px; color: var(--cn-muted); margin-top: 8px; }
+
+/* ============================================
+   카드 1 — 표지
+   ============================================ */
+.cn-cover-media { position: relative; width: 600px; height: 290px; overflow: hidden; }
+.cn-cover-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cn-cover-fade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 90px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), var(--cn-surface) 92%);
+}
+.cn-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 8px 16px;
+  border-radius: var(--cn-radius-chip);
+  background: var(--cn-teal-light);
+  color: var(--cn-teal);
+}
+.cn-badge--overlay {
+  display: inline-flex;
+  align-self: flex-start;
+  position: relative;
+  margin: -60px 0 32px 32px;
+  box-shadow: 0 4px 14px rgba(15,118,110,0.14);
+}
+.cn-pad--cover { padding-top: 0; padding-bottom: 72px; display: flex; flex-direction: column; flex: 1; }
+
+.cn-title {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+  word-break: keep-all;
+}
+.cn-subtitle { font-size: 19px; line-height: 1.5; color: var(--cn-muted); margin-bottom: 22px; word-break: keep-all; }
+
+/* 모집호수~신청기간 표는 위 텍스트 분량과 무관하게 카드 하단에 고정 정렬 */
+.cn-pad--cover .cn-chip-row { margin-top: auto; }
+.cn-chip-row { display: flex; flex-direction: column; }
+.cn-chip {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--cn-border);
+}
+.cn-chip:last-child { border-bottom: none; }
+.cn-chip-label { font-size: 16.5px; color: var(--cn-muted); font-weight: 500; flex-shrink: 0; }
+.cn-chip-val { font-size: 20px; font-weight: 700; text-align: right; word-break: keep-all; }
+
+/* ============================================
+   카드 2 — 공급개요
+   ============================================ */
+.cn-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.cn-type-chip {
+  padding: 15px 8px;
+  border: 1px solid var(--cn-border);
+  border-radius: var(--cn-radius-md);
+  text-align: center;
+}
+.cn-type-name { display: block; font-size: 20px; font-weight: 800; }
+.cn-type-units { display: block; font-size: 14px; font-weight: 600; color: var(--cn-teal); margin-top: 4px; }
+
+.cn-area-caption { font-size: 16px; color: var(--cn-muted-2); text-align: center; margin-bottom: 24px; }
+
+.cn-loc-block {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  padding: 18px;
+  background: var(--cn-surface-2);
+  border-radius: var(--cn-radius-md);
+  border-left: 4px solid var(--cn-teal);
+}
+.cn-loc-pin { color: var(--cn-teal); flex-shrink: 0; margin-top: 2px; }
+.cn-loc-name { font-size: 19px; font-weight: 700; margin-bottom: 4px; word-break: keep-all; }
+.cn-loc-addr { font-size: 16px; color: var(--cn-muted); word-break: keep-all; }
+
+/* ============================================
+   카드 3 — 신청 자격
+   ============================================ */
+.cn-cond-list { margin-bottom: 8px; }
+.cn-cond-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--cn-border);
+}
+.cn-cond-row:last-child { border-bottom: none; }
+.cn-cond-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cn-cond-blue   { background: #EFF6FF; color: #2563EB; }
+.cn-cond-green  { background: #F0FDF4; color: #16A34A; }
+.cn-cond-amber  { background: #FFFBEB; color: #D97706; }
+.cn-cond-purple { background: #F5F3FF; color: #7C3AED; }
+.cn-cond-label { font-size: 16px; color: var(--cn-muted); font-weight: 600; width: 96px; flex-shrink: 0; }
+.cn-cond-value { font-size: 21px; font-weight: 800; flex: 1; word-break: keep-all; }
+.cn-cond-dot { flex-shrink: 0; }
+
+.cn-bullet-group { margin-top: 22px; }
+.cn-bullet-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--cn-teal);
+  text-transform: uppercase;
+  margin-bottom: 9px;
+}
+.cn-bullet-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.cn-bullet-list li {
+  position: relative;
+  padding-left: 15px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #3F4652;
+  word-break: keep-all;
+}
+.cn-bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px;
+  width: 6px; height: 6px;
+  background: var(--cn-teal);
+  border-radius: 1px;
+}

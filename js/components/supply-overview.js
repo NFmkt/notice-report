@@ -1,10 +1,10 @@
 // js/components/supply-overview.js
 
-function sqmToPyeong(sqm) {
+export function sqmToPyeong(sqm) {
   return Math.round(sqm * 0.3025 * 10) / 10;
 }
 
-function parseAreaRange(areaRange) {
+export function parseAreaRange(areaRange) {
   if (!areaRange) return null;
   const match = areaRange.match(/([\d.]+)㎡~([\d.]+)㎡/);
   if (!match) return null;

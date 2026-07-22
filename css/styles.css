@@ -1103,7 +1103,7 @@ a:focus-visible {
   display: block;
 }
 .bullet-list { padding-left: 18px; }
-.bullet-list li { margin-bottom: 5px; line-height: 1.65; font-size: 18px; color: var(--ink-muted); }
+.bullet-list li { margin-bottom: 5px; line-height: 1.65; font-size: 18px; color: var(--ink-muted); word-break: keep-all; }
 
 /* ── Eligibility Badges ──────────────────────── */
 .elig-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }

@@ -41,7 +41,7 @@ function renderEligibilityBadges(items) {
 
 // 줍줍분양 청약 조건 아이콘 (icon-design 스킬: viewBox 0 0 20 20, stroke 금지, fill 전용)
 // 직관적 메타포 — 청약통장:통장 / 무주택:집 / 거주지역:핀 / 재당첨:응모권
-const CONDITION_ICONS = {
+export const CONDITION_ICONS = {
   '청약통장': { icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3.4" y="2.4" width="13.2" height="15.2" rx="1.8" fill="currentColor"/><rect x="6" y="6.1" width="8" height="1.5" rx="0.75" fill="#fff"/><rect x="6" y="9.3" width="8" height="1.5" rx="0.75" fill="#fff"/><rect x="6" y="12.5" width="5" height="1.5" rx="0.75" fill="#fff"/></svg>`, color: 'blue' },
   '무주택 요건': { icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.1 2.2 8.5v9.4h5.4v-5.9h4.8v5.9h5.4V8.5z" fill="currentColor"/></svg>`, color: 'green' },
   '거주지역': { icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 1.8c-3.7 0-6.7 2.9-6.7 6.6 0 4.7 5.8 11.6 6 11.9.4.4 1 .4 1.4 0 .2-.3 6-7.2 6-11.9 0-3.7-3-6.6-6.7-6.6z" fill="currentColor"/><circle cx="10" cy="8.2" r="2.6" fill="#fff"/></svg>`, color: 'purple' },
@@ -49,7 +49,7 @@ const CONDITION_ICONS = {
 };
 
 // 상태 뱃지: O(자유·완화) 초록 체크 / X(제한·필요) 회색 X — 둘 다 fill 전용 path
-const STATE_DOTS = {
+export const STATE_DOTS = {
   free: `<svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#16A34A"/><path d="M8.6 13.4 5.4 10.2 6.7 8.9 8.6 10.8 13.3 6.1 14.6 7.4z" fill="#fff"/></svg>`,
   limited: `<svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#64748B"/><path d="M6.4 5.9 10 9.5 13.6 5.9 14.8 7.1 11.2 10.7 14.8 14.3 13.6 15.5 10 11.9 6.4 15.5 5.2 14.3 8.8 10.7 5.2 7.1z" fill="#fff"/></svg>`,
 };
@@ -62,7 +62,8 @@ function detectConditionState(desc) {
   return null;
 }
 
-function renderConditionBadges(items) {
+// items(["청약통장: 불필요", ...]) → [{ key, desc, state, icon, color }] — cardnews.js 등 외부에서도 재사용
+export function parseConditionItems(items) {
   const badges = [];
   const seen = new Set();
   items.forEach(item => {
@@ -75,6 +76,11 @@ function renderConditionBadges(items) {
       }
     }
   });
+  return badges;
+}
+
+function renderConditionBadges(items) {
+  const badges = parseConditionItems(items);
   if (badges.length === 0) return null;
   const badgeHtml = badges.map(b => `
     <div class="cond-badge cond-${b.color}">
