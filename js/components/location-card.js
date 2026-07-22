@@ -16,7 +16,7 @@ export function renderLocationCard(data) {
       </div>
       <div class="loc-card-body">
         <div class="loc-addr-block">
-          <p class="loc-address">${loc.address}</p>
+          ${loc.address ? `<p class="loc-address">${loc.address}</p>` : ''}
           ${loc.detail ? `<p class="loc-detail-line">${loc.detail}</p>` : ''}
         </div>
         ${loc.transit ? `<span class="loc-transit-chip">${SUBWAY_SVG}<span>${loc.transit}</span></span>` : ''}

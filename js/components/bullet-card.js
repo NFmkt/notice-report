@@ -39,6 +39,58 @@ function renderEligibilityBadges(items) {
   return `<div class="elig-badges${gridClass}">${badgeHtml}</div>`;
 }
 
+// 줍줍분양 청약 조건 아이콘 (icon-design 스킬: viewBox 0 0 20 20, stroke 금지, fill 전용)
+// 직관적 메타포 — 청약통장:통장 / 무주택:집 / 거주지역:핀 / 재당첨:응모권
+const CONDITION_ICONS = {
+  '청약통장': { icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3.4" y="2.4" width="13.2" height="15.2" rx="1.8" fill="currentColor"/><rect x="6" y="6.1" width="8" height="1.5" rx="0.75" fill="#fff"/><rect x="6" y="9.3" width="8" height="1.5" rx="0.75" fill="#fff"/><rect x="6" y="12.5" width="5" height="1.5" rx="0.75" fill="#fff"/></svg>`, color: 'blue' },
+  '무주택 요건': { icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.1 2.2 8.5v9.4h5.4v-5.9h4.8v5.9h5.4V8.5z" fill="currentColor"/></svg>`, color: 'green' },
+  '거주지역': { icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 1.8c-3.7 0-6.7 2.9-6.7 6.6 0 4.7 5.8 11.6 6 11.9.4.4 1 .4 1.4 0 .2-.3 6-7.2 6-11.9 0-3.7-3-6.6-6.7-6.6z" fill="currentColor"/><circle cx="10" cy="8.2" r="2.6" fill="#fff"/></svg>`, color: 'purple' },
+  '재당첨 제한': { icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.5 6.6c0-.9.7-1.6 1.6-1.6h11.8c.9 0 1.6.7 1.6 1.6v1.2a1.4 1.4 0 0 0 0 2.8v1.2c0 .9-.7 1.6-1.6 1.6H4.1c-.9 0-1.6-.7-1.6-1.6v-1.2a1.4 1.4 0 0 0 0-2.8z" fill="currentColor"/><rect x="9.3" y="4.2" width="1.4" height="10.4" rx="0.7" fill="#fff"/></svg>`, color: 'amber' },
+};
+
+// 상태 뱃지: O(자유·완화) 초록 체크 / X(제한·필요) 회색 X — 둘 다 fill 전용 path
+const STATE_DOTS = {
+  free: `<svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#16A34A"/><path d="M8.6 13.4 5.4 10.2 6.7 8.9 8.6 10.8 13.3 6.1 14.6 7.4z" fill="#fff"/></svg>`,
+  limited: `<svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#64748B"/><path d="M6.4 5.9 10 9.5 13.6 5.9 14.8 7.1 11.2 10.7 14.8 14.3 13.6 15.5 10 11.9 6.4 15.5 5.2 14.3 8.8 10.7 5.2 7.1z" fill="#fff"/></svg>`,
+};
+const FREE_WORDS = ['없음', '무관', '불필요', '자유', '가능', '불요'];
+const LIMITED_WORDS = ['있음', '필요', '제한', '불가', '해당'];
+
+function detectConditionState(desc) {
+  if (FREE_WORDS.some(w => desc.includes(w))) return 'free';
+  if (LIMITED_WORDS.some(w => desc.includes(w))) return 'limited';
+  return null;
+}
+
+function renderConditionBadges(items) {
+  const badges = [];
+  const seen = new Set();
+  items.forEach(item => {
+    for (const [key, meta] of Object.entries(CONDITION_ICONS)) {
+      if (!seen.has(key) && item.startsWith(key)) {
+        seen.add(key);
+        const rest = item.slice(key.length).replace(/^[\s:(]+/, '').replace(/[)]+$/, '').trim();
+        badges.push({ key, desc: rest, state: detectConditionState(rest), ...meta });
+        break;
+      }
+    }
+  });
+  if (badges.length === 0) return null;
+  const badgeHtml = badges.map(b => `
+    <div class="cond-badge cond-${b.color}">
+      <span class="cond-icon-wrap">
+        <span class="cond-icon">${b.icon}</span>
+        ${b.state ? `<span class="cond-dot">${STATE_DOTS[b.state]}</span>` : ''}
+      </span>
+      <div class="cond-text">
+        <span class="cond-name">${b.key}</span>
+        <span class="cond-desc">${b.desc}</span>
+      </div>
+    </div>
+  `).join('');
+  return `<div class="cond-badges">${badgeHtml}</div>`;
+}
+
 function renderIncomeTable(table) {
   if (!table || !table.rows || table.rows.length === 0) return '';
   const sizes = table.sizes || ['1인', '2인', '3인', '4인', '5인'];
@@ -68,6 +120,12 @@ export function renderBulletCard(data) {
   // If first group is eligibility types, show icon badges — skip text row only if badges rendered
   if (groups.length > 0 && groups[0].label === '신청 가능 계층') {
     const badges = renderEligibilityBadges(groups[0].items);
+    if (badges) {
+      prefixHtml = badges;
+      groupsToRender = groups.slice(1);
+    }
+  } else if (groups.length > 0 && groups[0].label === '청약 조건') {
+    const badges = renderConditionBadges(groups[0].items);
     if (badges) {
       prefixHtml = badges;
       groupsToRender = groups.slice(1);

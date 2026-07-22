@@ -4,5 +4,6 @@ admin/
 # 로컬 전용 — 공개 레포/배포에서 제외 (로컬 디스크에는 유지)
 docs/
 CLAUDE.md
+README.md
 배포가이드.md
 시작 4711.bat

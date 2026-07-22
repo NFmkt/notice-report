@@ -21,8 +21,7 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "아이파크현대산업개발(주)",
-      "households": 21,
-      "featured": true
+      "households": 21
     },
     {
       "slug": "20260715-풍무역롯데캐슬시그니처-임의공급2차",
@@ -58,7 +57,8 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "디비종합건설",
-      "households": 30
+      "households": 30,
+      "featured": true
     }
   ]
 }
