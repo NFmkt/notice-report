@@ -85,8 +85,21 @@
       "category": "줍줍",
       "org": "디엘이앤씨 주식회사",
       "households": 1,
-      "featured": true,
       "thumbnail": "public/uploads/20260723-e편한세상강동프레스티지원/1784769221793-20260723-e____________.jpg"
+    },
+    {
+      "slug": "20260723-판교TH212",
+      "title": "판교 입성 가자! 대장지구 초대형 테라스 판교TH212 단 1세대 줍줍",
+      "subtitle": "분양가상한제로 합리적인 가격에 넓은 테라스 하우스를 누릴 기회예요.",
+      "publishedAt": "2026-07-23",
+      "badge": "줍줍분양",
+      "applyEndISO": "2026-07-27",
+      "channel": "줍줍분양",
+      "category": "줍줍",
+      "org": "금강주택",
+      "households": 1,
+      "thumbnail": "public/uploads/20260723-판교TH212/1784776779257-20260723-__TH212.jpg",
+      "featured": true
     }
   ]
 }
