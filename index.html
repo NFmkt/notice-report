@@ -175,7 +175,16 @@
       var stBadge = st ? '<span class="hero-status hero-status--' + st.kind + '">' + esc(st.label) + '</span>' : '';
       var dl = r.applyEndISO ? '<span class="hero-report-deadline">' + ICON.cal + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
       var ribbon = isFeatured ? '추천 리포트' : '최신 리포트';
-      return '<a href="' + href(r.slug) + '" class="hero-report-card">' +
+      var hasPhoto = !!r.thumbnail;
+      var cardClass = 'hero-report-card' + (hasPhoto ? ' hero-report-card--photo' : '');
+      // 인라인 style="background-image:url(...)"로 넣어야 문서(index.html) 기준 상대경로로 해석됨.
+      // CSS 커스텀 프로퍼티(--x: url(...)) 안의 상대경로는 "사용된" 스타일시트(css/styles.css) 기준으로 해석돼 깨짐(GitHub Pages 서브패스 배포 포함 공통 이슈).
+      var photoHTML = hasPhoto
+        ? '<div class="hero-report-photo" style="background-image:url(\'' + esc(r.thumbnail) + '\')" aria-hidden="true"></div>'
+        : '';
+      var iconHTML = hasPhoto ? '' : '<div class="hero-report-icon">' + HOUSE + '</div>';
+      return '<a href="' + href(r.slug) + '" class="' + cardClass + '">' +
+        photoHTML +
         '<div class="hero-report-inner">' +
           '<div class="hero-report-content">' +
             '<div class="hero-badge-row"><span class="report-badge">' + ribbon + '</span>' + heroChannelBadgeHTML(r) + stBadge + '</div>' +
@@ -183,7 +192,7 @@
             '<p class="hero-report-subtitle">' + esc(r.subtitle) + '</p>' +
             '<div class="hero-report-meta">' + dl + '</div>' +
           '</div>' +
-          '<div class="hero-report-icon">' + HOUSE + '</div>' +
+          iconHTML +
         '</div></a>';
     }
 

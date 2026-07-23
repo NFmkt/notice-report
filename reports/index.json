@@ -21,7 +21,8 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "아이파크현대산업개발(주)",
-      "households": 21
+      "households": 21,
+      "thumbnail": "public/uploads/20260714-의정부역-센트럴아이파크-임의공급2차/1784601341725-1784082658772-20260304501029.jpg"
     },
     {
       "slug": "20260715-풍무역롯데캐슬시그니처-임의공급2차",
@@ -57,7 +58,8 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "디비종합건설",
-      "households": 30
+      "households": 30,
+      "thumbnail": "public/uploads/20260721-디에트르라메르/1784688202486-20260722-_______-2.jpg"
     },
     {
       "slug": "20260722-리아츠더인천",
@@ -69,7 +71,8 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "파인건설(주)",
-      "households": 7
+      "households": 7,
+      "thumbnail": "public/uploads/20260722-리아츠더인천/1784709738314-20260722-______.jpg"
     },
     {
       "slug": "20260723-e편한세상강동프레스티지원",
@@ -82,7 +85,8 @@
       "category": "줍줍",
       "org": "디엘이앤씨 주식회사",
       "households": 1,
-      "featured": true
+      "featured": true,
+      "thumbnail": "public/uploads/20260723-e편한세상강동프레스티지원/1784769221793-20260723-e____________.jpg"
     }
   ]
 }

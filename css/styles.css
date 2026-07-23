@@ -944,14 +944,44 @@ a:focus-visible {
   overflow: hidden;
   margin-bottom: var(--space-2xl);
   transition: opacity 0.2s;
+  position: relative;
+  isolation: isolate;
 }
-.hero-report-card:hover { background: var(--accent-dark); }
+.hero-report-card:not(.hero-report-card--photo):hover { background: var(--accent-dark); }
 .hero-report-inner {
   padding: var(--space-2xl);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-xl);
+  position: relative;
+  z-index: 1;
+}
+
+/* 추천/최신 리포트 히어로 — 썸네일 배경 (있을 때만, 없으면 위 단색 배경 유지) */
+.hero-report-card--photo { background: #14181a; }
+.hero-report-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+}
+.hero-report-card--photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(100deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.45) 48%, rgba(0,0,0,0.15) 100%);
+  transition: background 0.2s;
+}
+.hero-report-card--photo:hover::after {
+  background: linear-gradient(100deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.52) 48%, rgba(0,0,0,0.22) 100%);
+}
+@media (max-width: 768px) {
+  .hero-report-card--photo::after {
+    background: linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.7) 100%);
+  }
 }
 .hero-report-content { flex: 1; min-width: 0; }
 .hero-report-icon {
