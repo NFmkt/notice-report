@@ -1040,11 +1040,12 @@ a:focus-visible {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-lg);
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s, transform 0.2s;
 }
 .report-card-item:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.report-card-body { padding: var(--space-lg); }
 .report-card-item .report-badge { background: var(--accent-light); color: var(--accent); margin-bottom: var(--space-sm); }
 .report-card-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); line-height: 1.55; margin-bottom: var(--space-sm); }
 .report-card-subtitle {
@@ -1862,7 +1863,23 @@ a:focus-visible {
 .report-card-item { display: flex; flex-direction: column; height: 100%; }
 .report-card-item:hover { border-color: var(--accent); }
 .report-card-item.is-closed { opacity: 0.82; }
+.report-card-body { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .report-card-status { display: flex; align-items: center; justify-content: flex-start; gap: 8px; flex-wrap: wrap; margin-bottom: var(--space-sm); min-height: 20px; }
+
+/* ── 카드 썸네일 (있으면 사진, 없으면 accent 배경 + 집 아이콘으로 통일) ── */
+.report-card-thumb {
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+  background: var(--accent);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.report-card-thumb--photo { background-color: #14181a; }
+.report-card-thumb-icon { width: 52px; height: 52px; opacity: 0.9; }
+.report-card-thumb-icon svg { width: 100%; height: 100%; display: block; }
 .report-card-foot {
   margin-top: auto; display: flex; align-items: center; gap: 5px;
   padding-top: 12px; border-top: 1px solid var(--border);
@@ -1915,7 +1932,7 @@ a:focus-visible {
 /* ── 목록 스켈레톤 ── */
 .sk-hero { height: 196px; border-radius: var(--radius-lg); margin-bottom: var(--space-2xl); }
 .sk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-lg); }
-.sk-card { height: 158px; border-radius: var(--radius-lg); }
+.sk-card { height: 260px; border-radius: var(--radius-lg); }
 
 @media (prefers-reduced-motion: reduce) {
   .reports-grid .report-card-item { animation: none; }

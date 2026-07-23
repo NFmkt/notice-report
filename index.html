@@ -200,11 +200,19 @@
       var st = r.status;
       var stBadge = st ? '<span class="status-badge status-badge--' + st.kind + '">' + esc(st.label) + '</span>' : '';
       var dl = r.applyEndISO ? ICON.cal + '<span>' + esc(fmtDeadline(r.applyEndISO)) + '</span>' : '';
+      var hasPhoto = !!r.thumbnail;
+      // 인라인 style="background-image:url(...)"로 넣는 이유는 heroHTML과 동일(상대경로 해석 이슈, 위 heroHTML 참고)
+      var thumbHTML = hasPhoto
+        ? '<div class="report-card-thumb report-card-thumb--photo" style="background-image:url(\'' + esc(r.thumbnail) + '\')" aria-hidden="true"></div>'
+        : '<div class="report-card-thumb" aria-hidden="true"><div class="report-card-thumb-icon">' + HOUSE + '</div></div>';
       return '<a href="' + href(r.slug) + '" class="report-card-item' + (st && st.kind === 'closed' ? ' is-closed' : '') + '">' +
-        '<div class="report-card-status">' + channelBadgeHTML(r) + stBadge + '</div>' +
-        '<h3 class="report-card-title">' + esc(r.title) + '</h3>' +
-        '<p class="report-card-subtitle">' + esc(r.subtitle) + '</p>' +
-        '<div class="report-card-foot">' + dl + '</div>' +
+        thumbHTML +
+        '<div class="report-card-body">' +
+          '<div class="report-card-status">' + channelBadgeHTML(r) + stBadge + '</div>' +
+          '<h3 class="report-card-title">' + esc(r.title) + '</h3>' +
+          '<p class="report-card-subtitle">' + esc(r.subtitle) + '</p>' +
+          '<div class="report-card-foot">' + dl + '</div>' +
+        '</div>' +
       '</a>';
     }
 
