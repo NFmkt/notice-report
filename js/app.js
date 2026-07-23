@@ -183,7 +183,13 @@ function initShareButton() {
   }
 
   btn.addEventListener('click', async () => {
-    const url = window.location.href;
+    // ?slug= 형태로 열려 있어도, 링크 미리보기(카톡 등)가 정상 동작하는 /report/슬러그 형태로 공유한다
+    // (report.html은 파일이 하나뿐이라 og:title/image가 슬러그별로 안 나뉨 — report/{slug}/index.html이 그 역할을 함)
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('slug');
+    const url = slug
+      ? window.location.origin + window.location.pathname.replace(/\/report\.html$/, '') + '/report/' + encodeURIComponent(slug) + window.location.hash
+      : window.location.href;
     const title = document.getElementById('reportTitle')?.textContent || '공고 분석 리포트';
     if (navigator.share) {
       try {
