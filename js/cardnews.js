@@ -49,6 +49,7 @@ function renderCard2(section) {
       <span class="cn-type-units">${esc(t.units)}세대</span>
     </div>
   `).join('');
+  const typeGridCols = (supply.houseTypes || []).length >= 5 ? 3 : 2;
 
   const locData = loc && loc.data.locations && loc.data.locations[0];
   const area = parseAreaRange(supply.areaRange);
@@ -67,7 +68,7 @@ function renderCard2(section) {
         <span class="cn-hero-caption">${esc(district.district)} 단일 공급</span>
       </div>` : ''}
 
-      <div class="cn-type-grid">${typeChips}</div>
+      <div class="cn-type-grid" style="grid-template-columns:repeat(${typeGridCols},1fr)">${typeChips}</div>
       ${area ? `<p class="cn-area-caption">${area.minSqm}㎡~${area.maxSqm}㎡ · ${area.minPyeong}평~${area.maxPyeong}평</p>` : supply.areaRange ? `<p class="cn-area-caption">${esc(supply.areaRange)}</p>` : ''}
 
       ${locData ? `

@@ -69,8 +69,7 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "파인건설(주)",
-      "households": 7,
-      "featured": true
+      "households": 7
     },
     {
       "slug": "20260723-e편한세상강동프레스티지원",
@@ -82,7 +81,8 @@
       "channel": "줍줍분양",
       "category": "줍줍",
       "org": "디엘이앤씨 주식회사",
-      "households": 1
+      "households": 1,
+      "featured": true
     }
   ]
 }
