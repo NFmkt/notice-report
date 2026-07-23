@@ -71,6 +71,18 @@
       "org": "파인건설(주)",
       "households": 7,
       "featured": true
+    },
+    {
+      "slug": "20260723-e편한세상강동프레스티지원",
+      "title": "청약통장 없이 신축 아파트 즉시 입주! 천호역 e편한세상 강동 프레스티지원 특별 재공급",
+      "subtitle": "잔금만 내면 이번 달 바로 입주할 수 있는기회예요.",
+      "publishedAt": "2026-07-23",
+      "badge": "줍줍분양",
+      "applyEndISO": "2026-07-27",
+      "channel": "줍줍분양",
+      "category": "줍줍",
+      "org": "디엘이앤씨 주식회사",
+      "households": 1
     }
   ]
 }
