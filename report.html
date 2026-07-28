@@ -6,8 +6,28 @@
   <title>리포트 제목 | 공고 분석 리포트</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
-  <!-- Pretendard Variable (모든 폰트 통일) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+  <!-- 크리티컬 CSS: 외부 리소스(폰트 CDN, 로컬 스타일시트) 로딩을 기다리지 않고
+       배경색·히어로·스켈레톤이 즉시 페인트되도록 함(흰 화면 노출 방지).
+       css/styles.css의 :root 변수·.skeleton* 규칙과 값이 동기화되어야 함 -->
+  <style>
+    body{margin:0;background:#F5F6F7;color:#161B20;font-size:19px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,'Pretendard Variable','Pretendard',sans-serif}
+    .hero{background:#FFFFFF;border-bottom:1px solid #ECEFF2;padding:75px 0}
+    .hero-inner{max-width:1100px;margin:0 auto;padding:0 47px}
+    .hero-content{max-width:760px;margin:0 auto}
+    @keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+    .skeleton{display:block;border-radius:5px;background:linear-gradient(90deg,#ECEFF2 25%,#FFFFFF 50%,#ECEFF2 75%);background-size:600px 100%;animation:shimmer 1.4s ease-in-out infinite}
+    @media (prefers-reduced-motion: reduce){.skeleton{animation:none;background:#ECEFF2}}
+    .skeleton-title{height:40px;width:70%;margin-bottom:8px}
+    .skeleton-subtitle{height:20px;width:50%}
+    .loading-skeleton{display:flex;flex-direction:column;gap:28px}
+    .skeleton-section{display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #ECEFF2;border-radius:10px;padding:47px}
+    .skeleton-line{height:16px}
+    .w-30{width:30%}.w-40{width:40%}.w-50{width:50%}.w-60{width:60%}.w-70{width:70%}.w-80{width:80%}.w-90{width:90%}
+  </style>
+
+  <!-- Pretendard Variable — 렌더링을 막지 않도록 비동기 로드(media=print 트릭), 로드 완료 시 all로 전환 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"></noscript>
 
   <link rel="stylesheet" href="css/design-system.css?v=2">
   <link rel="stylesheet" href="css/styles.css?v=2">
