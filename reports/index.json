@@ -98,8 +98,7 @@
       "category": "줍줍",
       "org": "금강주택",
       "households": 1,
-      "thumbnail": "public/uploads/20260723-판교TH212/1784776779257-20260723-__TH212.jpg",
-      "featured": true
+      "thumbnail": "public/uploads/20260723-판교TH212/1784776779257-20260723-__TH212.jpg"
     },
     {
       "slug": "20260729-더하이브퍼스트",
@@ -112,7 +111,8 @@
       "category": "줍줍",
       "org": "㈜디에이건설",
       "households": 8,
-      "thumbnail": "public/uploads/20260729-더하이브퍼스트/1785299994429-260729-_______.jpg"
+      "thumbnail": "public/uploads/20260729-더하이브퍼스트/1785299994429-260729-_______.jpg",
+      "featured": true
     },
     {
       "slug": "20260729-한화포레나안산고잔",
