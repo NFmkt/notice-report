@@ -100,6 +100,31 @@
       "households": 1,
       "thumbnail": "public/uploads/20260723-판교TH212/1784776779257-20260723-__TH212.jpg",
       "featured": true
+    },
+    {
+      "slug": "20260729-더하이브퍼스트",
+      "title": "청약통장 없이 서울 내집마련! 신대방역 더하이브퍼스트 무순위 8세대",
+      "subtitle": "중도금 전액 무이자 지원! 계약금만 있으면 시작할 수 있어요.",
+      "publishedAt": "2026-07-29",
+      "badge": "줍줍분양",
+      "applyEndISO": "2026-08-11",
+      "channel": "줍줍분양",
+      "category": "줍줍",
+      "org": "㈜디에이건설",
+      "households": 8,
+      "thumbnail": "public/uploads/20260729-더하이브퍼스트/1785299994429-260729-_______.jpg"
+    },
+    {
+      "slug": "20260729-한화포레나안산고잔",
+      "title": "청약통장 없이 무순위 줍줍! 안산 한화포레나 잔여 2세대 모집",
+      "subtitle": "중도금 없이 계약금 10%, 입주 임박 아파트를 바로 잡을 기회예요.",
+      "publishedAt": "2026-07-29",
+      "badge": "줍줍분양",
+      "applyEndISO": "2026-08-03",
+      "channel": "줍줍분양",
+      "category": "줍줍",
+      "org": "㈜한화 건설부문",
+      "households": 2
     }
   ]
 }
