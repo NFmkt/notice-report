@@ -130,11 +130,15 @@ export function renderBulletCard(data) {
       prefixHtml = badges;
       groupsToRender = groups.slice(1);
     }
-  } else if (groups.length > 0 && groups[0].label === '청약 조건') {
-    const badges = renderConditionBadges(groups[0].items);
-    if (badges) {
-      prefixHtml = badges;
-      groupsToRender = groups.slice(1);
+  } else {
+    // "청약 조건" 그룹은 위치(순서)와 무관하게 찾는다 — 생성 단계에서 순서가 밀려도 뱃지가 렌더링되도록
+    const conditionIdx = groups.findIndex(g => g.label === '청약 조건');
+    if (conditionIdx !== -1) {
+      const badges = renderConditionBadges(groups[conditionIdx].items);
+      if (badges) {
+        prefixHtml = badges;
+        groupsToRender = groups.filter((_, i) => i !== conditionIdx);
+      }
     }
   }
 
