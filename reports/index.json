@@ -137,8 +137,7 @@
       "category": "줍줍",
       "org": "장위10구역 주택재개발정비사업조합",
       "households": 39,
-      "thumbnail": "public/uploads/20260806-장위푸르지오마크원/1785980950312-20260806-_________.jpg",
-      "featured": true
+      "thumbnail": "public/uploads/20260806-장위푸르지오마크원/1785980950312-20260806-_________.jpg"
     },
     {
       "slug": "20260806-더리치먼드미아",
@@ -164,7 +163,8 @@
       "category": "줍줍",
       "org": "거여2재정비촉진구역1지구주택재개발정비사업조합",
       "households": 1,
-      "thumbnail": "public/uploads/260811-송파시그니처롯데캐슬/1786430982041-260811-__________.jpg"
+      "thumbnail": "public/uploads/260811-송파시그니처롯데캐슬/1786430982041-260811-__________.jpg",
+      "featured": true
     }
   ]
 }

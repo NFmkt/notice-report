@@ -72,15 +72,17 @@ export function renderSupplyOverview(data) {
   const area = parseAreaRange(areaRange);
   const districtHtml = renderDistrictChart(locations);
   const typesHtml = renderHouseTypes(houseTypes);
+  const hasDistrictCol = Boolean(districtHtml);
   const hasTypesCol = Boolean(typesHtml) || Boolean(area);
 
   return `
     <div class="supply-overview-v2">
       <div class="supply-cols">
+        ${hasDistrictCol ? `
         <div class="supply-col-district">
           <p class="supply-col-title">모집호수</p>
           ${districtHtml}
-        </div>
+        </div>` : ''}
         ${hasTypesCol ? `
         <div class="supply-col-types">
           <p class="supply-col-title">주택 유형</p>
