@@ -175,7 +175,8 @@
       "category": "줍줍",
       "thumbnail": "public/uploads/20260818-선유노블레르/1787299004241-66c12a981095003651ccba118987ef85_tKN7Ggx.jpg",
       "org": "노블레르",
-      "households": 6
+      "households": 6,
+      "featured": true
     }
   ]
 }
